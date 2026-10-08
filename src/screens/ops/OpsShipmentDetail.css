@@ -1,0 +1,275 @@
+.ops-detail {
+  display: grid;
+  gap: var(--space-6);
+}
+
+.ops-detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--space-3) var(--space-5);
+  padding-bottom: var(--space-4);
+  border-bottom: 1px solid var(--ink);
+}
+
+.ops-detail-order {
+  font-family: var(--font-data);
+}
+
+.ops-detail-sub {
+  color: var(--ink-2);
+}
+
+.ops-detail-state {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-5);
+}
+
+.ops-detail-risk {
+  font-weight: 500;
+}
+
+.ops-detail-updated {
+  color: var(--ink-2);
+}
+
+/* Raw feed | normalised timeline | rail. The two feeds share row heights so
+   an event sits beside its canonical milestone. */
+.ops-columns {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 380px;
+  gap: var(--space-6);
+  align-items: start;
+}
+
+.ops-feed {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.ops-feed-hint {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.ops-events {
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ink);
+  background: var(--surface);
+}
+
+.ops-event {
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  height: 56px;
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  box-shadow: inset 2px 0 0 transparent;
+  transition: background-color var(--dur-hover);
+}
+
+.ops-event[data-active='true'] {
+  background: var(--tint-harbour);
+  box-shadow: inset 2px 0 0 var(--harbour);
+}
+
+.ops-event-main {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.ops-event-operator {
+  color: var(--ink-2);
+}
+
+.ops-raw {
+  font-family: var(--font-data);
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.ops-milestone {
+  font-weight: 600;
+}
+
+.ops-milestone[data-mapped='false'] {
+  color: var(--amber);
+}
+
+.ops-unmapped {
+  padding: 0 var(--space-2);
+  border: 1px solid var(--amber);
+  border-radius: var(--radius-tag);
+  color: var(--amber);
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.ops-event-meta {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.ops-event-pending {
+  background: var(--manifest);
+}
+
+.ops-event-pending .ops-milestone {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
+.ops-rail {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.ops-rail > section {
+  display: grid;
+  gap: var(--space-2);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--ink);
+}
+
+.ops-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.ops-risk-line {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-3);
+  font-size: var(--text-20);
+  font-weight: 600;
+}
+
+.ops-risk-line span:last-child {
+  color: var(--ink-2);
+  font-size: var(--text-16);
+  font-weight: 500;
+}
+
+.ops-reasons {
+  display: grid;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ops-reasons > li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-1) 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.ops-weight {
+  font-family: var(--font-data);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.ops-proposed {
+  font-weight: 500;
+}
+
+.ops-quiet {
+  color: var(--ink-2);
+}
+
+.ops-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* The rail is narrow: document rows keep name and status on one line and put
+   the note and the action underneath. */
+.ops-rail .docs-row {
+  grid-template-columns: 1fr auto;
+}
+
+.ops-rail .docs-note,
+.ops-rail .docs-action {
+  grid-column: 1 / -1;
+}
+
+.ops-rail .docs-action:empty {
+  display: none;
+}
+
+.ops-rail .estimate-card {
+  padding: 0;
+}
+
+.ops-log {
+  display: grid;
+  gap: var(--space-2);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ops-log > li {
+  display: grid;
+  grid-template-columns: 96px 1fr;
+  gap: var(--space-3);
+}
+
+.ops-log time {
+  color: var(--ink-2);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (max-width: 1180px) {
+  .ops-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+
+  .ops-rail {
+    grid-column: 1 / -1;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+  }
+}
+
+/* Phone order: the route timeline above already is the normalised view, so the
+   flat normalised list drops out; then risk and actions; then the raw feed. */
+@media (max-width: 720px) {
+  .ops-columns {
+    grid-template-columns: 1fr;
+    gap: var(--space-5);
+  }
+
+  .ops-norm {
+    display: none;
+  }
+
+  .ops-rail {
+    grid-column: auto;
+    grid-template-columns: 1fr;
+    order: -1;
+  }
+
+  .ops-event {
+    height: auto;
+    min-height: 56px;
+    padding-top: var(--space-2);
+    padding-bottom: var(--space-2);
+  }
+}
