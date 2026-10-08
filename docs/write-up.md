@@ -53,7 +53,7 @@ Limitations I know about:
 - Search understands a fixed set of phrases and nothing else.
 - Risk and estimates are deterministic rules, not models, so they cannot learn.
 - There is only one scripted live event.
-- No auth, no tests, and a few rough edges: in ops, a port drop reads "Delivered" in the normalised column but "Delivered to port" on the timeline, and I added an "Awaiting update" customer status for stale shipments that was not in the spec.
+- No auth and no tests. I also added an "Awaiting update" customer status for shipments whose operator feed has gone quiet.
 
 Next steps, in order. First, real events behind a thin API with webhooks. Second, an evaluation set for the status mapper, before any LLM touches customer-facing text. Third, tests for the risk and search rules, which are the cheapest to cover. Then notification preferences, document upload and a map, once I know what customers actually ask for.
 

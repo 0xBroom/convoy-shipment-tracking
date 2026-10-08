@@ -32,7 +32,7 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 
 1. Switch to ops. Today opens with the daily summary, a few ranked next actions and the sites snapshot.
 2. Open Exceptions. Order 12345 sits in a port incident group with two other shipments. Click "Draft notice to customer" on 12345, read the drafted message, edit a word, then "Send notice to customer".
-3. Switch back to the customer. Order 12345 now shows a banner with that text, and Notifications has a new item with an unread count in the nav.
+3. Switch back to the customer. The banner on order 12345 changes from the earlier "documents lodged" update to the new delay notice, and Notifications has a new item with an unread count in the nav.
 4. Switch to ops again. In Portfolio, click the suggestion "shipments to France this week running late" (or type it). Three interpreted chips appear and the table narrows to one row. Remove the window chip and a second French shipment comes back.
 5. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
 6. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Docs lodged", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
