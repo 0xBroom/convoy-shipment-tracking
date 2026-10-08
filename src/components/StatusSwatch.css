@@ -1,0 +1,27 @@
+.swatch {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-data);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.swatch-square {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  background: var(--ink-2);
+}
+
+.swatch[data-tone='cleared'] .swatch-square {
+  background: var(--cleared);
+}
+
+.swatch[data-tone='amber'] .swatch-square {
+  background: var(--amber);
+}
+
+.swatch[data-tone='signal'] .swatch-square {
+  background: var(--signal);
+}

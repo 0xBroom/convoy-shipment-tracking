@@ -7,6 +7,7 @@ import { selectExceptions, selectUnreadCount } from '../store/selectors.js'
 import { useDispatch, useSelector, useStore } from '../store/useStore.js'
 import DemoControls from './DemoControls.jsx'
 import './Shell.css'
+import Toasts from './Toast.jsx'
 import Wordmark from './Wordmark.jsx'
 
 const ROLES = ['customer', 'ops']
@@ -120,6 +121,7 @@ export default function Shell() {
       <main className="shell-main" id="main" tabIndex={-1} data-role={role}>
         {synced ? <Outlet /> : null}
       </main>
+      <Toasts />
     </>
   )
 }

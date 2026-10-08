@@ -1,0 +1,21 @@
+.stamp {
+  display: inline-block;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--harbour);
+  border-radius: var(--radius-tag);
+  color: var(--harbour);
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-weight: 600;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.why {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.why-label {
+  font-weight: 600;
+}

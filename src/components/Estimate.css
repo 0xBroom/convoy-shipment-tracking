@@ -1,0 +1,91 @@
+/*
+  Estimate vs confirmed: solid means an operator confirmed it. Dashed means
+  nobody has. A hatch band marks a date Convoy moved. No dedicated colour, so
+  an estimate never looks like a status and still reads without colour.
+*/
+.estimate {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 var(--space-2);
+}
+
+.estimate-word {
+  color: var(--ink-2);
+}
+
+.estimate-value {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+  border-bottom: 2px dashed var(--ink-2);
+}
+
+.estimate[data-kind='estimated'] .estimate-value {
+  background: var(--hatch);
+}
+
+.estimate-confidence {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.estimate-confirmed {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.estimate-block {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.estimate-note {
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+/* ETA card: a ledger section, no radius, no shadow. */
+.estimate-card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4) 0;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+}
+
+.estimate-card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.estimate-display {
+  font-family: var(--font-data);
+  font-size: var(--text-30);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.estimate-display .estimate {
+  gap: var(--space-1) var(--space-3);
+}
+
+.estimate-display .estimate-word,
+.estimate-display .estimate-confidence {
+  font-family: var(--font-ui);
+  font-size: var(--text-14);
+  font-weight: 400;
+}
+
+.estimate-display .estimate-value {
+  font-weight: 600;
+}
+
+.estimate-source {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}

@@ -1,0 +1,11 @@
+.not-found {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  padding: var(--space-7) var(--space-4);
+  text-align: center;
+}
+
+.not-found p {
+  color: var(--ink-2);
+}

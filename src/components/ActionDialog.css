@@ -1,0 +1,78 @@
+/* A floating layer: the only dialog radius and shadow in the app. */
+.action-dialog {
+  width: min(560px, calc(100vw - 2 * var(--space-4)));
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-float);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+}
+
+.action-dialog[open] {
+  animation: dialog-in var(--dur-dialog) ease-out;
+}
+
+.action-dialog::backdrop {
+  background: color-mix(in oklab, var(--ink) 40%, transparent);
+}
+
+.action-body {
+  display: grid;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.action-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.action-text {
+  width: 100%;
+  resize: vertical;
+}
+
+.action-facts {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.action-facts p {
+  font-weight: 600;
+}
+
+.action-facts ul {
+  margin: 0;
+  padding-left: var(--space-4);
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  margin-top: var(--space-2);
+}
+
+@keyframes dialog-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (max-width: 720px) {
+  .action-dialog {
+    width: calc(100vw - 2 * var(--space-2));
+    max-height: calc(100dvh - 2 * var(--space-2));
+  }
+
+  .action-body {
+    padding: var(--space-4);
+  }
+
+  .action-buttons {
+    flex-direction: column-reverse;
+  }
+}

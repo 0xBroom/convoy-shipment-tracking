@@ -1,0 +1,349 @@
+/*
+  Route timeline. Horizontal: one grid column per leg, track on top, events
+  under it. Under 720px it becomes a vertical rail with the same shapes and
+  line styles. Class names are prefixed .timeline- to stay out of other
+  components' way.
+*/
+.timeline-wrap {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.timeline-scroll {
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.timeline {
+  display: grid;
+  grid-template-columns: var(--cols);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-leg {
+  min-width: 0;
+}
+
+/* Track: line, solid overlay, hatch band, nodes and the Now tick. */
+.timeline-track {
+  position: relative;
+  height: 56px;
+}
+
+.timeline-line {
+  position: absolute;
+  top: 36px;
+  right: 0;
+  left: 0;
+  border-top: 2px dashed var(--ink-2);
+}
+
+.timeline-solid {
+  position: absolute;
+  top: 35px;
+  left: 0;
+  width: calc(var(--share) * 100%);
+  height: 4px;
+  background: var(--ink);
+}
+
+.timeline-band {
+  position: absolute;
+  top: 42px;
+  right: 0;
+  left: calc(var(--share) * 100%);
+  height: 10px;
+  background: var(--hatch);
+}
+
+/* Place shapes: circle site, square port, diamond customs. */
+.timeline-node {
+  position: absolute;
+  top: 30px;
+  left: 0;
+  width: 14px;
+  height: 14px;
+  border: 2px solid var(--ink-2);
+  background: var(--surface);
+}
+
+.timeline-node-end {
+  right: 0;
+  left: auto;
+}
+
+.timeline-node[data-kind='site'] {
+  border-radius: 50%;
+}
+
+.timeline-node[data-kind='customs'] {
+  transform: rotate(45deg) scale(0.82);
+}
+
+.timeline-node[data-confirmed='true'] {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+/* Estimated and not confirmed: hollow with a dotted ring. */
+.timeline-node[data-estimated='true'] {
+  outline: 1px dotted var(--ink-2);
+  outline-offset: 2px;
+}
+
+.timeline-now {
+  position: absolute;
+  top: 8px;
+  left: calc(var(--share) * 100%);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
+  color: var(--ink);
+  transform: translateX(-6px);
+}
+
+.timeline-now[data-flip='true'] {
+  align-items: flex-end;
+  transform: translateX(calc(-100% + 6px));
+}
+
+.timeline-now-label {
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.timeline-now-row {
+  display: none;
+}
+
+/* Leg body */
+.timeline-body {
+  padding: var(--space-2) var(--space-4) 0 0;
+}
+
+.timeline-count {
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+.timeline-title {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-top: 2px;
+  font-size: var(--text-14);
+}
+
+.timeline-operator {
+  margin-top: var(--space-1);
+}
+
+.timeline-dwell {
+  margin-top: var(--space-1);
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+.timeline-events {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.timeline-event {
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  column-gap: var(--space-2);
+  padding: var(--space-1) var(--space-1) var(--space-1) 0;
+}
+
+.timeline-event[data-active='true'] {
+  background: var(--tint-harbour);
+}
+
+.timeline-dot {
+  grid-row: 1;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border: 2px solid var(--ink-2);
+  border-radius: 50%;
+  background: var(--surface);
+}
+
+.timeline-event[data-confirmed='true'] .timeline-dot {
+  border-color: var(--ink);
+  background: var(--ink);
+}
+
+.timeline-event > :not(.timeline-dot) {
+  grid-column: 2;
+}
+
+.timeline-event-label {
+  font-weight: 500;
+}
+
+/* An unmapped raw status is never guessed: the label says so. */
+.timeline-event-label[data-mapped='false'] {
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+.timeline-event-where {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.timeline-event-when {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 var(--space-2);
+  font-size: var(--text-13);
+}
+
+.timeline-event-when time {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.timeline-raw {
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+/* Legend: line samples, not a decoration. */
+.timeline-legend {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1) var(--space-2);
+  max-width: none;
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+.timeline-key {
+  display: inline-block;
+  width: 28px;
+  margin-left: var(--space-3);
+}
+
+.timeline-key:first-child {
+  margin-left: 0;
+}
+
+.timeline-key[data-key='confirmed'] {
+  border-top: 3px solid var(--ink);
+}
+
+.timeline-key[data-key='planned'] {
+  border-top: 2px dashed var(--ink-2);
+}
+
+.timeline-key[data-key='estimated'] {
+  height: 8px;
+  background: var(--hatch);
+  border-top: 2px dashed var(--ink-2);
+}
+
+@media (max-width: 720px) {
+  .timeline-scroll {
+    overflow-x: visible;
+  }
+
+  .timeline {
+    grid-template-columns: 1fr;
+  }
+
+  .timeline-leg {
+    display: grid;
+    grid-template-columns: 28px 1fr;
+    padding-bottom: var(--space-4);
+  }
+
+  .timeline-track {
+    height: auto;
+  }
+
+  .timeline-line {
+    top: 0;
+    bottom: 0;
+    left: 13px;
+    width: 0;
+    border-top: 0;
+    border-left: 2px dashed var(--ink-2);
+  }
+
+  .timeline-solid {
+    top: 0;
+    left: 12px;
+    width: 4px;
+    height: calc(var(--share) * 100%);
+  }
+
+  .timeline-band {
+    top: calc(var(--share) * 100%);
+    right: auto;
+    bottom: 0;
+    left: 18px;
+    width: 10px;
+    height: auto;
+  }
+
+  .timeline-node {
+    top: 0;
+    left: 6px;
+  }
+
+  .timeline-node-end {
+    top: auto;
+    right: auto;
+    bottom: 0;
+    left: 6px;
+  }
+
+  .timeline-now {
+    top: calc(var(--share) * 100%);
+    left: 18px;
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  .timeline-now[data-flip='true'] {
+    align-items: flex-start;
+    transform: translateY(-50%) rotate(-90deg);
+  }
+
+  .timeline-now-label {
+    display: none;
+  }
+
+  .timeline-body {
+    padding-top: 0;
+  }
+
+  /* The Now line moves into the list, right after the last confirmed event. */
+  .timeline-now-row {
+    display: block;
+    color: var(--ink);
+    font-family: var(--font-data);
+    font-size: var(--text-12);
+    font-weight: 600;
+  }
+
+  .timeline-event > .timeline-now-row {
+    grid-column: 2;
+  }
+}
+
+.timeline-title svg {
+  flex: none;
+}
