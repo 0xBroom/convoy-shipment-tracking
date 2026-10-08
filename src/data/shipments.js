@@ -1,5 +1,6 @@
 import { SITES_BY_ID } from './sites.js'
 import { t } from './time.js'
+import { DOCUMENT_TYPES } from './documents.js'
 
 /*
   Shipments are facts only: what the order promised (plan), what operators
@@ -45,7 +46,6 @@ const event = (operatorId, raw, location, legIndex, at, extra) => ({
   ...extra,
 })
 
-const DOCUMENT_TYPES = ['invoice', 'packing_list', 'bill_of_lading', 'customs_declaration']
 const documents = (overrides = {}) =>
   DOCUMENT_TYPES.map((type) => ({ type, status: 'ok', ...overrides[type] }))
 
