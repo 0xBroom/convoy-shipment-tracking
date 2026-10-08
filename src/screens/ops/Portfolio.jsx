@@ -8,6 +8,7 @@ import SearchBar from '../../components/SearchBar.jsx'
 import StatusSwatch from '../../components/StatusSwatch.jsx'
 import { CUSTOMERS_BY_ID } from '../../data/customers.js'
 import { COUNTRIES, SITES_BY_ID } from '../../data/sites.js'
+import { USERS } from '../../data/users.js'
 import {
   RISK_OPTIONS,
   STATUS_OPTIONS,
@@ -37,12 +38,16 @@ const initial = (q) => ({ q, text: q ?? '', ...interpret(q) })
 const uniqueBy = (items, key) => [...new Map(items.map((item) => [key(item), item])).values()]
 
 // The dropdown options come from the shipments this role can see, so a site,
-// country or customer that only the hidden shipment has is never offered.
+// country or customer that only the hidden shipment has is never offered. A
+// shipment can touch the perimeter at one end only, so sites are kept to the
+// ops user's own.
 function optionsOf(views) {
   const sites = uniqueBy(
-    views.flatMap((v) => [v.origin, v.destination]).filter((p) => p.siteId),
+    views.flatMap((v) => [v.origin, v.destination]).filter((p) => USERS.ops.sites.includes(p.siteId)),
     (p) => p.siteId,
-  ).map((p) => ({ value: p.siteId, label: SITES_BY_ID[p.siteId].name }))
+  )
+    .map((p) => ({ value: p.siteId, label: SITES_BY_ID[p.siteId].name }))
+    .sort((a, b) => a.label.localeCompare(b.label))
   const countries = [...new Set(views.map((v) => v.destination.country))]
     .map((code) => ({ value: code, label: COUNTRIES[code] }))
     .sort((a, b) => a.label.localeCompare(b.label))

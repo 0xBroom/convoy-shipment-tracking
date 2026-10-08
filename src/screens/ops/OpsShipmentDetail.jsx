@@ -13,7 +13,7 @@ import { NOW } from '../../data/now.js'
 import { fmtDateTime } from '../../lib/format.js'
 import { routeSentence } from '../../lib/route.js'
 import { isDelivered, lastEvent } from '../../lib/shipment.js'
-import { buildTimeline } from '../../lib/timeline.js'
+import { buildTimeline, eventLabel } from '../../lib/timeline.js'
 import { selectActivity, selectShipmentView } from '../../store/selectors.js'
 import { useLiveEventId, useSelector } from '../../store/useStore.js'
 import './OpsShipmentDetail.css'
@@ -53,7 +53,7 @@ function RawFeed({ events, activeId, setActive, liveId }) {
   )
 }
 
-function NormalisedFeed({ events, pending, activeId, setActive, liveId }) {
+function NormalisedFeed({ view, events, pending, activeId, setActive, liveId }) {
   return (
     <section className="ops-feed ops-norm" aria-labelledby="norm-heading">
       <h2 id="norm-heading">Convoy timeline (normalised)</h2>
@@ -63,7 +63,7 @@ function NormalisedFeed({ events, pending, activeId, setActive, liveId }) {
           <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} data-live={e.id === liveId} {...hooks(e.id, setActive)}>
             <span className="ops-event-main">
               <span className="ops-milestone" data-mapped={e.recognised}>
-                {e.label}
+                {eventLabel(view, e)}
               </span>
               {!e.recognised && <span className="ops-raw">&lsquo;{e.raw}&rsquo;</span>}
             </span>
@@ -192,6 +192,7 @@ export default function OpsShipmentDetail() {
       <div className="ops-columns">
         <RawFeed events={view.timeline} activeId={activeId} setActive={setActive} liveId={liveId} />
         <NormalisedFeed
+          view={view}
           events={view.timeline}
           pending={pending}
           activeId={activeId}

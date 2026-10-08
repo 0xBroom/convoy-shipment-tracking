@@ -31,6 +31,12 @@ function milestoneLabel(leg, isLast, milestone, label) {
   return leg.toKind === 'port' ? 'Delivered to port' : 'Handed over'
 }
 
+// The same rule for a normalised event, so the ops feed reads like the route.
+export function eventLabel(view, event) {
+  const leg = view.legs[event.legIndex]
+  return milestoneLabel(leg, event.legIndex === view.legs.length - 1, event.milestone, event.label)
+}
+
 export function buildTimeline(view, now = NOW) {
   const delivered = deliveredEvent(view) !== null
   const estimate = view.estimate

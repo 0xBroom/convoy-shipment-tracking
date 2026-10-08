@@ -50,8 +50,9 @@ function withShipment(state, shipmentId, change) {
 
 export function reducer(state, action) {
   switch (action.type) {
+    // Toasts belong to the role that raised them, so they do not follow it.
     case 'switchRole':
-      return state.role === action.role ? state : { ...state, role: action.role }
+      return state.role === action.role ? state : { ...state, role: action.role, toasts: [] }
 
     case 'sendNotice': {
       const shipment = state.shipments.byId[action.shipmentId]

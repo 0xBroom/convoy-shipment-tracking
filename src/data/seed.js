@@ -39,8 +39,8 @@ export const SEED_NOTICES = [
 
 // Ops activity log entries present when the demo loads (newest first at render).
 export const SEED_ACTIVITY = [
-  { id: 'activity-1', at: t(8, '11:05'), type: 'notice', shipmentId: '12345', text: 'Notice sent to customer' },
+  { id: 'activity-1', at: t(8, '11:05'), type: 'notice', shipmentId: '12345', text: 'Update sent to customer' },
   { id: 'activity-2', at: t(8, '10:20'), type: 'operator', shipmentId: '12418', text: 'Message sent to Iberroute' },
   { id: 'activity-3', at: t(7, '16:55'), type: 'operator', shipmentId: '12290', text: 'Message sent to Baltic Customs' },
-  { id: 'activity-4', at: t(7, '16:45'), type: 'notice', shipmentId: '12290', text: 'Notice sent to customer' },
+  { id: 'activity-4', at: t(7, '16:45'), type: 'notice', shipmentId: '12290', text: 'Update sent to customer' },
 ]
