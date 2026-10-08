@@ -1,0 +1,207 @@
+@import '@fontsource/barlow/400.css';
+@import '@fontsource/barlow/500.css';
+@import '@fontsource/barlow/600.css';
+@import '@fontsource/barlow-semi-condensed/500.css';
+@import '@fontsource/barlow-semi-condensed/600.css';
+
+/*
+  Tabular figures: Barlow ships the `tnum` feature, so the digits 0 to 9 share
+  one advance width when `font-variant-numeric: tabular-nums` is on (checked
+  against the bundled files: 527 units in Barlow 400, 507 in Barlow Semi
+  Condensed 600; the default figures are proportional). Numeric table cells
+  therefore only need right-alignment, no `ch` sizing workaround.
+*/
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--manifest);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-14);
+  font-weight: 400;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Headings and text */
+h1,
+h2,
+h3,
+h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: var(--text-24);
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: var(--text-16);
+  line-height: 1.3;
+}
+
+h3 {
+  font-size: var(--text-14);
+  line-height: 1.3;
+}
+
+p {
+  margin: 0;
+  max-width: var(--measure);
+}
+
+a {
+  color: var(--harbour);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+small {
+  font-size: var(--text-12);
+}
+
+:focus-visible {
+  outline: 2px solid var(--harbour);
+  outline-offset: 2px;
+}
+
+/* Tables: ledger rows, numbers right-aligned and tabular */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-variant-numeric: tabular-nums;
+}
+
+th,
+td {
+  height: var(--row-height);
+  padding: 0 var(--space-3);
+  border-bottom: 1px solid var(--rule);
+  text-align: left;
+  vertical-align: middle;
+  line-height: 1.3;
+}
+
+th {
+  font-weight: 600;
+  color: var(--ink-2);
+}
+
+.num {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+
+/* Buttons and inputs */
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 32px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--harbour);
+  border-radius: var(--radius-control);
+  background: var(--harbour);
+  color: #fff;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--dur-hover), border-color var(--dur-hover);
+}
+
+.button:hover {
+  background: color-mix(in oklab, var(--harbour) 85%, black);
+}
+
+.button-secondary {
+  background: var(--surface);
+  color: var(--harbour);
+  border-color: color-mix(in oklab, var(--harbour) 45%, var(--surface));
+}
+
+.button-secondary:hover {
+  background: var(--tint-harbour);
+}
+
+.button:disabled,
+.button[aria-disabled='true'] {
+  background: var(--manifest);
+  border-color: var(--rule);
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+.field {
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  border: 1px solid color-mix(in oklab, var(--ink) 35%, var(--manifest));
+  border-radius: var(--radius-control);
+  background: var(--surface);
+}
+
+textarea.field {
+  padding: var(--space-2);
+  line-height: 1.5;
+}
+
+/* Utilities */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  top: var(--space-2);
+  left: var(--space-2);
+  z-index: 100;
+  padding: var(--space-2) var(--space-3);
+  background: var(--surface);
+  border-radius: var(--radius-control);
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

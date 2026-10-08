@@ -1,0 +1,77 @@
+/*
+  Convoy design tokens. Six named colours; everything else is derived with
+  color-mix so the palette stays one decision. One light theme only.
+*/
+:root {
+  /* Named colours */
+  --manifest: #f4f5f3; /* page background, cool paper */
+  --ink: #1e2b38; /* text, confirmed data, solid strokes */
+  --harbour: #1d5c96; /* interactive only, and the Convoy stamp */
+  --cleared: #2e7d5b; /* on time, delivered, cleared */
+  --amber: #a65a16; /* at risk, delayed, stale, missing document (darkened from the first pass to reach AA on manifest) */
+  --signal: #b3261e; /* held at customs, port incident, rejected */
+
+  /* Derived neutrals */
+  --surface: #ffffff;
+  --rule: color-mix(in oklab, var(--ink) 14%, var(--manifest));
+  --ink-2: color-mix(in oklab, var(--ink) 76%, var(--manifest)); /* secondary text */
+  --ink-3: color-mix(in oklab, var(--ink) 66%, var(--manifest)); /* hints, still AA on manifest */
+  --tint-harbour: color-mix(in oklab, var(--harbour) 8%, white);
+
+  /* Status tints, for row flags only (10%) */
+  --tint-cleared: color-mix(in oklab, var(--cleared) 10%, white);
+  --tint-amber: color-mix(in oklab, var(--amber) 10%, white);
+  --tint-signal: color-mix(in oklab, var(--signal) 10%, white);
+
+  /* Estimated or planned area under a leg */
+  --hatch: repeating-linear-gradient(
+    135deg,
+    transparent 0 4px,
+    color-mix(in oklab, var(--ink) 10%, transparent) 4px 5px
+  );
+
+  /* Type */
+  --font-ui: 'Barlow', system-ui, sans-serif;
+  --font-data: 'Barlow Semi Condensed', 'Barlow', system-ui, sans-serif;
+
+  /* Scale: 12 / 13 / 14 / 16 / 20 / 24 / 30 / 38 */
+  --text-12: 0.75rem;
+  --text-13: 0.8125rem;
+  --text-14: 0.875rem;
+  --text-16: 1rem;
+  --text-20: 1.25rem;
+  --text-24: 1.5rem;
+  --text-30: 1.875rem;
+  --text-38: 2.375rem;
+
+  /* Spacing: 4 / 8 / 12 / 16 / 24 / 32 / 48 */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Radius by hierarchy: sections 0, tags and chips 2, controls 4, floating layers 6 */
+  --radius-section: 0;
+  --radius-tag: 2px;
+  --radius-control: 4px;
+  --radius-float: 6px;
+
+  /* Floating layers only: toast, dialog, search suggestions, menus */
+  --shadow-float: 0 8px 24px rgb(30 43 56 / 0.18);
+
+  /* Motion */
+  --dur-hover: 150ms;
+  --dur-dialog: 120ms;
+  --dur-toast: 200ms;
+  --dur-reveal: 600ms;
+  --dur-tint: 2s;
+
+  /* Layout */
+  --width-customer: 960px;
+  --width-ops: 1440px;
+  --row-height: 36px;
+  --measure: 64ch;
+}
