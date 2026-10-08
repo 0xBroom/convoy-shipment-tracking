@@ -1,0 +1,76 @@
+.demo {
+  position: relative;
+}
+
+/* Secondary on purpose: no fill, quiet border, secondary ink. */
+.demo-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-control);
+  background: transparent;
+  color: var(--ink-2);
+  font-size: var(--text-13);
+  cursor: pointer;
+  transition: background-color var(--dur-hover);
+}
+
+.demo-trigger:hover,
+.demo-trigger[aria-expanded='true'] {
+  background: var(--tint-harbour);
+}
+
+.demo-panel {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  right: 0;
+  z-index: 20;
+  display: grid;
+  min-width: 200px;
+  padding: var(--space-1);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-float);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+}
+
+.demo-item {
+  min-height: 36px;
+  padding: 0 var(--space-3);
+  border: 0;
+  border-radius: var(--radius-control);
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.demo-item:hover:not(:disabled) {
+  background: var(--tint-harbour);
+}
+
+.demo-item:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
+}
+
+/* Phone: icon button, label kept for assistive technology. */
+@media (max-width: 720px) {
+  .demo-trigger-label {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .demo-trigger {
+    min-width: 36px;
+    min-height: 36px;
+    justify-content: center;
+  }
+}
