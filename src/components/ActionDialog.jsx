@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { draftDocumentRequest, draftNotice, draftOperatorMessage } from '../ai/drafts.js'
-import { DOCUMENT_LABELS } from '../data/documents.js'
+import { DOCUMENT_LABELS, docLabel } from '../data/documents.js'
 import { fmtDateTime } from '../lib/format.js'
 import { contactTarget } from '../lib/shipment.js'
 import { contactOperator, requestDocument, sendNotice } from '../store/actions.js'
@@ -30,7 +30,7 @@ const ACTIONS = {
     send: (view, _action, text) => sendNotice({ shipmentId: view.id, kind: 'delay', text }),
   },
   request_document: {
-    title: (view, action) => `Request ${DOCUMENT_LABELS[action.docType].toLowerCase()}, order ${view.id}`,
+    title: (view, action) => `Request ${docLabel(action.docType)}, order ${view.id}`,
     confirm: 'Request document',
     draft: (view, action) => draftDocumentRequest(view, action.docType),
     facts(view, action) {

@@ -1,0 +1,46 @@
+.risk-level {
+  font-family: var(--font-data);
+  font-weight: 600;
+}
+
+.risk-level[data-level='high'] {
+  color: var(--signal);
+}
+
+.risk-level[data-level='medium'] {
+  color: var(--amber);
+}
+
+.risk-level[data-level='low'] {
+  color: var(--ink-2);
+}
+
+.reason-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Tags are stamps of the reason: 2px radius, hairline border, tone on the text. */
+.reason-tag {
+  padding: 0 var(--space-2);
+  border: 1px solid currentColor;
+  border-radius: var(--radius-tag);
+  background: var(--surface);
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-weight: 500;
+  line-height: 18px;
+  white-space: nowrap;
+}
+
+.reason-tag[data-tone='amber'] {
+  color: var(--amber);
+}
+
+.reason-tag[data-tone='signal'] {
+  color: var(--signal);
+}

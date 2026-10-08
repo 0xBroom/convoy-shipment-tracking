@@ -1,4 +1,4 @@
-import { DOCUMENT_LABELS } from '../data/documents.js'
+import { docLabel } from '../data/documents.js'
 import { INCIDENTS } from '../data/incidents.js'
 import { SITES_BY_ID } from '../data/sites.js'
 import { dayKey, fmtDateTime, fmtDuration, hoursSince } from '../lib/format.js'
@@ -86,7 +86,7 @@ export function describeAction(view, action, now) {
     }
     case 'request_document': {
       const doc = view.documents.find((d) => d.type === action.docType)
-      const label = DOCUMENT_LABELS[action.docType].toLowerCase()
+      const label = docLabel(action.docType)
       const reason =
         doc.status === 'rejected'
           ? `${label} rejected ${fmtDateTime(doc.rejectedAt)}`

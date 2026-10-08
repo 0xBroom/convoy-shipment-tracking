@@ -1,0 +1,206 @@
+.exceptions {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.exceptions-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+}
+
+.exceptions-count {
+  color: var(--ink-2);
+}
+
+.exceptions-empty {
+  padding: var(--space-6) 0;
+  color: var(--ink-2);
+}
+
+/* The port incident: one grouped entry above the ranked table, with the
+   signal rule every incident-related flag uses. */
+.incident {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-left: 3px solid var(--signal);
+  background: var(--surface);
+}
+
+.incident-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.incident-members {
+  display: grid;
+  margin: var(--space-2) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.incident-members > li {
+  display: grid;
+  grid-template-columns: 90px minmax(160px, 1fr) auto 200px;
+  align-items: center;
+  gap: var(--space-3);
+  min-height: 44px;
+  border-top: 1px solid var(--rule);
+}
+
+.incident-order {
+  font-family: var(--font-data);
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  background: var(--surface);
+  border-top: 1px solid var(--ink);
+}
+
+.exceptions-table {
+  min-width: 960px;
+}
+
+.exceptions-table th {
+  font-size: var(--text-13);
+}
+
+/* Rows are taller than 36px: reasons wrap and actions sit in a column. */
+.exceptions-table td {
+  height: 56px;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+  vertical-align: top;
+}
+
+/* 3px risk rule on the left of each row. */
+.exceptions-table tbody tr td:first-child {
+  box-shadow: inset 3px 0 0 var(--ink-3);
+}
+
+.exceptions-table tbody tr[data-level='high'] td:first-child {
+  box-shadow: inset 3px 0 0 var(--signal);
+}
+
+.exceptions-table tbody tr[data-level='medium'] td:first-child {
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+.exceptions-rank {
+  width: 56px;
+  color: var(--ink-2);
+}
+
+.exceptions-order {
+  min-width: 150px;
+}
+
+.exceptions-order-cell {
+  display: grid;
+  gap: 2px;
+}
+
+.exceptions-order-cell a {
+  font-family: var(--font-data);
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.exceptions-route {
+  color: var(--ink-2);
+  font-size: var(--text-12);
+}
+
+.exceptions-customer {
+  min-width: 120px;
+}
+
+.exceptions-proposed {
+  min-width: 200px;
+  max-width: 280px;
+}
+
+.exceptions-actions {
+  display: grid;
+  gap: var(--space-2);
+  justify-items: start;
+  min-width: 220px;
+}
+
+@media (max-width: 720px) {
+  .incident-members > li {
+    grid-template-columns: auto 1fr;
+    padding: var(--space-2) 0;
+  }
+
+  .incident-members > li > :nth-child(3),
+  .incident-members > li > :nth-child(4) {
+    grid-column: 1 / -1;
+  }
+
+  .table-scroll {
+    overflow: visible;
+    background: none;
+  }
+
+  .exceptions-table {
+    min-width: 0;
+  }
+
+  .exceptions-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .exceptions-table tbody tr {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: var(--space-2) var(--space-3);
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .exceptions-table tbody tr td:first-child {
+    box-shadow: none;
+  }
+
+  .exceptions-table tbody tr[data-level='high'] {
+    box-shadow: inset 3px 0 0 var(--signal);
+  }
+
+  .exceptions-table tbody tr[data-level='medium'] {
+    box-shadow: inset 3px 0 0 var(--amber);
+  }
+
+  .exceptions-table td {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .exceptions-rank {
+    width: auto;
+  }
+
+  .exceptions-customer,
+  .exceptions-table td:nth-child(5),
+  .exceptions-proposed,
+  .exceptions-table td:last-child {
+    grid-column: 1 / -1;
+    min-width: 0;
+    max-width: none;
+  }
+}
