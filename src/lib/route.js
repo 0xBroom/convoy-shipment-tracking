@@ -18,3 +18,11 @@ export function routeSentence(view) {
   })
   return stops.length ? `${routeShort(view)}, via ${joinList(stops)}` : routeShort(view)
 }
+
+// "Road", "Sea" or "Road + sea": the transport modes of a shipment. Customs is
+// a stop, not a mode of transport, so it is left out.
+export function modeSummary(view) {
+  const modes = [...new Set(view.legs.map((leg) => leg.mode).filter((mode) => mode !== 'customs'))]
+  const words = modes.map((mode) => mode.charAt(0).toUpperCase() + mode.slice(1))
+  return words.map((word, i) => (i === 0 ? word : word.toLowerCase())).join(' + ')
+}

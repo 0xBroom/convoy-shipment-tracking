@@ -1,0 +1,202 @@
+.portfolio {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.portfolio-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+}
+
+.portfolio-count {
+  color: var(--ink-2);
+}
+
+.portfolio-filters {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.portfolio-filter {
+  display: grid;
+  gap: var(--space-1);
+}
+
+.portfolio-filter label {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+  font-weight: 500;
+}
+
+.portfolio-filter .field {
+  width: 100%;
+}
+
+.portfolio-active {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  font-weight: 600;
+}
+
+.portfolio-clear {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--harbour);
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+
+.portfolio-empty {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-3);
+  padding: var(--space-6) 0;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  background: var(--surface);
+  border-top: 1px solid var(--ink);
+}
+
+.portfolio-table {
+  min-width: 1080px;
+}
+
+.portfolio-table th {
+  font-size: var(--text-13);
+}
+
+.portfolio-table tbody tr {
+  position: relative;
+}
+
+.portfolio-table tbody tr:hover {
+  background: var(--tint-harbour);
+}
+
+/* 3px risk rule on the left of each row, same as the exceptions queue. */
+.portfolio-table tbody tr td:first-child {
+  box-shadow: inset 3px 0 0 transparent;
+}
+
+.portfolio-table tbody tr[data-level='high'] td:first-child {
+  box-shadow: inset 3px 0 0 var(--signal);
+}
+
+.portfolio-table tbody tr[data-level='medium'] td:first-child {
+  box-shadow: inset 3px 0 0 var(--amber);
+}
+
+.portfolio-order a {
+  font-family: var(--font-data);
+  font-size: var(--text-16);
+  font-weight: 600;
+}
+
+.portfolio-route,
+.portfolio-customer,
+.portfolio-mode {
+  white-space: nowrap;
+}
+
+.portfolio-updated {
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+
+@media (max-width: 1080px) {
+  .portfolio-filters {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .portfolio-filters {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .table-scroll {
+    overflow: visible;
+    background: none;
+  }
+
+  .portfolio-table {
+    min-width: 0;
+  }
+
+  .portfolio-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  /* Stacked row: order and status on line one, route and customer next,
+     then risk, arrival and last update. */
+  .portfolio-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-3);
+    border-bottom: 1px solid var(--rule);
+    background: var(--surface);
+  }
+
+  .portfolio-table tbody tr td:first-child,
+  .portfolio-table tbody tr[data-level='high'] td:first-child,
+  .portfolio-table tbody tr[data-level='medium'] td:first-child {
+    box-shadow: none;
+  }
+
+  .portfolio-table tbody tr[data-level='high'] {
+    box-shadow: inset 3px 0 0 var(--signal);
+  }
+
+  .portfolio-table tbody tr[data-level='medium'] {
+    box-shadow: inset 3px 0 0 var(--amber);
+  }
+
+  .portfolio-table td {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .portfolio-route,
+  .portfolio-customer,
+  .portfolio-mode {
+    white-space: normal;
+  }
+
+  .portfolio-status {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .portfolio-risk {
+    justify-self: end;
+  }
+
+  .portfolio-customer,
+  .portfolio-route,
+  .portfolio-arrival,
+  .portfolio-updated {
+    grid-column: 1 / -1;
+  }
+
+  .portfolio-risk::before {
+    content: 'Risk ';
+    color: var(--ink-2);
+  }
+}

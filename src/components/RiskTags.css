@@ -44,3 +44,8 @@
 .reason-tag[data-tone='signal'] {
   color: var(--signal);
 }
+
+.risk-level[data-level='none'] {
+  color: var(--ink-3);
+  font-weight: 400;
+}

@@ -5,6 +5,7 @@ const VARIANTS = {
   suggests: 'Convoy suggests',
   summary: 'Convoy summary',
   drafted: 'Drafted by Convoy',
+  interpreted: 'Convoy search',
 }
 
 // The one marker for simulated output: a bordered stamp, no icon. Pair it with
