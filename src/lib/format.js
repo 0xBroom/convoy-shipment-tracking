@@ -59,3 +59,18 @@ export function fmtRelative(value, now) {
   const text = fmtDuration(Math.abs(hours))
   return hours < 0 ? `${text} ago` : `in ${text}`
 }
+
+// "Thursday 8 October". Built from parts so the output does not depend on the
+// ICU version's comma rules.
+const longDate = new Intl.DateTimeFormat('en-GB', {
+  weekday: 'long',
+  day: 'numeric',
+  month: 'long',
+  timeZone: TZ,
+})
+
+export function fmtLongDate(value) {
+  const parts = longDate.formatToParts(new Date(value))
+  const pick = (type) => parts.find((p) => p.type === type).value
+  return `${pick('weekday')} ${pick('day')} ${pick('month')}`
+}

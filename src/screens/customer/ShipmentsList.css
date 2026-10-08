@@ -1,0 +1,151 @@
+.shipments {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.shipments-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-4);
+}
+
+.shipments-count {
+  color: var(--ink-2);
+}
+
+.shipments-empty {
+  padding: var(--space-6) 0;
+  color: var(--ink-2);
+}
+
+.shipments-table {
+  background: var(--surface);
+  border-top: 1px solid var(--ink);
+}
+
+.shipments-table th {
+  height: 40px;
+  font-size: var(--text-13);
+}
+
+.shipments-table td {
+  height: 64px;
+  padding-top: var(--space-2);
+  padding-bottom: var(--space-2);
+}
+
+.shipments-table tbody tr {
+  position: relative;
+}
+
+.shipments-table tbody tr:hover {
+  background: var(--tint-harbour);
+}
+
+/* Rows that carry a Convoy notice get the 2px ink rule of a selected row. */
+.shipments-table tbody tr[data-notice='true'] td:first-child {
+  box-shadow: inset 2px 0 0 var(--ink);
+}
+
+.shipments-order {
+  width: 120px;
+  font-family: var(--font-data);
+  font-size: var(--text-20);
+  font-weight: 600;
+}
+
+.shipments-order a {
+  color: var(--ink);
+  text-decoration: none;
+}
+
+/* The whole row is the link target. */
+.shipments-order a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+.shipments-order a:focus-visible {
+  outline: none;
+}
+
+.shipments-table tbody tr:has(a:focus-visible) {
+  outline: 2px solid var(--harbour);
+  outline-offset: -2px;
+}
+
+.shipments-route {
+  display: grid;
+  gap: 2px;
+  align-content: center;
+}
+
+.shipments-notice {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
+  color: var(--amber);
+  font-size: var(--text-13);
+  font-weight: 500;
+}
+
+.shipments-arrival {
+  width: 300px;
+}
+
+@media (max-width: 720px) {
+  .shipments-table thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .shipments-table tbody tr {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: var(--space-1) var(--space-3);
+    padding: var(--space-3) var(--space-3);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .shipments-table td {
+    display: block;
+    height: auto;
+    padding: 0;
+    border: 0;
+  }
+
+  .shipments-table tbody tr[data-notice='true'] {
+    box-shadow: inset 2px 0 0 var(--ink);
+  }
+
+  .shipments-table tbody tr[data-notice='true'] td:first-child {
+    box-shadow: none;
+  }
+
+  .shipments-order {
+    width: auto;
+  }
+
+  .shipments-status {
+    justify-self: end;
+    align-self: center;
+  }
+
+  .shipments-route,
+  .shipments-arrival {
+    grid-column: 1 / -1;
+    width: auto;
+  }
+
+  .shipments-table td.shipments-route {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-3);
+  }
+}

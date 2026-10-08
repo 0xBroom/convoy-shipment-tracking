@@ -1,0 +1,88 @@
+.notices {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.notices-empty {
+  padding: var(--space-6) 0;
+  color: var(--ink-2);
+}
+
+.notices-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--ink);
+  background: var(--surface);
+}
+
+.notice {
+  display: grid;
+  grid-template-columns: 12px 1fr auto;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-bottom: 1px solid var(--rule);
+}
+
+/* Unread: a filled harbour square and a heavier title; read items stay quiet. */
+.notice-dot {
+  width: 8px;
+  height: 8px;
+  margin-top: 7px;
+}
+
+.notice[data-unread='true'] .notice-dot {
+  background: var(--harbour);
+  border-radius: 50%;
+}
+
+.notice-main {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: start;
+}
+
+.notice-main h2 {
+  font-weight: 500;
+}
+
+.notice[data-unread='true'] .notice-main h2 {
+  font-weight: 600;
+}
+
+.notice-body {
+  color: var(--ink-2);
+}
+
+.notice-time {
+  color: var(--ink-2);
+  font-family: var(--font-data);
+  font-size: var(--text-13);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+@media (max-width: 720px) {
+  .notice {
+    grid-template-columns: 12px 1fr;
+  }
+
+  /* Timestamps move under the title. */
+  .notice-time {
+    grid-row: 2;
+    grid-column: 2;
+  }
+
+  .notice-main {
+    display: contents;
+  }
+
+  .notice-main h2 {
+    grid-column: 2;
+  }
+
+  .notice-body,
+  .notice-main a {
+    grid-column: 2;
+  }
+}

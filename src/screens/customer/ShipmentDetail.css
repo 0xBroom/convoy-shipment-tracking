@@ -1,0 +1,87 @@
+.detail {
+  display: grid;
+  gap: var(--space-5);
+}
+
+.detail-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-4);
+}
+
+.detail-order {
+  font-family: var(--font-data);
+  font-size: var(--text-38);
+  line-height: 1.05;
+}
+
+.detail-route {
+  margin-top: var(--space-2);
+  color: var(--ink-2);
+  font-size: var(--text-16);
+}
+
+.detail-head .swatch {
+  margin-top: var(--space-2);
+  font-size: var(--text-16);
+}
+
+/* Proactive notice: amber 3px rule on a 10% tint, like every status flag. */
+.notice-banner {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: start;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  border-left: 3px solid var(--amber);
+  background: var(--tint-amber);
+}
+
+.notice-banner > svg {
+  margin-top: 2px;
+  color: var(--amber);
+}
+
+.notice-banner-body {
+  display: grid;
+  gap: var(--space-2);
+}
+
+.notice-banner-text {
+  max-width: var(--measure);
+}
+
+.notice-banner-meta {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.detail-section {
+  display: grid;
+  gap: var(--space-3);
+}
+
+@media (max-width: 720px) {
+  .detail-head {
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .detail-order {
+    font-size: var(--text-30);
+  }
+
+  .detail-head .swatch {
+    margin-top: 0;
+  }
+
+  .notice-banner {
+    grid-template-columns: auto 1fr;
+  }
+
+  .notice-banner .button {
+    grid-column: 2;
+    justify-self: start;
+  }
+}
