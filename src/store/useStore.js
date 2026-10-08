@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useState } from 'react'
 
 // The context object lives here, not in StoreProvider.jsx, so that file can
 // export only a component (react-refresh/only-export-components).
@@ -16,4 +16,13 @@ export const useDispatch = () => useStore().dispatch
 // perimeter and view caches in selectors.js keep that cheap.
 export function useSelector(select) {
   return select(useStore().state)
+}
+
+// The id of the live event, but only when it arrived while the calling screen
+// was mounted. A screen opened after the event shows it as plain history, so
+// the one orchestrated motion plays once, where the person is looking.
+export function useLiveEventId() {
+  const liveEventId = useStore().state.liveEventId
+  const [atMount] = useState(liveEventId)
+  return liveEventId !== null && liveEventId !== atMount ? liveEventId : null
 }

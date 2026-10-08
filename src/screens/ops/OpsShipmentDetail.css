@@ -79,6 +79,16 @@
   box-shadow: inset 2px 0 0 var(--harbour);
 }
 
+.ops-event[data-live='true'] {
+  animation: live-tint var(--dur-tint) ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ops-event[data-live='true'] {
+    animation-duration: var(--dur-tint) !important;
+  }
+}
+
 .ops-event-main {
   display: flex;
   align-items: baseline;

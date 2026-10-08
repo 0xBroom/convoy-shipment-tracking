@@ -251,7 +251,7 @@ export const SHIPMENTS = [
       event('medlines', 'GATE IN', 'Tarragona', 1, t(4, '17:00')),
       event('rhone-brokers', 'Déclaration déposée', 'Marseille', 2, t(6, '09:00')),
       event('medlines', 'VSL LOAD', 'Tarragona', 1, t(7, '09:00')),
-      event('medlines', 'VSL DEP', 'Tarragona', 1, t(8, '03:00'), { delayHours: 72 }),
+      event('medlines', 'VSL DEP', 'Tarragona', 1, t(8, '03:00'), { delayHours: 120 }),
     ],
   }),
 

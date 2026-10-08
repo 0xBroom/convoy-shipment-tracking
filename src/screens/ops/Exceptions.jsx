@@ -115,7 +115,7 @@ export default function Exceptions() {
                     <td className="exceptions-proposed">{proposedAction(view)}</td>
                     <td>
                       <div className="exceptions-actions">
-                        <ActionButtons view={view} />
+                        <ActionButtons view={view} emphasis />
                         <ActionStates view={view} />
                       </div>
                     </td>

@@ -61,12 +61,6 @@
   padding: var(--space-6) 0;
 }
 
-.table-scroll {
-  overflow-x: auto;
-  background: var(--surface);
-  border-top: 1px solid var(--ink);
-}
-
 .portfolio-table {
   min-width: 1080px;
 }
@@ -122,11 +116,6 @@
 @media (max-width: 720px) {
   .portfolio-filters {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .table-scroll {
-    overflow: visible;
-    background: none;
   }
 
   .portfolio-table {

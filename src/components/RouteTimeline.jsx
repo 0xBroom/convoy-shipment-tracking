@@ -3,6 +3,7 @@ import { fmtDateTime } from '../lib/format.js'
 import { MODE_LABELS } from '../data/milestones.js'
 import { OPERATORS_BY_ID } from '../data/operators.js'
 import { buildTimeline } from '../lib/timeline.js'
+import { useLiveEventId } from '../store/useStore.js'
 import AiStamp from './AiStamp.jsx'
 import { EstimatedTime } from './Estimate.jsx'
 import OperatorTag from './OperatorTag.jsx'
@@ -46,6 +47,8 @@ function legTitle(leg) {
 */
 export default function RouteTimeline({ view, activeEventId = null, onEventActive = null }) {
   const legs = buildTimeline(view)
+  const liveId = useLiveEventId()
+  const liveLeg = liveId ? legs.findIndex((leg) => leg.rows.some((row) => row.id === liveId)) : -1
   const estimated = legs.some((leg) => leg.estimated)
   const interactive = typeof onEventActive === 'function'
 
@@ -64,6 +67,7 @@ export default function RouteTimeline({ view, activeEventId = null, onEventActiv
                 className="timeline-leg"
                 data-state={entry.state}
                 data-estimated={entry.estimated}
+                data-live={entry.index === liveLeg ? 'here' : entry.index === liveLeg + 1 && liveLeg !== -1 ? 'next' : undefined}
                 style={{ '--share': entry.share }}
               >
                 <div className="timeline-track">
@@ -103,6 +107,7 @@ export default function RouteTimeline({ view, activeEventId = null, onEventActiv
                         data-event-id={row.id}
                         data-confirmed={row.confirmed}
                         data-active={row.id === activeEventId}
+                        data-live={row.id === liveId}
                         tabIndex={interactive && row.confirmed ? 0 : undefined}
                         onMouseEnter={interactive ? () => onEventActive(row.id) : undefined}
                         onMouseLeave={interactive ? () => onEventActive(null) : undefined}

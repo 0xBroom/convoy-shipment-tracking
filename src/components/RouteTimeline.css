@@ -191,10 +191,11 @@
   font-weight: 500;
 }
 
-/* An unmapped raw status is never guessed: the label says so. */
+/* An unmapped raw status is never guessed: the label says so, in a quieter
+   ink and never underlined, so it cannot be mistaken for a link. */
 .timeline-event-label[data-mapped='false'] {
-  text-decoration: underline dotted;
-  text-underline-offset: 3px;
+  color: var(--ink-2);
+  font-style: italic;
 }
 
 .timeline-event-where {
@@ -346,4 +347,66 @@
 
 .timeline-title svg {
   flex: none;
+}
+
+/*
+  The one orchestrated moment: the live event. The solid line of the leg that
+  received it redraws left to right, the node it reaches fills, and the new row
+  carries a tint that fades. Only plays when the event arrives while this
+  timeline is on screen. Reduced motion keeps the tint and drops the rest.
+*/
+.timeline-leg[data-live='here'] .timeline-solid {
+  transform-origin: left center;
+  animation: timeline-confirm var(--dur-reveal) ease-out;
+}
+
+.timeline-leg[data-live='next'] .timeline-node:not(.timeline-node-end) {
+  animation: timeline-node-fill 240ms ease-out var(--dur-reveal) backwards;
+}
+
+.timeline-event[data-live='true'] {
+  animation: live-tint var(--dur-tint) ease-out;
+}
+
+@keyframes timeline-confirm {
+  from {
+    transform: scaleX(0);
+  }
+}
+
+@keyframes timeline-node-fill {
+  from {
+    border-color: var(--ink-2);
+    background: var(--surface);
+  }
+}
+
+@keyframes live-tint {
+  from {
+    background: color-mix(in oklab, var(--harbour) 18%, white);
+  }
+}
+
+@media (max-width: 720px) {
+  .timeline-leg[data-live='here'] .timeline-solid {
+    transform-origin: center top;
+    animation-name: timeline-confirm-vertical;
+  }
+}
+
+@keyframes timeline-confirm-vertical {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-leg[data-live] .timeline-solid,
+  .timeline-leg[data-live] .timeline-node {
+    animation: none !important;
+  }
+
+  .timeline-event[data-live='true'] {
+    animation-duration: var(--dur-tint) !important;
+  }
 }

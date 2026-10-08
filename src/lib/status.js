@@ -9,6 +9,7 @@ const STATUSES = {
   held: { key: 'held', label: 'Held at customs', tone: 'signal' },
   delayed: { key: 'delayed', label: 'Delayed', tone: 'amber' },
   needs_document: { key: 'needs_document', label: 'Needs a document', tone: 'amber' },
+  stale: { key: 'stale', label: 'Awaiting update', tone: 'amber' },
   arriving_today: { key: 'arriving_today', label: 'Arriving today', tone: 'cleared' },
   on_time: { key: 'on_time', label: 'On time', tone: 'cleared' },
 }
@@ -19,9 +20,10 @@ export function deriveStatus(view, now = NOW) {
   if (view.risk.tags.includes('customs_hold')) return STATUSES.held
   if (view.risk.tags.includes('delay')) return STATUSES.delayed
   if (view.risk.tags.includes('missing_document')) return STATUSES.needs_document
+  if (view.risk.tags.includes('stale')) return STATUSES.stale
   const arrival = view.estimate?.value ?? new Date(view.legs.at(-1).plannedArrival)
   return dayKey(arrival) === dayKey(now) ? STATUSES.arriving_today : STATUSES.on_time
 }
 
 // Shipments the customer should look at first.
-export const needsAttention = (status) => ['held', 'delayed', 'needs_document'].includes(status.key)
+export const needsAttention = (status) => ['held', 'delayed', 'needs_document', 'stale'].includes(status.key)

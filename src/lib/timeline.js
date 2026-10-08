@@ -24,6 +24,13 @@ const LABELS = {
   cleared: 'Cleared',
 }
 
+// A road leg that is not the last one ends at a port or hub, not at the
+// customer. "Delivered" there would read as final delivery, so say where.
+function milestoneLabel(leg, isLast, milestone, label) {
+  if (milestone !== 'delivered' || isLast) return label
+  return leg.toKind === 'port' ? 'Delivered to port' : 'Handed over'
+}
+
 export function buildTimeline(view, now = NOW) {
   const delivered = deliveredEvent(view) !== null
   const estimate = view.estimate
@@ -50,7 +57,7 @@ export function buildTimeline(view, now = NOW) {
     const rows = events.map((e) => ({
       id: e.id,
       confirmed: true,
-      label: e.label,
+      label: milestoneLabel(leg, isLast, e.milestone, e.label),
       recognised: e.recognised,
       location: e.location,
       at: e.at,
@@ -67,7 +74,7 @@ export function buildTimeline(view, now = NOW) {
         rows.push({
           id: `${view.id}-leg${i}-${next}`,
           confirmed: false,
-          label: LABELS[next],
+          label: milestoneLabel(leg, isLast, next, LABELS[next]),
           recognised: true,
           location: leg.to.replace(/ port$/, ''),
           at,

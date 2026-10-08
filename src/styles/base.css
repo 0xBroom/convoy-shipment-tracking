@@ -146,6 +146,20 @@ textarea {
   background: var(--tint-harbour);
 }
 
+/* Quieter than secondary: for the extra actions on a dense row, where only the
+   proposed action should carry weight. Still a real button with a 32px target. */
+.button-quiet {
+  background: transparent;
+  border-color: transparent;
+  color: var(--harbour);
+}
+
+.button-quiet:hover {
+  background: var(--tint-harbour);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
 .button:disabled,
 .button[aria-disabled='true'] {
   background: var(--manifest);
@@ -165,6 +179,21 @@ textarea {
 textarea.field {
   padding: var(--space-2);
   line-height: 1.5;
+}
+
+/* A wide table scrolls inside its container; stacked screens opt out below 720px. */
+.table-scroll {
+  min-width: 0; /* as a grid child it must shrink, or the page scrolls */
+  overflow-x: auto;
+  background: var(--surface);
+  border-top: 1px solid var(--ink);
+}
+
+@media (max-width: 720px) {
+  .table-scroll {
+    overflow: visible;
+    background: none;
+  }
 }
 
 /* Utilities */

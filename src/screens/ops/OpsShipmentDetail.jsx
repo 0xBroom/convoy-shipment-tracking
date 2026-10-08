@@ -15,7 +15,7 @@ import { routeSentence } from '../../lib/route.js'
 import { isDelivered, lastEvent } from '../../lib/shipment.js'
 import { buildTimeline } from '../../lib/timeline.js'
 import { selectActivity, selectShipmentView } from '../../store/selectors.js'
-import { useSelector } from '../../store/useStore.js'
+import { useLiveEventId, useSelector } from '../../store/useStore.js'
 import './OpsShipmentDetail.css'
 
 // Hover or focus on an event on either side lights up its counterpart through
@@ -30,14 +30,14 @@ function hooks(id, setActive) {
   }
 }
 
-function RawFeed({ events, activeId, setActive }) {
+function RawFeed({ events, activeId, setActive, liveId }) {
   return (
     <section className="ops-feed" aria-labelledby="raw-heading">
       <h2 id="raw-heading">Operator feed (raw)</h2>
       <p className="ops-feed-hint">Each event as the operator sent it.</p>
       <ol className="ops-events">
         {events.map((e) => (
-          <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} {...hooks(e.id, setActive)}>
+          <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} data-live={e.id === liveId} {...hooks(e.id, setActive)}>
             <span className="ops-event-main">
               <span className="ops-event-operator">{e.operatorName}</span>
               <span className="ops-raw">&lsquo;{e.raw}&rsquo;</span>
@@ -53,14 +53,14 @@ function RawFeed({ events, activeId, setActive }) {
   )
 }
 
-function NormalisedFeed({ events, pending, activeId, setActive }) {
+function NormalisedFeed({ events, pending, activeId, setActive, liveId }) {
   return (
     <section className="ops-feed ops-norm" aria-labelledby="norm-heading">
       <h2 id="norm-heading">Convoy timeline (normalised)</h2>
       <p className="ops-feed-hint">The same events as canonical milestones.</p>
       <ol className="ops-events">
         {events.map((e) => (
-          <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} {...hooks(e.id, setActive)}>
+          <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} data-live={e.id === liveId} {...hooks(e.id, setActive)}>
             <span className="ops-event-main">
               <span className="ops-milestone" data-mapped={e.recognised}>
                 {e.label}
@@ -143,6 +143,7 @@ export default function OpsShipmentDetail() {
   const view = useSelector((state) => selectShipmentView(state, id))
   const activity = useSelector((state) => selectActivity(state, id))
   const [activeId, setActive] = useState(null)
+  const liveId = useLiveEventId()
 
   useEffect(() => {
     document.title = view ? `Order ${view.id}, Convoy` : 'Shipment not found, Convoy'
@@ -189,8 +190,14 @@ export default function OpsShipmentDetail() {
       </section>
 
       <div className="ops-columns">
-        <RawFeed events={view.timeline} activeId={activeId} setActive={setActive} />
-        <NormalisedFeed events={view.timeline} pending={pending} activeId={activeId} setActive={setActive} />
+        <RawFeed events={view.timeline} activeId={activeId} setActive={setActive} liveId={liveId} />
+        <NormalisedFeed
+          events={view.timeline}
+          pending={pending}
+          activeId={activeId}
+          setActive={setActive}
+          liveId={liveId}
+        />
 
         <div className="ops-rail">
           <RiskReasoning view={view} />

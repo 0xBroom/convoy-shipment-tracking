@@ -59,12 +59,6 @@
   font-weight: 600;
 }
 
-.table-scroll {
-  overflow-x: auto;
-  background: var(--surface);
-  border-top: 1px solid var(--ink);
-}
-
 .exceptions-table {
   min-width: 960px;
 }
@@ -132,7 +126,14 @@
   display: grid;
   gap: var(--space-2);
   justify-items: start;
-  min-width: 220px;
+  min-width: 200px;
+}
+
+/* One filled button (the proposed action), then the quiet ones in a column. */
+.exceptions-actions .action-buttons-row {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 
 @media (max-width: 720px) {
@@ -144,11 +145,6 @@
   .incident-members > li > :nth-child(3),
   .incident-members > li > :nth-child(4) {
     grid-column: 1 / -1;
-  }
-
-  .table-scroll {
-    overflow: visible;
-    background: none;
   }
 
   .exceptions-table {

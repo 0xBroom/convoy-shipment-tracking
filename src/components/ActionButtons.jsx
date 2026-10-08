@@ -21,7 +21,7 @@ export function ActionButton({ view, action, variant = 'secondary' }) {
     <>
       <button
         type="button"
-        className={variant === 'primary' ? 'button' : 'button button-secondary'}
+        className={`button${variant === 'primary' ? '' : ` button-${variant}`}`}
         onClick={() => setOpen(true)}
       >
         {LABELS[action.type]}
@@ -32,12 +32,28 @@ export function ActionButton({ view, action, variant = 'secondary' }) {
   )
 }
 
-export default function ActionButtons({ view, notice = true }) {
+// The action Convoy proposes: the first one still worth taking. A notice that
+// was already sent is not proposed again, and "awaiting" is a wait, not a task.
+function proposedOf(view) {
+  const open = view.risk.actions.find((a) => !(a.type === 'notify' && view.notified))
+  return open && open.type !== 'awaiting_operator' ? open : null
+}
+
+const sameAction = (a, b) => a && a.type === b.type && (a.docType ?? null) === (b.docType ?? null)
+
+// With `emphasis`, only the proposed action is filled and the rest are quiet,
+// so a dense row has one primary button that agrees with its proposed-action text.
+export default function ActionButtons({ view, notice = true, emphasis = false }) {
+  const proposed = emphasis ? proposedOf(view) : null
   return (
     <div className="action-buttons-row">
-      {actionsOf(view, { notice }).map((action) => (
-        <ActionButton key={`${action.type}-${action.docType ?? ''}`} view={view} action={action} />
-      ))}
+      {actionsOf(view, { notice })
+        .map((action) => ({ action, primary: emphasis && sameAction(proposed, action) }))
+        .sort((a, b) => Number(b.primary) - Number(a.primary))
+        .map(({ action, primary }) => {
+          const variant = !emphasis ? 'secondary' : primary ? 'primary' : 'quiet'
+          return <ActionButton key={`${action.type}-${action.docType ?? ''}`} view={view} action={action} variant={variant} />
+        })}
     </div>
   )
 }
