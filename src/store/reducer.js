@@ -116,10 +116,11 @@ export function reducer(state, action) {
           d.type === action.docType ? { ...d, status: 'sent', sentAt: nowIso(), sentTo: action.operatorId } : d,
         ),
       }))
+      const attached = action.attachments?.length ? `, attached ${action.attachments.join(', ')}` : ''
       return record(next, {
         type: 'document',
         shipmentId: shipment.id,
-        text: `${label} sent to ${name} by email`,
+        text: `${label} sent to ${name} by email${attached}`,
         detail: action.text,
         toast: `${label} sent to ${name}`,
       })

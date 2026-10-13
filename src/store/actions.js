@@ -18,12 +18,14 @@ export const requestDocument = ({ shipmentId, docType, operatorId, text }) => ({
   text,
 })
 
-export const sendDocument = ({ shipmentId, docType, operatorId, text }) => ({
+// `attachments` lists the file names that went with the document.
+export const sendDocument = ({ shipmentId, docType, operatorId, text, attachments = [] }) => ({
   type: 'sendDocument',
   shipmentId,
   docType,
   operatorId,
   text,
+  attachments,
 })
 
 export const contactOperator = ({ shipmentId, operatorId, text }) => ({

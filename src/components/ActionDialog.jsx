@@ -1,3 +1,4 @@
+import { FileText, Paperclip, X } from 'lucide-react'
 import { useRef, useState } from 'react'
 import { draftDocumentRequest, draftDocumentSend, draftNotice, draftOperatorMessage } from '../ai/drafts.js'
 import { DOCUMENT_LABELS, docLabel, documentFileName, isShipperDocument } from '../data/documents.js'
@@ -25,6 +26,50 @@ const toCustomer = (view) => ({ name: view.customerName, address: null, channel:
 function documentState(doc) {
   if (doc.status === 'rejected') return `rejected ${fmtDateTime(doc.rejectedAt)}`
   return doc.status === 'missing' && isShipperDocument(doc.type) ? 'not sent' : doc.status
+}
+
+// The file the ERP holds for a shipper document, and the extra files a person
+// can attach next to it. Nothing is read from disk: this prototype only names
+// files, so the sizes are fixed and the extras come from a short list.
+const ERP_FILE_SIZES = { invoice: '184 KB', packing_list: '121 KB', union_status: '77 KB' }
+const erpFile = (docType, shipmentId) => ({
+  name: documentFileName(docType, shipmentId),
+  size: ERP_FILE_SIZES[docType] ?? '96 KB',
+  source: 'from the ERP',
+})
+const EXTRA_FILES = [
+  { stem: 'cover-letter', size: '42 KB' },
+  { stem: 'certificate-of-origin', size: '96 KB' },
+  { stem: 'delivery-instructions', size: '18 KB' },
+]
+const extraFile = ({ stem, size }, shipmentId) => ({ name: `${stem}-${shipmentId}.pdf`, size, removable: true })
+
+function Attachments({ files, canAdd, onAdd, onRemove }) {
+  return (
+    <div className="action-attachments">
+      <p>Attachment</p>
+      <ul className="action-files">
+        {files.map((file) => (
+          <li key={file.name} className="action-file">
+            <FileText size={16} aria-hidden="true" />
+            <span className="action-file-name">{file.name}</span>
+            <span className="action-file-part">{file.size}</span>
+            {file.source && <span className="action-file-part">{file.source}</span>}
+            {file.removable && (
+              <button type="button" className="action-file-remove" aria-label={`Remove ${file.name}`} onClick={() => onRemove(file.name)}>
+                <X size={14} aria-hidden="true" />
+              </button>
+            )}
+          </li>
+        ))}
+      </ul>
+      <button type="button" className="button button-quiet action-attach" disabled={!canAdd} onClick={onAdd}>
+        <Paperclip size={14} aria-hidden="true" />
+        Attach another file
+      </button>
+      <p className="action-attach-note">This prototype does not read real files.</p>
+    </div>
+  )
 }
 
 // Each proposed action type from the risk engine maps to one dialog: its
@@ -58,17 +103,18 @@ const ACTIONS = {
         `Order ${view.id}, ${route(view)}`,
         `${DOCUMENT_LABELS[action.docType]}: ${documentState(doc)}`,
         doc.neededBy ? `Needed before ${doc.neededBy}` : null,
-        `Attachment: ${documentFileName(action.docType, view.id)}, from the ERP`,
       ]
     },
     why: 'Built from the document status, who needs it next on the route, and the file the ERP holds for this order. Nothing is sent until you confirm.',
     to: (view, action) => toOperator(documentRecipient(view, action.docType)),
-    send: (view, action, text) =>
+    attachments: true,
+    send: (view, action, text, attachments) =>
       sendDocument({
         shipmentId: view.id,
         docType: action.docType,
         operatorId: documentRecipient(view, action.docType).id,
         text,
+        attachments,
       }),
   },
   request_document: {
@@ -123,8 +169,15 @@ export default function ActionDialog({ view, action, onClose }) {
   const spec = ACTIONS[action.type]
   const dialog = useRef(null)
   const [text, setText] = useState(() => spec.draft(view, action))
+  const [extras, setExtras] = useState([])
   const titleId = `action-title-${view.id}`
   const to = spec.to(view, action)
+
+  // The ERP file always goes; extras are added and removed by name.
+  const files = spec.attachments ? [erpFile(action.docType, view.id), ...extras] : []
+  const nextExtra = EXTRA_FILES.find((candidate) => !extras.some((file) => file.name === extraFile(candidate, view.id).name))
+  const addExtra = () => setExtras((current) => [...current, extraFile(nextExtra, view.id)])
+  const removeExtra = (name) => setExtras((current) => current.filter((file) => file.name !== name))
 
   // Callback ref: opens the modal once, even when StrictMode runs it twice.
   const open = (node) => {
@@ -136,7 +189,7 @@ export default function ActionDialog({ view, action, onClose }) {
   const close = () => dialog.current?.close()
 
   const confirm = () => {
-    dispatch(spec.send(view, action, text.trim()))
+    dispatch(spec.send(view, action, text.trim(), files.map((file) => file.name)))
     close()
   }
 
@@ -173,6 +226,8 @@ export default function ActionDialog({ view, action, onClose }) {
             {text.length} / {MAX_TEXT}
           </p>
         </div>
+
+        {spec.attachments && <Attachments files={files} canAdd={Boolean(nextExtra)} onAdd={addExtra} onRemove={removeExtra} />}
 
         <div className="action-facts">
           <p>Facts used</p>

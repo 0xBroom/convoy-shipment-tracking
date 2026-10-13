@@ -57,6 +57,87 @@
   font-weight: 600;
 }
 
+/* Attachments: one file row per chip, the ERP file first, extras removable.
+   Set like the facts block so the two read as one ledger. */
+.action-attachments {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: start;
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.action-attachments > p:first-child {
+  font-weight: 600;
+}
+
+.action-files {
+  display: grid;
+  gap: var(--space-1);
+  justify-self: stretch;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.action-file {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 var(--space-2);
+  min-height: 28px;
+  padding: 2px var(--space-2);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-tag);
+  background: var(--manifest);
+}
+
+.action-file > svg {
+  flex: none;
+  color: var(--ink);
+}
+
+.action-file-name {
+  color: var(--ink);
+  font-family: var(--font-data);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.action-file-part::before {
+  content: '\00b7';
+  margin-right: var(--space-2);
+}
+
+.action-file-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-tag);
+  background: transparent;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.action-file-remove:hover {
+  background: var(--tint-harbour);
+  color: var(--harbour);
+}
+
+.action-attach {
+  margin-left: calc(-1 * var(--space-3));
+}
+
+.action-attach-note {
+  color: var(--ink-3);
+  font-size: var(--text-12);
+}
+
 .action-facts ul {
   margin: 0;
   padding-left: var(--space-4);
