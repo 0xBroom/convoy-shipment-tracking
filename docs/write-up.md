@@ -37,7 +37,7 @@ The live feed shows this over time: seven scripted operator events, one every fo
 
 Each dialog shows a "To" line with recipient and channel: email for operators, Convoy inbox plus email for customers. Documents follow ownership: the manufacturer issues the invoice, packing list and T2L, so ops sends those with the ERP file attached (the file picker is simulated); the carrier issues the bill of lading or CMR and the broker the customs declaration, so those are requested. The customer never receives a document request, and downloads any existing document as a one-page synthetic PDF generated in the browser.
 
-Drafts are written in the recipient's language. Rhone Industries and Rhone Brokers work in French, so messages to them are drafted in French; the dialog shows the language, its reason and a "Write in English instead" switch. Notices are capped at 600 characters.
+Drafts are written in the recipient's language. Rhone Industries and Rhone Brokers work in French, so messages to them are drafted in French; the dialog shows the language, its reason and a "Write in English instead" switch. The switch only goes towards English, the shared language of the trade: with many languages, Convoy could not know which one an English reader wants instead. Notices are capped at 600 characters.
 
 ## Technical approach
 

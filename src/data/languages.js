@@ -3,5 +3,7 @@
 // UI itself stays in English.
 export const LANGUAGES = { en: 'English', fr: 'French' }
 
-// The other one, for the "Write in … instead" switch.
-export const otherLanguage = (code) => (code === 'fr' ? 'en' : 'fr')
+// English is the shared language of the trade: the only fallback offered when
+// a draft is in the recipient's own language. There is no switch the other
+// way, since with many languages Convoy could not know which one to offer.
+export const FALLBACK_LANGUAGE = 'en'

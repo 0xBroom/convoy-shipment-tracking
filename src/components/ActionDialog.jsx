@@ -2,7 +2,7 @@ import { FileText, Paperclip, RotateCcw, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 import { draftDocumentRequest, draftDocumentSend, draftNotice, draftOperatorMessage, recipientLanguage } from '../ai/drafts.js'
 import { DOCUMENT_LABELS, docLabel, documentFileName, isShipperDocument } from '../data/documents.js'
-import { LANGUAGES, otherLanguage } from '../data/languages.js'
+import { FALLBACK_LANGUAGE, LANGUAGES } from '../data/languages.js'
 import { OPERATORS_BY_ID } from '../data/operators.js'
 import { documentRecipient } from '../lib/documents.js'
 import { fmtDateTime } from '../lib/format.js'
@@ -171,9 +171,10 @@ const ACTIONS = {
   short "Sending…" state has passed, and what is sent is the edited text.
   Cancel during that state drops the send.
 
-  The draft is written in the recipient's language. "Write in … instead"
-  switches it and regenerates the draft; the sent text keeps whichever
-  language it was written in.
+  The draft is written in the recipient's language. When that is not English,
+  "Write in English instead" regenerates it in English and "Back to French"
+  undoes that; an English draft offers no switch. The sent text keeps
+  whichever language it was written in.
 */
 export default function ActionDialog({ view, action, onClose }) {
   const dispatch = useDispatch()
@@ -197,8 +198,9 @@ export default function ActionDialog({ view, action, onClose }) {
   useEffect(() => () => clearTimeout(sendTimer.current), [])
 
   // A new language means a new draft; any edits to the old one are dropped.
+  const canSwitch = recipient.language !== FALLBACK_LANGUAGE
   const switchLanguage = () => {
-    const next = otherLanguage(language)
+    const next = chosen ? recipient.language : FALLBACK_LANGUAGE
     const regenerated = spec.draft(view, action, next)
     setLanguage(next)
     setDraft(regenerated)
@@ -307,9 +309,11 @@ export default function ActionDialog({ view, action, onClose }) {
                 {chosen ? 'your choice; ' : ''}
                 {recipient.reason}
               </span>
-              <button type="button" className="link-button action-language" disabled={sending} onClick={switchLanguage}>
-                Write in {LANGUAGES[otherLanguage(language)]} instead
-              </button>
+              {canSwitch && (
+                <button type="button" className="link-button action-language" disabled={sending} onClick={switchLanguage}>
+                  {chosen ? `Back to ${LANGUAGES[recipient.language]}` : `Write in ${LANGUAGES[FALLBACK_LANGUAGE]} instead`}
+                </button>
+              )}
             </dd>
           </div>
         </dl>
