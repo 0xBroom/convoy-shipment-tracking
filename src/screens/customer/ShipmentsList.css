@@ -46,7 +46,9 @@
 /* Rows that carry a Convoy notice get an inset ink bar at their start. It
    hangs off the row (already positioned for the row link), not the cell, so
    the link still covers the whole row. */
-.shipments-table tbody tr[data-notice='true']::before {
+/* Drawn from the order link, not the row: a pseudo-element on the <tr> itself
+   becomes an extra table cell in Chrome and shifts every column right. */
+.shipments-table tbody tr[data-notice='true'] .shipments-order a::before {
   content: '';
   position: absolute;
   top: var(--space-3);
