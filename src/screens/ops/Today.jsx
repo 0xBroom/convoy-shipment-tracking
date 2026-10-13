@@ -52,7 +52,7 @@ export default function Today() {
 
   return (
     <div className="today">
-      <header className="today-summary">
+      <header className="today-summary panel">
         <div className="today-meta">
           <h1>{fmtLongDate(NOW)}</h1>
           <AiStamp variant="summary" />
@@ -64,7 +64,7 @@ export default function Today() {
       </header>
 
       <div className="today-grid">
-        <section aria-labelledby="next-actions">
+        <section className="today-next panel" aria-labelledby="next-actions">
           <h2 id="next-actions">Next actions</h2>
           {summary.nextActions.length === 0 ? (
             <p className="today-empty">No actions waiting. Convoy lists them here as exceptions appear.</p>

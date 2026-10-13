@@ -83,12 +83,12 @@ export default function ShipmentDetail() {
 
       <Estimate view={view} variant="card" />
 
-      <section className="detail-section" aria-labelledby="route-heading">
+      <section className="detail-section panel" aria-labelledby="route-heading">
         <h2 id="route-heading">Route</h2>
         <RouteTimeline view={view} />
       </section>
 
-      <section className="detail-section" aria-labelledby="documents-heading">
+      <section className="detail-section panel" aria-labelledby="documents-heading">
         <h2 id="documents-heading">Documents</h2>
         <DocumentList
           documents={view.documents}

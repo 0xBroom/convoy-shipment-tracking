@@ -56,7 +56,7 @@ export default function Exceptions() {
       ) : (
         <>
           {shownGroups.map(({ incident, members }) => (
-            <section className="incident" key={incident.id} aria-labelledby={`incident-${incident.id}`}>
+            <section className="incident panel" key={incident.id} aria-labelledby={`incident-${incident.id}`}>
               <div className="incident-head">
                 <h2 id={`incident-${incident.id}`}>{incident.title}</h2>
                 <AiStamp variant="suggests" />

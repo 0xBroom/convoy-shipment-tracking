@@ -109,7 +109,7 @@ export default function Estimate({ view, variant = 'inline' }) {
 
   if (variant === 'card') {
     return (
-      <section className="estimate-card" aria-labelledby={`estimate-${view.id}`}>
+      <section className="estimate-card panel" aria-labelledby={`estimate-${view.id}`}>
         <div className="estimate-card-head">
           <h2 id={`estimate-${view.id}`}>{HEADINGS[arrival.kind]}</h2>
           {arrival.kind === 'estimated' && <AiStamp variant="estimate" />}

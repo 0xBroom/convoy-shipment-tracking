@@ -1,6 +1,6 @@
 .ops-detail {
   display: grid;
-  gap: var(--space-6);
+  gap: var(--space-4);
 }
 
 .ops-detail-head {
@@ -9,8 +9,7 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: var(--space-3) var(--space-5);
-  padding-bottom: var(--space-4);
-  border-bottom: 1px solid var(--ink);
+  padding-bottom: var(--space-2);
 }
 
 .ops-detail-order {
@@ -41,13 +40,14 @@
 .ops-columns {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 380px;
-  gap: var(--space-6);
+  gap: var(--space-4);
   align-items: start;
 }
 
+/* The feed rows run to the panel's edges and its bottom corners. */
 .ops-feed {
-  display: grid;
   gap: var(--space-2);
+  overflow: hidden;
 }
 
 .ops-feed-hint {
@@ -56,11 +56,10 @@
 }
 
 .ops-events {
-  margin: var(--space-2) 0 0;
+  margin: var(--space-2) calc(-1 * var(--panel-pad)) calc(-1 * var(--panel-pad));
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--ink);
-  background: var(--surface);
+  border-top: 1px solid var(--rule);
 }
 
 .ops-event {
@@ -68,15 +67,19 @@
   align-content: center;
   gap: 2px;
   height: 56px;
-  padding: 0 var(--space-3);
+  padding: 0 var(--panel-pad);
   border-bottom: 1px solid var(--rule);
   box-shadow: inset 2px 0 0 transparent;
   transition: background-color var(--dur-hover);
 }
 
+.ops-event:last-child {
+  border-bottom: 0;
+}
+
 .ops-event[data-active='true'] {
   background: var(--tint-harbour);
-  box-shadow: inset 2px 0 0 var(--harbour);
+  box-shadow: inset 3px 0 0 var(--harbour);
 }
 
 .ops-event[data-live='true'] {
@@ -161,14 +164,7 @@
 
 .ops-rail {
   display: grid;
-  gap: var(--space-5);
-}
-
-.ops-rail > section {
-  display: grid;
-  gap: var(--space-2);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--ink);
+  gap: var(--space-4);
 }
 
 .ops-panel-head {
@@ -203,8 +199,12 @@
   display: flex;
   justify-content: space-between;
   gap: var(--space-3);
-  padding: var(--space-1) 0;
+  padding: var(--space-2) 0;
   border-bottom: 1px solid var(--rule);
+}
+
+.ops-reasons > li:last-child {
+  border-bottom: 0;
 }
 
 .ops-weight {
@@ -240,13 +240,6 @@
 
 .ops-rail .docs-action:empty {
   display: none;
-}
-
-/* In the rail the card is one more section: same top rule and spacing as its
-   siblings, and no bottom rule of its own. */
-.ops-rail .estimate-card {
-  padding: var(--space-3) 0 0;
-  border-bottom: 0;
 }
 
 .ops-log {
@@ -288,7 +281,6 @@
 @media (max-width: 720px) {
   .ops-columns {
     grid-template-columns: 1fr;
-    gap: var(--space-5);
   }
 
   .ops-norm {

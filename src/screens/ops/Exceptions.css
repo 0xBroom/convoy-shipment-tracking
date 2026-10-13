@@ -1,6 +1,6 @@
 .exceptions {
   display: grid;
-  gap: var(--space-5);
+  gap: var(--space-4);
 }
 
 .exceptions-head {
@@ -20,14 +20,11 @@
   color: var(--ink-2);
 }
 
-/* The port incident: one grouped entry above the ranked table, with the
-   signal rule every incident-related flag uses. */
+/* The port incident: one grouped panel above the ranked table, held by a
+   signal-tinted rule instead of the neutral one. */
 .incident {
-  display: grid;
   gap: var(--space-2);
-  padding: var(--space-4);
-  border-left: 3px solid var(--signal);
-  background: var(--surface);
+  border-color: color-mix(in oklab, var(--signal) 32%, white);
 }
 
 .incident-head {

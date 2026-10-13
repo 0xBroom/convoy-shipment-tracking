@@ -35,7 +35,7 @@ export default function SearchBar({ text, onTextChange, interpreted, unreadable,
   }
 
   return (
-    <section className="search" aria-label="Search">
+    <section className="search panel" aria-label="Search">
       <form className="search-form" role="search" onSubmit={submit}>
         <label className="visually-hidden" htmlFor={inputId}>
           Search shipments

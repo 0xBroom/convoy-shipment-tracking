@@ -27,14 +27,15 @@
   font-size: var(--text-16);
 }
 
-/* Proactive notice: amber 3px rule on a 10% tint, like every status flag. */
+/* Proactive notice: a panel on the amber tint, held by an amber rule. */
 .notice-banner {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: start;
   gap: var(--space-3);
-  padding: var(--space-4);
-  border-left: 3px solid var(--amber);
+  padding: var(--panel-pad);
+  border: 1px solid color-mix(in oklab, var(--amber) 28%, white);
+  border-radius: var(--radius-panel);
   background: var(--tint-amber);
 }
 
@@ -71,8 +72,7 @@
 }
 
 .detail-section {
-  display: grid;
-  gap: var(--space-3);
+  gap: var(--space-4);
 }
 
 @media (max-width: 720px) {

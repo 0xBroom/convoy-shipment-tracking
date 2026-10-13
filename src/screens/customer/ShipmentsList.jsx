@@ -39,43 +39,45 @@ export default function ShipmentsList() {
       {rows.length === 0 ? (
         <p className="shipments-empty">No shipments yet. They appear here once your first order ships.</p>
       ) : (
-        <table className="shipments-table">
-          <thead>
-            <tr>
-              <th scope="col">Order</th>
-              <th scope="col">Route</th>
-              <th scope="col">Status</th>
-              <th scope="col">Arrival</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((view) => (
-              <tr key={view.id} data-notice={view.notice ? 'true' : 'false'} data-live={view.id === liveId}>
-                <td className="shipments-order">
-                  <Link to={`/customer/shipments/${view.id}`}>
-                    <span className="visually-hidden">Order </span>
-                    {view.id}
-                  </Link>
-                </td>
-                <td className="shipments-route">
-                  <span>{routeShort(view)}</span>
-                  {view.notice && (
-                    <span className="shipments-notice">
-                      <BellRing size={14} aria-hidden="true" />
-                      Notice from Convoy
-                    </span>
-                  )}
-                </td>
-                <td className="shipments-status">
-                  <StatusSwatch view={view} />
-                </td>
-                <td className="shipments-arrival">
-                  <Estimate view={view} variant="cell" />
-                </td>
+        <div className="table-scroll">
+          <table className="shipments-table">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Route</th>
+                <th scope="col">Status</th>
+                <th scope="col">Arrival</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {rows.map((view) => (
+                <tr key={view.id} data-notice={view.notice ? 'true' : 'false'} data-live={view.id === liveId}>
+                  <td className="shipments-order">
+                    <Link to={`/customer/shipments/${view.id}`}>
+                      <span className="visually-hidden">Order </span>
+                      {view.id}
+                    </Link>
+                  </td>
+                  <td className="shipments-route">
+                    <span>{routeShort(view)}</span>
+                    {view.notice && (
+                      <span className="shipments-notice">
+                        <BellRing size={14} aria-hidden="true" />
+                        Notice from Convoy
+                      </span>
+                    )}
+                  </td>
+                  <td className="shipments-status">
+                    <StatusSwatch view={view} />
+                  </td>
+                  <td className="shipments-arrival">
+                    <Estimate view={view} variant="cell" />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   )

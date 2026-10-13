@@ -48,8 +48,8 @@ h1 {
 }
 
 h2 {
-  font-size: var(--text-16);
-  line-height: 1.3;
+  font-size: var(--text-20);
+  line-height: 1.25;
 }
 
 h3 {
@@ -196,18 +196,62 @@ textarea.field {
   line-height: 1.5;
 }
 
-/* A wide table scrolls inside its container; stacked screens opt out below 720px. */
+/*
+  Panel: the surface of a primary object (a route, an estimate, a list of
+  actions). White on the paper background, one tinted rule, 12px corners and
+  no shadow; what sits inside stays flat, separated by row rules only.
+*/
+.panel {
+  display: grid;
+  align-content: start;
+  gap: var(--space-3);
+  min-width: 0;
+  padding: var(--panel-pad);
+  border: 1px solid var(--rule-panel);
+  border-radius: var(--radius-panel);
+  background: var(--surface);
+}
+
+/* A panel's title row: heading on the left, a Convoy stamp on the right. */
+.panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+/* A wide table scrolls inside its panel; stacked screens opt out below 720px.
+   The panel has no padding: rows run edge to edge and the first and last
+   cells carry the inset. */
 .table-scroll {
   min-width: 0; /* as a grid child it must shrink, or the page scrolls */
   overflow-x: auto;
+  border: 1px solid var(--rule-panel);
+  border-radius: var(--radius-panel);
   background: var(--surface);
-  border-top: 1px solid var(--ink);
+}
+
+.table-scroll th:first-child,
+.table-scroll td:first-child {
+  padding-left: var(--space-4);
+}
+
+.table-scroll th:last-child,
+.table-scroll td:last-child {
+  padding-right: var(--space-4);
+}
+
+.table-scroll tbody tr:last-child > * {
+  border-bottom: 0;
 }
 
 @media (max-width: 720px) {
   .table-scroll {
-    overflow: visible;
-    background: none;
+    overflow: hidden;
+  }
+
+  .table-scroll tbody tr:last-child {
+    border-bottom: 0;
   }
 }
 

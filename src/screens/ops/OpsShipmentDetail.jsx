@@ -37,7 +37,7 @@ function hooks(id, setActive) {
 // An unrecognised row already says "Not mapped" in its tag.
 function RawFeed({ view, events, activeId, setActive, liveId }) {
   return (
-    <section className="ops-feed" aria-labelledby="raw-heading">
+    <section className="ops-feed panel" aria-labelledby="raw-heading">
       <div className="ops-panel-head">
         <h2 id="raw-heading">Operator feed (raw)</h2>
         <AiStamp variant="convoy" dense className="ops-feed-stamp" />
@@ -72,7 +72,7 @@ function RawFeed({ view, events, activeId, setActive, liveId }) {
 
 function NormalisedFeed({ view, events, pending, activeId, setActive, liveId }) {
   return (
-    <section className="ops-feed ops-norm" aria-labelledby="norm-heading">
+    <section className="ops-feed ops-norm panel" aria-labelledby="norm-heading">
       <h2 id="norm-heading">Convoy timeline (normalised)</h2>
       <p className="ops-feed-hint">The same events as canonical milestones.</p>
       <ol className="ops-events">
@@ -109,7 +109,7 @@ function RiskReasoning({ view }) {
   const { risk } = view
   const action = risk.actions.find((a) => !(a.type === 'notify' && view.notified)) ?? risk.actions[0]
   return (
-    <section aria-labelledby="risk-heading">
+    <section className="panel" aria-labelledby="risk-heading">
       <div className="ops-panel-head">
         <h2 id="risk-heading">Risk reasoning</h2>
         <AiStamp variant="suggests" />
@@ -140,7 +140,7 @@ function RiskReasoning({ view }) {
 
 function Actions({ view }) {
   return (
-    <section aria-labelledby="actions-heading">
+    <section className="panel" aria-labelledby="actions-heading">
       <div className="ops-panel-head">
         <h2 id="actions-heading">Actions</h2>
         <AiStamp variant="drafted" />
@@ -202,7 +202,7 @@ export default function OpsShipmentDetail() {
         </div>
       </header>
 
-      <section aria-labelledby="route-heading">
+      <section className="panel" aria-labelledby="route-heading">
         <h2 id="route-heading">Route</h2>
         <RouteTimeline view={view} activeEventId={activeId} onEventActive={setActive} />
       </section>
@@ -223,12 +223,12 @@ export default function OpsShipmentDetail() {
           <Estimate view={view} variant="card" />
           {!delivered && <Actions view={view} />}
 
-          <section aria-labelledby="docs-heading">
+          <section className="panel" aria-labelledby="docs-heading">
             <h2 id="docs-heading">Documents</h2>
             <DocumentList documents={view.documents} renderAction={documentAction} />
           </section>
 
-          <section aria-labelledby="past-heading">
+          <section className="panel" aria-labelledby="past-heading">
             <h2 id="past-heading">Past actions</h2>
             {activity.length === 0 ? (
               <p className="ops-quiet">Nothing has been sent for this shipment yet.</p>

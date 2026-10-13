@@ -52,13 +52,9 @@
   font-size: var(--text-12);
 }
 
-/* ETA card: a ledger section, no radius, no shadow. */
+/* ETA card: a panel (see .panel in base.css), a little tighter inside. */
 .estimate-card {
-  display: grid;
   gap: var(--space-2);
-  padding: var(--space-4) 0;
-  border-top: 1px solid var(--rule);
-  border-bottom: 1px solid var(--rule);
 }
 
 .estimate-card-head {

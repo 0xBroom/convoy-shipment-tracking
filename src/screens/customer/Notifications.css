@@ -12,15 +12,21 @@
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--ink);
+  border: 1px solid var(--rule-panel);
+  border-radius: var(--radius-panel);
   background: var(--surface);
+  overflow: hidden;
+}
+
+.notice:last-child {
+  border-bottom: 0;
 }
 
 .notice {
   display: grid;
   grid-template-columns: 12px 1fr auto;
   gap: var(--space-3);
-  padding: var(--space-4);
+  padding: var(--space-4) var(--panel-pad);
   border-bottom: 1px solid var(--rule);
 }
 
@@ -43,6 +49,7 @@
 }
 
 .notice-main h2 {
+  font-size: var(--text-16);
   font-weight: 500;
 }
 
