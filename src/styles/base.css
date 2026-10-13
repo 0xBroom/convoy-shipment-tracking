@@ -253,6 +253,12 @@ textarea.field {
   .table-scroll tbody tr:last-child {
     border-bottom: 0;
   }
+
+  /* Stacked rows carry their own inset; the cells do not. */
+  .table-scroll td:first-child,
+  .table-scroll td:last-child {
+    padding-inline: 0;
+  }
 }
 
 /* Utilities */

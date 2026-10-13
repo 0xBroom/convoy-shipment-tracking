@@ -22,6 +22,13 @@
   --tint-cleared: color-mix(in oklab, var(--cleared) 10%, white);
   --tint-amber: color-mix(in oklab, var(--amber) 10%, white);
   --tint-signal: color-mix(in oklab, var(--signal) 10%, white);
+  --tint-neutral: color-mix(in oklab, var(--ink) 7%, white);
+
+  /* Text on those tints: each tone pulled a little towards ink so a label
+     on its own tint stays above 4.5:1. */
+  --on-tint-cleared: color-mix(in oklab, var(--cleared) 78%, var(--ink));
+  --on-tint-amber: color-mix(in oklab, var(--amber) 78%, var(--ink));
+  --on-tint-signal: color-mix(in oklab, var(--signal) 88%, var(--ink));
 
   /* Route line states. Confirmed is solid ink; planned is a thin dashed line
      in a lighter ink (3.3:1 on manifest, enough for a graphic); moved by a

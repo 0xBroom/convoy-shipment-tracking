@@ -2,7 +2,7 @@
   display: inline-block;
   padding: 0 var(--space-2);
   border: 1px solid var(--rule);
-  border-radius: var(--radius-tag);
+  border-radius: var(--radius-pill);
   background: var(--surface);
   font-family: var(--font-data);
   font-size: var(--text-12);

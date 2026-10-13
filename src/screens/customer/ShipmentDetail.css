@@ -24,7 +24,9 @@
 
 .detail-head .swatch {
   margin-top: var(--space-2);
+  padding: 0 var(--space-3);
   font-size: var(--text-16);
+  line-height: 32px;
 }
 
 /* Proactive notice: a panel on the amber tint, held by an amber rule. */

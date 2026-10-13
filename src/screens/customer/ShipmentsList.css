@@ -43,9 +43,18 @@
   animation: live-row var(--dur-tint) ease-out;
 }
 
-/* Rows that carry a Convoy notice get the 2px ink rule of a selected row. */
-.shipments-table tbody tr[data-notice='true'] td:first-child {
-  box-shadow: inset 2px 0 0 var(--ink);
+/* Rows that carry a Convoy notice get an inset ink bar at their start. It
+   hangs off the row (already positioned for the row link), not the cell, so
+   the link still covers the whole row. */
+.shipments-table tbody tr[data-notice='true']::before {
+  content: '';
+  position: absolute;
+  top: var(--space-3);
+  bottom: var(--space-3);
+  left: 6px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--ink);
 }
 
 .shipments-order {
@@ -76,14 +85,15 @@
   outline-offset: -2px;
 }
 
-.shipments-route {
-  display: grid;
-  gap: 2px;
-  align-content: center;
+/* The cell stays a table cell (a grid cell would sit half a pixel off its
+   row and break the row rule); its two lines stack as blocks. */
+.shipments-route > span:first-child {
+  display: block;
 }
 
 .shipments-notice {
-  display: inline-flex;
+  display: flex;
+  margin-top: 2px;
   align-items: center;
   gap: var(--space-1);
   color: var(--amber);
@@ -119,19 +129,13 @@
     border: 0;
   }
 
-  .shipments-table tbody tr[data-notice='true'] {
-    box-shadow: inset 2px 0 0 var(--ink);
-  }
-
-  .shipments-table tbody tr[data-notice='true'] td:first-child {
-    box-shadow: none;
-  }
-
   .shipments-order {
     width: auto;
   }
 
   .shipments-status {
+    grid-column: 2;
+    grid-row: 1;
     justify-self: end;
     align-self: center;
   }

@@ -1,27 +1,34 @@
+/* Status as a tinted pill: the word in the tone's text colour on the tone's
+   10% tint. The colour only flags; the word carries the meaning. */
 .swatch {
   display: inline-flex;
   align-items: center;
-  gap: var(--space-2);
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  background: var(--tint-neutral);
+  color: var(--ink-2);
   font-family: var(--font-data);
-  font-weight: 500;
+  font-size: var(--text-13);
+  font-weight: 600;
+  line-height: 24px;
   white-space: nowrap;
 }
 
 .swatch-square {
-  flex: none;
-  width: 8px;
-  height: 8px;
-  background: var(--ink-2);
+  display: none;
 }
 
-.swatch[data-tone='cleared'] .swatch-square {
-  background: var(--cleared);
+.swatch[data-tone='cleared'] {
+  background: var(--tint-cleared);
+  color: var(--on-tint-cleared);
 }
 
-.swatch[data-tone='amber'] .swatch-square {
-  background: var(--amber);
+.swatch[data-tone='amber'] {
+  background: var(--tint-amber);
+  color: var(--on-tint-amber);
 }
 
-.swatch[data-tone='signal'] .swatch-square {
-  background: var(--signal);
+.swatch[data-tone='signal'] {
+  background: var(--tint-signal);
+  color: var(--on-tint-signal);
 }

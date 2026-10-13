@@ -81,17 +81,25 @@
   animation: live-row var(--dur-tint) ease-out;
 }
 
-/* 3px risk rule on the left of each row, same as the exceptions queue. */
-.portfolio-table tbody tr td:first-child {
-  box-shadow: inset 3px 0 0 transparent;
+/* Risk bar at the start of each row, same as the exceptions queue; only
+   high and medium carry one. */
+.portfolio-table tbody td:first-child {
+  position: relative;
 }
 
-.portfolio-table tbody tr[data-level='high'] td:first-child {
-  box-shadow: inset 3px 0 0 var(--signal);
+.portfolio-table tbody tr:is([data-level='high'], [data-level='medium']) td:first-child::before {
+  content: '';
+  position: absolute;
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: 6px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--amber);
 }
 
-.portfolio-table tbody tr[data-level='medium'] td:first-child {
-  box-shadow: inset 3px 0 0 var(--amber);
+.portfolio-table tbody tr[data-level='high'] td:first-child::before {
+  background: var(--signal);
 }
 
 .portfolio-order a {
@@ -140,15 +148,12 @@
     display: grid;
     grid-template-columns: 1fr auto;
     gap: var(--space-1) var(--space-3);
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--rule);
-    background: var(--surface);
   }
 
-  .portfolio-table tbody tr td:first-child,
-  .portfolio-table tbody tr[data-level='high'] td:first-child,
-  .portfolio-table tbody tr[data-level='medium'] td:first-child {
-    box-shadow: none;
+  .portfolio-table tbody td:first-child::before {
+    display: none !important;
   }
 
   .portfolio-table tbody tr[data-level='high'] {

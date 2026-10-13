@@ -78,17 +78,29 @@
   vertical-align: top;
 }
 
-/* 3px risk rule on the left of each row. */
-.exceptions-table tbody tr td:first-child {
-  box-shadow: inset 3px 0 0 var(--ink-3);
+/* Risk bar: a 3px rounded mark inset at the start of each row, in the level
+   colour, so the queue scans by colour before the pill is read. */
+.exceptions-table tbody td:first-child {
+  position: relative;
 }
 
-.exceptions-table tbody tr[data-level='high'] td:first-child {
-  box-shadow: inset 3px 0 0 var(--signal);
+.exceptions-table tbody td:first-child::before {
+  content: '';
+  position: absolute;
+  top: var(--space-2);
+  bottom: var(--space-2);
+  left: 6px;
+  width: 3px;
+  border-radius: var(--radius-pill);
+  background: var(--ink-3);
 }
 
-.exceptions-table tbody tr[data-level='medium'] td:first-child {
-  box-shadow: inset 3px 0 0 var(--amber);
+.exceptions-table tbody tr[data-level='high'] td:first-child::before {
+  background: var(--signal);
+}
+
+.exceptions-table tbody tr[data-level='medium'] td:first-child::before {
+  background: var(--amber);
 }
 
 .exceptions-rank {
@@ -166,13 +178,12 @@
     display: grid;
     grid-template-columns: auto 1fr auto;
     gap: var(--space-2) var(--space-3);
-    padding: var(--space-3);
+    padding: var(--space-3) var(--space-4);
     border-bottom: 1px solid var(--rule);
-    background: var(--surface);
   }
 
-  .exceptions-table tbody tr td:first-child {
-    box-shadow: none;
+  .exceptions-table tbody td:first-child::before {
+    display: none;
   }
 
   .exceptions-table tbody tr[data-level='high'] {

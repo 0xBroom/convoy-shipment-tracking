@@ -1,18 +1,26 @@
+/* Risk level: a tinted pill like the status, so the two read as one family.
+   "None" stays plain quiet text: there is nothing to flag. */
 .risk-level {
+  display: inline-block;
+  padding: 0 10px;
+  border-radius: var(--radius-pill);
+  background: var(--tint-neutral);
+  color: var(--ink-2);
   font-family: var(--font-data);
+  font-size: var(--text-13);
   font-weight: 600;
+  line-height: 24px;
+  white-space: nowrap;
 }
 
 .risk-level[data-level='high'] {
-  color: var(--signal);
+  background: var(--tint-signal);
+  color: var(--on-tint-signal);
 }
 
 .risk-level[data-level='medium'] {
-  color: var(--amber);
-}
-
-.risk-level[data-level='low'] {
-  color: var(--ink-2);
+  background: var(--tint-amber);
+  color: var(--on-tint-amber);
 }
 
 .reason-tags {
@@ -24,28 +32,31 @@
   list-style: none;
 }
 
-/* Tags are stamps of the reason: 2px radius, hairline border, tone on the text. */
+/* Reasons are outlined pills, one step quieter than the filled level pill
+   beside them: a tinted rule, tone on the text, white inside. */
 .reason-tag {
   padding: 0 var(--space-2);
-  border: 1px solid currentColor;
-  border-radius: var(--radius-tag);
+  border: 1px solid color-mix(in oklab, currentColor 40%, white);
+  border-radius: var(--radius-pill);
   background: var(--surface);
   font-family: var(--font-data);
   font-size: var(--text-12);
   font-weight: 500;
-  line-height: 18px;
+  line-height: 20px;
   white-space: nowrap;
 }
 
 .reason-tag[data-tone='amber'] {
-  color: var(--amber);
+  color: var(--on-tint-amber);
 }
 
 .reason-tag[data-tone='signal'] {
-  color: var(--signal);
+  color: var(--on-tint-signal);
 }
 
 .risk-level[data-level='none'] {
+  padding: 0;
+  background: none;
   color: var(--ink-3);
   font-weight: 400;
 }
