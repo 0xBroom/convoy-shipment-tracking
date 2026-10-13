@@ -33,12 +33,26 @@
 .action-field {
   display: grid;
   gap: var(--space-1);
-  justify-items: end;
 }
 
 .action-text {
   width: 100%;
   resize: vertical;
+}
+
+/* Under the text: the way back to the draft, once it was edited, and the
+   counter at the end. */
+.action-field-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-3);
+  min-height: 24px;
+}
+
+.action-regenerate {
+  min-height: 24px;
+  font-size: var(--text-13);
 }
 
 .action-count {

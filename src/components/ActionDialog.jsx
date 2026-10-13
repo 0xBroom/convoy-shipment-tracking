@@ -1,5 +1,5 @@
-import { FileText, Paperclip, X } from 'lucide-react'
-import { useRef, useState } from 'react'
+import { FileText, Paperclip, RotateCcw, X } from 'lucide-react'
+import { useEffect, useRef, useState } from 'react'
 import { draftDocumentRequest, draftDocumentSend, draftNotice, draftOperatorMessage } from '../ai/drafts.js'
 import { DOCUMENT_LABELS, docLabel, documentFileName, isShipperDocument } from '../data/documents.js'
 import { OPERATORS_BY_ID } from '../data/operators.js'
@@ -15,6 +15,10 @@ const route = (view) => `${view.origin.city} to ${view.destination.city}`
 
 // Every draft fits with room to edit; the counter shows how much is left.
 const MAX_TEXT = 600
+
+// How long the confirm button reads "Sending…" before the action lands.
+// Long enough to be seen, short enough not to be waited for.
+const SENDING_MS = 500
 
 // Where a message goes: operators by email, the customer through their Convoy
 // inbox with an email copy. The dialog shows this line so the channel is
@@ -161,17 +165,24 @@ const ACTIONS = {
   Draft, preview, confirm. Pass the shipment view and the proposed action
   ({ type: 'notify' | 'send_document' | 'request_document' | 'contact_operator',
   docType? }); mount it while the dialog should be open and unmount it in
-  onClose. Nothing is dispatched until the confirm button is clicked, and what
-  is sent is the edited text.
+  onClose. Nothing is dispatched until the confirm button is clicked and the
+  short "Sending…" state has passed, and what is sent is the edited text.
+  Cancel during that state drops the send.
 */
 export default function ActionDialog({ view, action, onClose }) {
   const dispatch = useDispatch()
   const spec = ACTIONS[action.type]
   const dialog = useRef(null)
-  const [text, setText] = useState(() => spec.draft(view, action))
+  const [draft] = useState(() => spec.draft(view, action))
+  const [text, setText] = useState(draft)
   const [extras, setExtras] = useState([])
+  const [sending, setSending] = useState(false)
+  const sendTimer = useRef(null)
   const titleId = `action-title-${view.id}`
   const to = spec.to(view, action)
+  const edited = text !== draft
+
+  useEffect(() => () => clearTimeout(sendTimer.current), [])
 
   // The ERP file always goes; extras are added and removed by name.
   const files = spec.attachments ? [erpFile(action.docType, view.id), ...extras] : []
@@ -186,11 +197,19 @@ export default function ActionDialog({ view, action, onClose }) {
   }
 
   // Closing through the dialog returns focus to the button that opened it.
+  // Any close (Cancel, Escape, backdrop) also drops a send still pending.
   const close = () => dialog.current?.close()
+  const closed = () => {
+    clearTimeout(sendTimer.current)
+    onClose()
+  }
 
   const confirm = () => {
-    dispatch(spec.send(view, action, text.trim(), files.map((file) => file.name)))
-    close()
+    setSending(true)
+    sendTimer.current = setTimeout(() => {
+      dispatch(spec.send(view, action, text.trim(), files.map((file) => file.name)))
+      close()
+    }, SENDING_MS)
   }
 
   return (
@@ -198,7 +217,7 @@ export default function ActionDialog({ view, action, onClose }) {
       className="action-dialog"
       ref={open}
       aria-labelledby={titleId}
-      onClose={onClose}
+      onClose={closed}
       onClick={(event) => {
         if (event.target === event.currentTarget) close()
       }}
@@ -219,12 +238,21 @@ export default function ActionDialog({ view, action, onClose }) {
             rows={7}
             maxLength={MAX_TEXT}
             value={text}
+            readOnly={sending}
             onChange={(event) => setText(event.target.value)}
           />
-          <p className="action-count">
-            <span className="visually-hidden">Length </span>
-            {text.length} / {MAX_TEXT}
-          </p>
+          <div className="action-field-foot">
+            {edited && !sending && (
+              <button type="button" className="button button-quiet action-regenerate" onClick={() => setText(draft)}>
+                <RotateCcw size={14} aria-hidden="true" />
+                Regenerate from facts
+              </button>
+            )}
+            <p className="action-count">
+              <span className="visually-hidden">Length </span>
+              {text.length} / {MAX_TEXT}
+            </p>
+          </div>
         </div>
 
         {spec.attachments && <Attachments files={files} canAdd={Boolean(nextExtra)} onAdd={addExtra} onRemove={removeExtra} />}
@@ -252,8 +280,8 @@ export default function ActionDialog({ view, action, onClose }) {
           <button type="button" className="button button-secondary" onClick={close}>
             Cancel
           </button>
-          <button type="button" className="button" disabled={!text.trim()} onClick={confirm}>
-            {spec.confirm}
+          <button type="button" className="button" disabled={!text.trim() || sending} onClick={confirm}>
+            {sending ? 'Sending…' : spec.confirm}
           </button>
         </div>
       </div>
