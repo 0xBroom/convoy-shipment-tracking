@@ -53,6 +53,12 @@
   border-top: 1px solid var(--rule);
 }
 
+/* The row the latest live event touched, in the group and in the table. */
+.incident-members > li[data-live='true'],
+.exceptions-table tbody tr[data-live='true'] {
+  animation: live-row var(--dur-live) ease-out both;
+}
+
 .incident-order {
   font-family: var(--font-data);
   font-size: var(--text-16);

@@ -3,7 +3,8 @@ import { MILESTONE_LABELS } from './milestones.js'
 // Turns one raw operator event into the canonical shape the UI renders.
 // A raw status the operator vocabulary does not know becomes 'unknown' with
 // the label "Not mapped"; the raw text is kept so it can be shown as is.
-// `delayHours` rides along so the AI engines do not need the raw event too.
+// `delayHours` and `operatorEta` ride along so the AI engines do not need the
+// raw event too.
 export function normaliseEvent(event, operatorsById) {
   const operator = operatorsById[event.operatorId]
   const milestone = operator?.vocab[event.raw] ?? 'unknown'
@@ -19,6 +20,7 @@ export function normaliseEvent(event, operatorsById) {
     location: event.location,
     legIndex: event.legIndex,
     delayHours: event.delayHours ?? 0,
+    operatorEta: event.operatorEta ? new Date(event.operatorEta) : null,
   }
 }
 

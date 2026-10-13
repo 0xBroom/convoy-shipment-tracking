@@ -21,7 +21,7 @@ import { fmtDateTime } from '../../lib/format.js'
 import { modeSummary, routeShort } from '../../lib/route.js'
 import { lastEvent } from '../../lib/shipment.js'
 import { selectPerimeterViews } from '../../store/selectors.js'
-import { useSelector } from '../../store/useStore.js'
+import { useLiveShipmentId, useSelector } from '../../store/useStore.js'
 import './Portfolio.css'
 
 // What a search string means: the filter object, the interpretation shown
@@ -77,6 +77,7 @@ export default function Portfolio() {
   const [params, setParams] = useSearchParams()
   const q = params.get('q')
   const views = useSelector(selectPerimeterViews)
+  const liveId = useLiveShipmentId()
   const [state, setState] = useState(() => initial(q))
 
   // The URL is the source of a search: when ?q= changes from outside (a link
@@ -184,7 +185,7 @@ export default function Portfolio() {
             </thead>
             <tbody>
               {rows.map((view) => (
-                <tr key={view.id} data-level={view.risk.level}>
+                <tr key={view.id} data-level={view.risk.level} data-live={view.id === liveId}>
                   <td className="portfolio-order">
                     <Link to={`/ops/shipments/${view.id}`}>{view.id}</Link>
                   </td>

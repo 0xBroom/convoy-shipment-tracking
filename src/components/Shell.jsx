@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router'
 import { USERS } from '../data/users.js'
+import { fmtTimeSeconds } from '../lib/format.js'
 import { ROLE_HOME, ROLE_LABELS, roleOfPath } from '../lib/roles.js'
 import { switchRole } from '../store/actions.js'
 import { selectExceptions, selectUnreadCount } from '../store/selectors.js'
@@ -23,6 +24,9 @@ export default function Shell() {
 
   const unread = useSelector(selectUnreadCount)
   const openExceptions = useSelector((s) => (s.role === 'ops' ? selectExceptions(s).rows.length : 0))
+  // The demo-clock time of the last operator event that landed; it only
+  // changes when the data does, never with the wall clock.
+  const updatedAt = state.feed.updatedAt
 
   // The URL decides the role, so a reload or a deep link to /ops/... lands in
   // Ops. Choosing a role in the switcher only navigates; this effect then
@@ -113,6 +117,9 @@ export default function Shell() {
                 ))}
               </div>
               <p className="shell-persona">{USERS[role].name}</p>
+              <p className="shell-updated">
+                Last updated <time dateTime={updatedAt}>{fmtTimeSeconds(updatedAt)}</time>
+              </p>
             </div>
           </div>
         </div>

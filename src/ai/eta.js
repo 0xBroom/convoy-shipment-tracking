@@ -11,9 +11,18 @@ const MIN_HOLD_HOURS = 12 // an open hold never promises release in less than th
 // Returns null for delivered shipments (the confirmed delivery is shown
 // instead). `moved` is false when no delay fact exists; the UI then shows the
 // value as "Planned", not "Estimated".
+//
+// An operator can post its own ETA with a status. While that ETA stands, it
+// replaces the Convoy estimate (`confirmed` is true, `source` names the
+// operator) and the estimate it replaced is kept in `history`, so the reader
+// can see what Convoy said and when the operator took over.
 export function estimateArrival(view, now) {
   if (isDelivered(view)) return null
+  const posted = standingOperatorEta(view)
+  return posted ? operatorEstimate(view, posted) : convoyEstimate(view, now)
+}
 
+function convoyEstimate(view, now) {
   const baseline = new Date(view.legs.at(-1).plannedArrival)
   const eventDelay = view.timeline.reduce((sum, e) => sum + e.delayHours, 0)
   const customs = customsDelay(view, now)
@@ -23,11 +32,49 @@ export function estimateArrival(view, now) {
   return {
     value,
     source: 'Convoy estimate',
+    confirmed: false,
+    operatorName: null,
     confidence: confidenceOf(view, now),
     rationale: rationaleOf(view, customs, delayHours),
     moved: delayHours > 0,
     delayHours,
     baseline,
+    history: [],
+  }
+}
+
+// The latest operator ETA still in force: the operator has not posted a newer
+// status since, and no customs hold has opened after it.
+function standingOperatorEta(view) {
+  const posted = view.timeline.findLast((e) => e.operatorEta) ?? null
+  if (!posted) return null
+  const newer = view.timeline.findLast((e) => e.operatorId === posted.operatorId)
+  const hold = openHold(view)
+  return newer === posted && !(hold && hold.at > posted.at) ? posted : null
+}
+
+// The operator's time, as confirmed. The Convoy estimate as it stood when the
+// operator posted is recomputed from the events before that moment and kept
+// as the first history entry.
+function operatorEstimate(view, posted) {
+  const baseline = new Date(view.legs.at(-1).plannedArrival)
+  const delayHours = Math.max(0, hoursBetween(baseline, posted.operatorEta))
+  const before = { ...view, timeline: view.timeline.filter((e) => e.at < posted.at) }
+  const superseded = convoyEstimate(before, posted.at)
+
+  return {
+    value: posted.operatorEta,
+    source: 'Operator ETA',
+    confirmed: true,
+    operatorName: posted.operatorName,
+    confidence: null,
+    rationale:
+      `${posted.operatorName} posted this arrival time with its '${posted.raw}' status ` +
+      `at ${posted.location} on ${fmtDateTime(posted.at)}.`,
+    moved: delayHours > 0,
+    delayHours,
+    baseline,
+    history: [{ value: superseded.value, source: superseded.source, confidence: superseded.confidence, supersededAt: posted.at }],
   }
 }
 

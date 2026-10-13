@@ -44,6 +44,10 @@
   background: var(--tint-harbour);
 }
 
+.shipments-table tbody tr[data-live='true'] {
+  animation: live-row var(--dur-live) ease-out both;
+}
+
 /* Rows that carry a Convoy notice get the 2px ink rule of a selected row. */
 .shipments-table tbody tr[data-notice='true'] td:first-child {
   box-shadow: inset 2px 0 0 var(--ink);

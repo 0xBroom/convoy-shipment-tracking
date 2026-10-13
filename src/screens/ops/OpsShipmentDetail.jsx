@@ -96,7 +96,7 @@ function NormalisedFeed({ view, events, pending, activeId, setActive, liveId }) 
             </span>
             <span className="ops-event-meta">
               {row.location},{' '}
-              <EstimatedTime kind={row.kind} at={row.at} confidence={row.confidence} source={row.source} compact />
+              <EstimatedTime kind={row.kind} at={row.at} confidence={row.confidence} source={row.source} operatorName={row.operatorName} compact />
             </span>
           </li>
         ))}

@@ -7,6 +7,9 @@ import './Toast.css'
 
 const VISIBLE_MS = 5000
 
+// A toast carries `text`, an optional `detail` line under it (what the event
+// means), an optional `tone` ('neutral' | 'warning' | 'success') for the rule
+// on its left, and the shipment it is about.
 function ToastItem({ toast, role }) {
   const dispatch = useDispatch()
   const { pathname } = useLocation()
@@ -28,6 +31,7 @@ function ToastItem({ toast, role }) {
   return (
     <div
       className="toast"
+      data-tone={toast.tone ?? 'neutral'}
       onMouseEnter={() => setHeld(true)}
       onMouseLeave={() => setHeld(false)}
       onFocus={() => setHeld(true)}
@@ -37,6 +41,7 @@ function ToastItem({ toast, role }) {
     >
       <div className="toast-body">
         <p>{toast.text}</p>
+        {toast.detail && <p className="toast-detail">{toast.detail}</p>}
         {showLink && <Link to={to}>Open order {toast.shipmentId}</Link>}
       </div>
       <button type="button" className="toast-close" onClick={() => dispatch(dismissToast(toast.id))}>

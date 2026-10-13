@@ -87,11 +87,12 @@ const ACTIONS = {
     facts(view) {
       const est = view.estimate
       const cause = view.risk.reasons[0]?.text
-      return [
-        `Order ${view.id}, ${route(view)}`,
-        est ? `${est.moved ? 'Estimate' : 'Plan'} ${fmtDateTime(est.value)}, ${est.confidence} confidence` : null,
-        cause ? `Cause: ${cause}` : null,
-      ]
+      const arrival = !est
+        ? null
+        : est.confirmed
+          ? `Operator ETA ${fmtDateTime(est.value)}, posted by ${est.operatorName}`
+          : `${est.moved ? 'Estimate' : 'Plan'} ${fmtDateTime(est.value)}, ${est.confidence} confidence`
+      return [`Order ${view.id}, ${route(view)}`, arrival, cause ? `Cause: ${cause}` : null]
     },
     why: 'Built from the order, route, estimate and confidence, cause, and the next update time. Nothing is sent until you confirm.',
     to: (view) => toCustomer(view),

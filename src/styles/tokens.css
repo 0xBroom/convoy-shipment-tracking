@@ -72,6 +72,7 @@
   --dur-toast: 200ms;
   --dur-reveal: 600ms;
   --dur-tint: 2s;
+  --dur-live: 300ms;
 
   /* Layout */
   --width-customer: 960px;

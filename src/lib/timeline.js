@@ -43,6 +43,8 @@ export function buildTimeline(view, now = NOW) {
   const delivered = deliveredEvent(view) !== null
   const estimate = view.estimate
   const moved = Boolean(estimate?.moved)
+  // An operator ETA is solid, like any operator fact: no hatch, no dotted ring.
+  const confirmed = Boolean(estimate?.confirmed)
   const customsIndex = view.legs.findIndex((l) => l.mode === 'customs')
   const eventDelay = view.timeline.reduce((sum, e) => sum + e.delayHours, 0)
   const customsShare = moved ? estimate.delayHours - eventDelay : 0
@@ -86,9 +88,10 @@ export function buildTimeline(view, now = NOW) {
           recognised: true,
           location: leg.to.replace(/ port$/, ''),
           at,
-          kind: moved ? 'estimated' : 'planned',
+          kind: confirmed && isLast ? 'operator' : moved ? 'estimated' : 'planned',
           confidence: estimate?.confidence ?? null,
           source: estimate?.source ?? null,
+          operatorName: estimate?.operatorName ?? null,
         })
       }
     }
@@ -102,7 +105,7 @@ export function buildTimeline(view, now = NOW) {
       state,
       rows,
       share,
-      estimated: state !== 'done' && moved,
+      estimated: state !== 'done' && moved && !confirmed,
       startNode: {
         kind: leg.fromKind,
         confirmed: i === 0 ? events.length > 0 || state === 'done' : done[i - 1],

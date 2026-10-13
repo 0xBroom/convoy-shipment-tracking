@@ -40,10 +40,10 @@ export function draftNotice(view, now = NOW) {
     const because = cause
       ? ` because of a ${cause.text.replace(/ \d+ (day|days|h)$/, '').toLowerCase()}${where ? ` at ${where}` : ''}`
       : ''
-    return (
-      `${opening} will arrive ${later} later than planned${because}. ` +
-      `New estimated arrival: ${fmtDateTime(est.value)} (estimate, ${est.confidence} confidence). ${nextUpdate}`
-    )
+    const arrival = est.confirmed
+      ? `New arrival time: ${fmtDateTime(est.value)} (confirmed by ${est.operatorName}).`
+      : `New estimated arrival: ${fmtDateTime(est.value)} (estimate, ${est.confidence} confidence).`
+    return `${opening} will arrive ${later} later than planned${because}. ${arrival} ${nextUpdate}`
   }
 
   const last = view.timeline.at(-1)

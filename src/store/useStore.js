@@ -18,11 +18,16 @@ export function useSelector(select) {
   return select(useStore().state)
 }
 
-// The id of the live event, but only when it arrived while the calling screen
-// was mounted. A screen opened after the event shows it as plain history, so
-// the one orchestrated motion plays once, where the person is looking.
+// The id of the latest live event, but only when it arrived while the calling
+// screen was mounted. A screen opened after the event shows it as plain
+// history, so the one orchestrated motion plays once, where the person is
+// looking.
 export function useLiveEventId() {
-  const liveEventId = useStore().state.liveEventId
+  const liveEventId = useStore().state.live.eventId
   const [atMount] = useState(liveEventId)
   return liveEventId !== null && liveEventId !== atMount ? liveEventId : null
 }
+
+// The shipment the latest live event touched: lists tint its row while it is
+// the last thing that changed.
+export const useLiveShipmentId = () => useStore().state.live.shipmentId

@@ -56,6 +56,51 @@
   cursor: not-allowed;
 }
 
+.demo-feed {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* Where the feed stands, under its button; also read out when it changes. */
+.demo-progress {
+  padding: 0 var(--space-3) var(--space-2);
+  color: var(--ink-3);
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Live: a small dot in the cleared green that breathes while the feed plays.
+   Reduced motion keeps the dot still (base.css stops the animation). */
+.demo-live {
+  display: inline-grid;
+  place-items: center;
+  width: 12px;
+  height: 12px;
+}
+
+.demo-live-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cleared);
+  animation: demo-pulse 1.4s ease-in-out infinite;
+}
+
+@keyframes demo-pulse {
+  50% {
+    opacity: 0.25;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .demo-live-dot {
+    animation: none;
+  }
+}
+
 /* Phone: icon button, label kept for assistive technology. */
 @media (max-width: 720px) {
   .demo-trigger-label {

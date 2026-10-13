@@ -128,6 +128,7 @@ export default function RouteTimeline({ view, activeEventId = null, onEventActiv
                               at={row.at}
                               confidence={row.confidence}
                               source={row.source}
+                              operatorName={row.operatorName}
                               compact
                             />
                           )}

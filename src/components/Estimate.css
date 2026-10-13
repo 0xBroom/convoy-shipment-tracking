@@ -25,6 +25,11 @@
   background: var(--hatch);
 }
 
+/* An operator's own ETA is an operator fact: solid ink, no hatch. */
+.estimate[data-kind='operator'] .estimate-value {
+  border-bottom: 2px solid var(--ink);
+}
+
 .estimate-confidence {
   color: var(--ink-2);
   font-size: var(--text-13);
@@ -88,4 +93,31 @@
 .estimate-source {
   color: var(--ink-2);
   font-size: var(--text-13);
+}
+
+/* The arrival times this one replaced: a disclosure under the card, set like
+   the source line, each entry on one line with tabular times. */
+.estimate-history {
+  color: var(--ink-2);
+  font-size: var(--text-13);
+}
+
+.estimate-history summary {
+  width: fit-content;
+  color: var(--harbour);
+  cursor: pointer;
+}
+
+.estimate-history ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: var(--space-1) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.estimate-history time {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
 }

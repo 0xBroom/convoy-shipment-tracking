@@ -36,17 +36,17 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 4. Switch to ops again. In Portfolio, click the suggestion "shipments to France this week running late" (or type it). Three interpreted chips appear and the table narrows to one row. Remove the window chip and a second French shipment comes back.
 5. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
 6. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Deklarasjon mottatt", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
-7. Open "Demo controls" and choose "Simulate new event". A toast appears and the timeline extends. The estimate stays but its reason changes. Customer view shows the same event.
+7. Open "Demo controls" and choose "Start live feed". Seven operator events land, one every four seconds, each with a toast: order 12345 leaves the vessel, a Gdansk hold is released, a stale feed wakes up, Norwegian customs stop 12345 and clear it again, Nordhaul posts its own ETA on 12466 (the Convoy estimate becomes "ETA history") and one more order is delivered. "Last updated" in the top bar follows. Pause and resume it from the same place; customer view shows the same events.
 8. On the detail page, use "Send document" on the invoice. The dialog says who receives it and how (Fjordklar Customs, the Norwegian import broker, by email) and names the attached file. Confirm. The customer then sees "Sent to Fjordklar Customs on 13 Oct, 14:30 by email".
 9. "Demo controls" then "Reset demo data" brings everything back.
 
 ## What is simulated
 
-All "AI" lives in `src/ai/` as plain deterministic functions: risk scoring, arrival estimates, the daily summary, the search parser and notice drafting. The store only holds facts (operator events, the plan, what ops did) and those functions derive everything else. Search understands a fixed set of phrases. Only one live event is scripted.
+All "AI" lives in `src/ai/` as plain deterministic functions: risk scoring, arrival estimates, the daily summary, the search parser and notice drafting. The store only holds facts (operator events, the plan, what ops did) and those functions derive everything else. Search understands a fixed set of phrases. The live feed is a script of seven events.
 
 ## Known limits
 
-No automated tests, no backend, no auth, one scripted live event, canned search. The write-up explains the cut and what comes next.
+No automated tests, no backend, no auth, a scripted live feed, canned search. The write-up explains the cut and what comes next.
 
 ## AI coding tools
 

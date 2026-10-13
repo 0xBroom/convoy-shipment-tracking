@@ -7,7 +7,7 @@ import { routeShort } from '../../lib/route.js'
 import { arrivalAt, isDelivered } from '../../lib/shipment.js'
 import { deriveStatus, needsAttention } from '../../lib/status.js'
 import { selectPerimeterViews } from '../../store/selectors.js'
-import { useSelector } from '../../store/useStore.js'
+import { useLiveShipmentId, useSelector } from '../../store/useStore.js'
 import './ShipmentsList.css'
 
 // Attention first, then open shipments, then delivered ones; each group by arrival.
@@ -18,6 +18,7 @@ const sortRows = (views) =>
 
 export default function ShipmentsList() {
   const views = useSelector(selectPerimeterViews)
+  const liveId = useLiveShipmentId()
   useEffect(() => {
     document.title = 'My shipments, Convoy'
   }, [])
@@ -49,7 +50,7 @@ export default function ShipmentsList() {
           </thead>
           <tbody>
             {rows.map((view) => (
-              <tr key={view.id} data-notice={view.notice ? 'true' : 'false'}>
+              <tr key={view.id} data-notice={view.notice ? 'true' : 'false'} data-live={view.id === liveId}>
                 <td className="shipments-order">
                   <Link to={`/customer/shipments/${view.id}`}>
                     <span className="visually-hidden">Order </span>

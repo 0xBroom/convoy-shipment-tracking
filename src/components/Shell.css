@@ -134,6 +134,21 @@
   font-size: var(--text-13);
 }
 
+/* When the data last changed, under the persona: quiet, with tabular digits
+   so the seconds tick without the line shifting. */
+.shell-updated {
+  grid-column: 1 / -1;
+  max-width: none;
+  color: var(--ink-3);
+  font-size: var(--text-12);
+}
+
+.shell-updated time {
+  font-family: var(--font-data);
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
 .shell-main {
   max-width: calc(var(--width-customer) + 2 * var(--space-4));
   margin: 0 auto;
@@ -164,7 +179,7 @@
   }
 }
 
-/* Phone: brand and switcher on one row, nav scrolls under them, caption hidden. */
+/* Phone: brand and switcher on one row, nav scrolls under them, captions hidden. */
 @media (max-width: 720px) {
   .shell-bar-inner {
     padding: var(--space-2) var(--space-3) 0;
@@ -176,7 +191,8 @@
   }
 
   .shell-viewer-label,
-  .shell-persona {
+  .shell-persona,
+  .shell-updated {
     position: absolute;
     width: 1px;
     height: 1px;

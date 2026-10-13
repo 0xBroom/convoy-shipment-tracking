@@ -8,7 +8,7 @@ import { fmtDateTime, fmtLongDate } from '../../lib/format.js'
 import { isDelivered } from '../../lib/shipment.js'
 import { NOW } from '../../data/now.js'
 import { selectActivity, selectDailySummary, selectPerimeterViews } from '../../store/selectors.js'
-import { useSelector } from '../../store/useStore.js'
+import { useLiveShipmentId, useSelector } from '../../store/useStore.js'
 import './Today.css'
 
 // Where each count in the sentence leads.
@@ -38,6 +38,7 @@ export default function Today() {
   const summary = useSelector(selectDailySummary)
   const views = useSelector(selectPerimeterViews)
   const activity = useSelector((state) => selectActivity(state)).slice(0, 5)
+  const liveId = useLiveShipmentId()
 
   useEffect(() => {
     document.title = 'Today, Convoy'
@@ -70,7 +71,7 @@ export default function Today() {
           ) : (
             <ol className="today-actions">
               {summary.nextActions.map((item, index) => (
-                <li key={`${item.view.id}-${item.type}-${item.docType ?? ''}`}>
+                <li key={`${item.view.id}-${item.type}-${item.docType ?? ''}`} data-live={item.view.id === liveId}>
                   <div className="today-action-text">
                     <p className="today-action-title">{item.text}</p>
                     <Why>{item.why}</Why>

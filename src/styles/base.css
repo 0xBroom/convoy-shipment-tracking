@@ -236,6 +236,22 @@ textarea.field {
   transform: none;
 }
 
+/*
+  A row or card whose shipment the latest live event touched carries
+  data-live="true": the harbour tint rises in 300 ms and rests, lighter, until
+  the next event lands elsewhere. Each list applies this to its own rows.
+  Reduced motion skips the rise and shows the resting tint.
+*/
+@keyframes live-row {
+  from {
+    background-color: color-mix(in oklab, var(--harbour) 28%, white);
+  }
+
+  to {
+    background-color: color-mix(in oklab, var(--harbour) 10%, white);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

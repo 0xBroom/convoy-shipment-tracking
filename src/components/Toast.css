@@ -23,6 +23,16 @@
   animation: toast-in var(--dur-toast) ease-out;
 }
 
+/* Tone: a rule on the left, in the status colour lifted so it reads on ink.
+   The words carry the meaning; the rule only flags it. */
+.toast[data-tone='warning'] {
+  box-shadow: inset 4px 0 0 color-mix(in oklab, var(--amber) 60%, white), var(--shadow-float);
+}
+
+.toast[data-tone='success'] {
+  box-shadow: inset 4px 0 0 color-mix(in oklab, var(--cleared) 60%, white), var(--shadow-float);
+}
+
 .toast-body {
   display: grid;
   gap: var(--space-1);
@@ -31,6 +41,12 @@
 
 .toast p {
   font-weight: 500;
+}
+
+.toast .toast-detail {
+  color: color-mix(in oklab, var(--manifest) 82%, var(--ink));
+  font-size: var(--text-13);
+  font-weight: 400;
 }
 
 /* The link keeps the toast's own colour: on ink, the underline is the cue. */

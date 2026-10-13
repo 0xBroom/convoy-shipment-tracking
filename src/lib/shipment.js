@@ -43,11 +43,11 @@ export function contactTarget(view) {
 export const placeOf = (view) => view.destination.city
 
 // The moment a shipment arrives or is expected to: confirmed delivery, then
-// the moved estimate, then the plan. Used for ordering, never for display
-// (display goes through <Estimate>).
+// an operator ETA or the moved estimate, then the plan. Used for ordering,
+// never for display (display goes through <Estimate>).
 export function arrivalAt(view) {
   const delivered = deliveredEvent(view)
   if (delivered) return new Date(delivered.at)
-  if (view.estimate?.moved) return view.estimate.value
+  if (view.estimate?.moved || view.estimate?.confirmed) return view.estimate.value
   return new Date(view.legs.at(-1).plannedArrival)
 }

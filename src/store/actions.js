@@ -35,8 +35,13 @@ export const contactOperator = ({ shipmentId, operatorId, text }) => ({
   text,
 })
 
-// The one scripted live event (src/data/liveEvent.js). Applies once per session.
-export const applyLiveEvent = () => ({ type: 'applyLiveEvent' })
+// The scripted live feed (src/data/liveFeed.js). The ticker in
+// src/store/liveFeed.js dispatches applyFeedEvent while the feed plays.
+export const playFeed = () => ({ type: 'playFeed' })
+
+export const pauseFeed = () => ({ type: 'pauseFeed' })
+
+export const applyFeedEvent = () => ({ type: 'applyFeedEvent' })
 
 export const markNoticesRead = (ids) => ({ type: 'markNoticesRead', ids })
 

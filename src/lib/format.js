@@ -17,6 +17,13 @@ const time = new Intl.DateTimeFormat('en-GB', {
   hourCycle: 'h23',
   timeZone: TZ,
 })
+const timeSeconds = new Intl.DateTimeFormat('en-GB', {
+  hour: '2-digit',
+  minute: '2-digit',
+  second: '2-digit',
+  hourCycle: 'h23',
+  timeZone: TZ,
+})
 const dayKeyFormat = new Intl.DateTimeFormat('en-CA', {
   year: 'numeric',
   month: '2-digit',
@@ -38,6 +45,9 @@ export const fmtDate = (value) => date.format(new Date(value))
 
 // "14:30"
 export const fmtTime = (value) => time.format(new Date(value))
+
+// "14:30:12", for moments seconds apart: the live feed's event times.
+export const fmtTimeSeconds = (value) => timeSeconds.format(new Date(value))
 
 // "2026-10-08", the calendar day in the demo time zone.
 export const dayKey = (value) => dayKeyFormat.format(new Date(value))

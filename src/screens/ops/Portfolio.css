@@ -77,6 +77,10 @@
   background: var(--tint-harbour);
 }
 
+.portfolio-table tbody tr[data-live='true'] {
+  animation: live-row var(--dur-live) ease-out both;
+}
+
 /* 3px risk rule on the left of each row, same as the exceptions queue. */
 .portfolio-table tbody tr td:first-child {
   box-shadow: inset 3px 0 0 transparent;

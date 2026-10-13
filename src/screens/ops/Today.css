@@ -69,6 +69,10 @@
   counter-increment: action;
 }
 
+.today-actions > li[data-live='true'] {
+  animation: live-row var(--dur-live) ease-out both;
+}
+
 .today-actions > li::before {
   content: counter(action);
   color: var(--ink-2);

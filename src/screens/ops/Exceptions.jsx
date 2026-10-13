@@ -10,7 +10,7 @@ import { OPERATORS_BY_ID } from '../../data/operators.js'
 import { CATEGORIES } from '../../lib/categories.js'
 import { routeShort } from '../../lib/route.js'
 import { categoryOf, selectExceptions } from '../../store/selectors.js'
-import { useSelector } from '../../store/useStore.js'
+import { useLiveShipmentId, useSelector } from '../../store/useStore.js'
 import './Exceptions.css'
 
 // The first action still worth taking: a delivered notice does not need to be
@@ -26,6 +26,7 @@ export default function Exceptions() {
   const requested = params.get('category')
   const category = requested in CATEGORIES ? requested : null
   const { rows, groups } = useSelector((state) => selectExceptions(state, category))
+  const liveId = useLiveShipmentId()
 
   useEffect(() => {
     document.title = 'Exceptions, Convoy'
@@ -67,7 +68,7 @@ export default function Exceptions() {
               </Why>
               <ul className="incident-members">
                 {members.map((view) => (
-                  <li key={view.id}>
+                  <li key={view.id} data-live={view.id === liveId}>
                     <Link className="incident-order" to={`/ops/shipments/${view.id}`}>
                       {view.id}
                     </Link>
@@ -97,7 +98,7 @@ export default function Exceptions() {
               </thead>
               <tbody>
                 {rows.map((view, index) => (
-                  <tr key={view.id} data-level={view.risk.level}>
+                  <tr key={view.id} data-level={view.risk.level} data-live={view.id === liveId}>
                     <td className="num exceptions-rank">{index + 1}</td>
                     <td className="exceptions-order">
                       <div className="exceptions-order-cell">
