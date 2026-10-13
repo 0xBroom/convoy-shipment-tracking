@@ -31,13 +31,20 @@ function hooks(id, setActive) {
   }
 }
 
-// On a phone the normalised column is hidden, so each raw row also carries its
-// mapped milestone on a line of its own (CSS shows it below 720px only).
+// On a phone the normalised column is hidden, so each recognised raw row also
+// carries its mapped milestone on a line of its own, and the section head
+// carries one Convoy stamp for all of them (CSS shows both below 720px only).
+// An unrecognised row already says "Not mapped" in its tag.
 function RawFeed({ view, events, activeId, setActive, liveId }) {
   return (
     <section className="ops-feed" aria-labelledby="raw-heading">
-      <h2 id="raw-heading">Operator feed (raw)</h2>
-      <p className="ops-feed-hint">Each event as the operator sent it.</p>
+      <div className="ops-panel-head">
+        <h2 id="raw-heading">Operator feed (raw)</h2>
+        <span className="stamp ops-feed-stamp">Convoy</span>
+      </div>
+      <p className="ops-feed-hint">
+        Each event as the operator sent it<span className="ops-feed-phone">, with Convoy&rsquo;s reading under it</span>.
+      </p>
       <ol className="ops-events">
         {events.map((e) => (
           <li key={e.id} className="ops-event" data-event-id={e.id} data-active={e.id === activeId} data-live={e.id === liveId} {...hooks(e.id, setActive)}>
@@ -46,18 +53,13 @@ function RawFeed({ view, events, activeId, setActive, liveId }) {
               <span className="ops-raw">&lsquo;{e.raw}&rsquo;</span>
               {!e.recognised && <span className="ops-unmapped">Not mapped</span>}
             </span>
-            <span className="ops-event-map" data-mapped={e.recognised}>
-              <span aria-hidden="true">&rarr;</span>
-              <span className="visually-hidden">Convoy reads this as</span>
-              {e.recognised ? (
-                <>
-                  <span className="ops-event-map-label">{eventLabel(view, e)}</span>
-                  <span className="stamp">Convoy</span>
-                </>
-              ) : (
-                <span className="ops-event-map-label">Not mapped</span>
-              )}
-            </span>
+            {e.recognised && (
+              <span className="ops-event-map">
+                <span aria-hidden="true">&rarr;</span>
+                <span className="visually-hidden">Convoy reads this as</span>
+                <span className="ops-event-map-label">{eventLabel(view, e)}</span>
+              </span>
+            )}
             <span className="ops-event-meta">
               {e.location}, <time dateTime={e.at.toISOString()}>{fmtDateTime(e.at)}</time>
             </span>
