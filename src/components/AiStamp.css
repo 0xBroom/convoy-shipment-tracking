@@ -1,14 +1,73 @@
+.stamp-wrap {
+  position: relative;
+  display: inline-flex;
+}
+
+/* The chip: harbour ink on a harbour tint, the same 18px line as before. */
 .stamp {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-1);
   padding: 0 var(--space-2);
   border: 1px solid var(--harbour);
   border-radius: var(--radius-tag);
+  background: var(--tint-harbour);
   color: var(--harbour);
   font-family: var(--font-data);
   font-size: var(--text-12);
   font-weight: 600;
   line-height: 18px;
   white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur-hover);
+}
+
+.stamp:hover,
+.stamp[aria-expanded='true'] {
+  background: color-mix(in oklab, var(--harbour) 16%, white);
+}
+
+.stamp svg {
+  flex: none;
+}
+
+/* The explanation: a floating layer under the chip, plain ink, normal text. */
+.stamp-popover {
+  position: absolute;
+  top: calc(100% + var(--space-1));
+  left: 0;
+  z-index: 20;
+  display: grid;
+  gap: var(--space-1);
+  width: 280px;
+  padding: var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-float);
+  background: var(--surface);
+  box-shadow: var(--shadow-float);
+  color: var(--ink);
+  font-family: var(--font-ui);
+  font-size: var(--text-13);
+  font-weight: 400;
+  line-height: 1.5;
+  text-align: left;
+  white-space: normal;
+  animation: stamp-in var(--dur-dialog) ease-out;
+}
+
+.stamp-popover[data-align='right'] {
+  right: 0;
+  left: auto;
+}
+
+@keyframes stamp-in {
+  from {
+    opacity: 0;
+  }
+}
+
+.stamp-popover-title {
+  font-weight: 600;
 }
 
 .why {

@@ -40,7 +40,7 @@ function RawFeed({ view, events, activeId, setActive, liveId }) {
     <section className="ops-feed" aria-labelledby="raw-heading">
       <div className="ops-panel-head">
         <h2 id="raw-heading">Operator feed (raw)</h2>
-        <span className="stamp ops-feed-stamp">Convoy</span>
+        <AiStamp variant="convoy" dense className="ops-feed-stamp" />
       </div>
       <p className="ops-feed-hint">
         Each event as the operator sent it<span className="ops-feed-phone">, with Convoy&rsquo;s reading under it</span>.

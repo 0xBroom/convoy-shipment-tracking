@@ -297,7 +297,7 @@
   }
 
   .ops-feed-stamp {
-    display: inline-block;
+    display: inline-flex;
   }
 
   .ops-feed-phone {
