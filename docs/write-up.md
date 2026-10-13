@@ -1,12 +1,14 @@
 # Convoy: shipment tracking prototype
 
-Convoy gives a manufacturer's customers **one place to see where an order is and when it arrives**, and gives its ops team **a short list of what to chase today**. It is a clickable prototype on mocked data. The AI is simulated with rules.
+Convoy gives a manufacturer's customers **one place to see where an order is and when it arrives**, and gives its ops team **a short list of what to chase today**.
 
 ## The cut I chose and why
 
-I built two roles, and **every screen answers one question**. The customer asks "is my order on time, and when does it arrive?" They get a shipment list, a detail page and a notification feed. Ops asks "which shipments do I chase first?" They get Today, an exceptions queue, a portfolio table and a detail page that shows the raw operator feed next to the milestones.
+I designed for two roles, and **every screen answers that user's question**. The customer asks "is my order on time, and when does it arrive?" They get a shipment list, a detail page and a notification feed. Ops asks "which shipments do I chase first?" They get Today, an exceptions queue, a portfolio table and a detail page that shows the raw operator feed next to the milestones.
 
-Ops covers two of the four sites, by origin or destination. **One shipment sits outside that perimeter on purpose**: its URL says "Shipment not found" and search doesn't return it. Nordvik, the main demo customer, receives goods in Norway, outside the EU customs union. That gives the demo **real import customs at Oslo** and a Norwegian broker posting statuses in Norwegian. Sea arrivals inside the EU only go through "Port formalities (Union status check)" with a T2L proof of Union status, because a customs declaration only exists outside the union. I wanted the customs flow to match how it really works.
+Ops covers two of the four sites, by origin or destination. I added order 20311 on purpose. It runs from Lyon to Gdansk, the two sites ops doesn't cover, and shows how I handled visibility: **ops never sees it in a list or a count**, its URL says "Shipment not found" and search doesn't return it. Nothing hints that it exists.
+
+I researched how customs actually works so the demo would hold up. Nordvik, the main demo customer, receives goods in Norway, outside the EU customs union. That gives the demo **real import customs at Oslo** and a Norwegian broker posting statuses in Norwegian. Sea arrivals inside the EU only go through "Port formalities (Union status check)" with a T2L proof of Union status, because a customs declaration only exists outside the union. I wanted the customs flow to match how it really works.
 
 Left out, and why:
 
@@ -26,15 +28,15 @@ There are seven features, each placed where someone needs it.
 | Daily summary                        | Ops Today                               | Live counts and ranked next actions, recomputed after every action.                                                                                            |
 | Natural-language search              | Ops portfolio                           | "shipments to France this week running late" becomes three filter chips. Words it doesn't understand are marked as ignored, and one control clears everything. |
 | Proactive notices                    | Exceptions queue, customer banner, feed | Order, route, estimate, confidence and cause. Ops edits before sending.                                                                                        |
-| Drafting in the recipient's language | Message dialogs                         | The customer's account language or the operator's language (French for Rhone), with the reason shown.                                                          |
+| Drafting in the recipient's language | Message dialogs                         | The customer's account language or the operator's language (try order 12471), with the reason shown.                                                          |
 
-Outputs are branded Convoy, not "AI". I want people to **trust an answer because they can see the facts behind it**. Every output carries a stamp saying what it was built from and a "Why" line that names those facts. The interface never says "prototype" or "simulated". The README and this document do.
+Outputs are branded Convoy, not "AI". I want people to **trust an answer because they can see the facts behind it**. Every output carries a stamp saying what it was built from and a "Why" line that names those facts.
 
 The rule I cared about most is that **a confirmed date and a Convoy date never look the same**. Operator events are solid, planned legs are dashed, and the span an estimate moved sits on an amber band. A single `Estimate` component renders every arrival date. If nothing moved the date, it says "Planned", not "Estimated". An unknown operator status shows as "Not mapped", and a quiet feed tells the customer "Awaiting update". I'd rather show a gap than guess.
 
 The live feed covers freshness. Seven scripted operator events arrive one every four seconds on the demo clock, with pause, resume and reset. Each lands with a highlight that fades, a toast linking to the order, and a new "Last updated" time in the header. When Nordhaul posts its own ETA for order 12466, Convoy **treats it as an operator fact**: solid, labelled "Operator ETA", and the earlier Convoy estimate moves into "ETA history".
 
-Every message dialog has a "To" line with recipient and channel: email for operators, Convoy inbox plus email for customers. **Documents follow ownership.** The manufacturer's own (invoice, packing list, T2L) are sent with the ERP file attached, through a fake picker. The carrier's bill of lading or CMR and the broker's customs declaration are requested from them. **Customers never get a document request.** They download existing documents as one-page PDFs built in the browser. Customer notices are capped at 600 characters and clamped to three lines.
+**Every message dialog has a "To" line with recipient and channel**, so it's clear whether a message goes through Convoy or by email. Operators get email; customers get the Convoy inbox plus email. **Documents follow ownership.** The manufacturer's own (invoice, packing list, T2L) are sent with the ERP file attached, through a fake picker. The carrier's bill of lading or CMR and the broker's customs declaration are requested from them. **Customers never get a document request.** They download existing documents as one-page PDFs built in the browser. Customer notices are capped at 600 characters and clamped to three lines.
 
 The language switch **only goes towards English**, the shared language of the trade. "Write in English instead" regenerates the draft and "Back to French" undoes it. An English draft offers no switch, because with many possible languages Convoy couldn't know which one to offer.
 
