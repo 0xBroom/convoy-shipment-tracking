@@ -53,13 +53,10 @@
 }
 
 /* The customer's download sits at the row end, quiet, so the status word
-   keeps the weight. */
+   keeps the weight. A quiet button has no side padding, so its text already
+   lines up with the panel's edge. */
 .docs-action:empty {
   display: none;
-}
-
-.docs-download {
-  margin-right: calc(-1 * var(--space-3));
 }
 
 @media (max-width: 720px) {
