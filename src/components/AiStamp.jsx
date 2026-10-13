@@ -46,10 +46,14 @@ export default function AiStamp({ variant = 'estimate', dense = false, className
     }
   }, [open])
 
-  // Opens under the chip's left edge unless that would run off the viewport.
+  // Opens under the chip's left edge unless that would run past the box that
+  // clips it: a dialog or a scrolling table, else the viewport. Measuring the
+  // viewport alone let the popover overflow a dialog and scroll it sideways.
   const toggle = () => {
     const rect = button.current?.getBoundingClientRect()
-    if (rect) setAlign(rect.left + POPOVER_WIDTH > window.innerWidth ? 'right' : 'left')
+    const clip = button.current?.closest('dialog, .table-scroll')?.getBoundingClientRect()
+    const limit = clip ? clip.right : window.innerWidth
+    if (rect) setAlign(rect.left + POPOVER_WIDTH > limit ? 'right' : 'left')
     setOpen((value) => !value)
   }
 
