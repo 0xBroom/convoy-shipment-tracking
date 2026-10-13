@@ -28,14 +28,15 @@ const noticeTitle = (kind, shipmentId) =>
   kind === 'delay' ? `Order ${shipmentId} arriving later` : `Update on order ${shipmentId}`
 
 // Adds an activity entry and a toast in one step, so every ops action is
-// logged and reported with the same name.
+// logged and reported with the same name. The toast keeps the shipment id so
+// it can link to the order it is about.
 function record(state, { type, shipmentId, text, detail, toast }) {
   const seq = state.seq
   return {
     ...state,
     seq: seq + 1,
     activity: [{ id: `activity-${seq}`, at: nowIso(), type, shipmentId, text, detail }, ...state.activity],
-    toasts: [...state.toasts, { id: `toast-${seq}`, text: toast }],
+    toasts: [...state.toasts, { id: `toast-${seq}`, shipmentId, text: toast }],
   }
 }
 
@@ -123,7 +124,11 @@ export function reducer(state, action) {
         liveEventId: id,
         toasts: [
           ...next.toasts,
-          { id: `toast-${seq}`, text: `New event on order ${shipmentId}: ${fields.raw.toLowerCase()} at ${fields.location}` },
+          {
+            id: `toast-${seq}`,
+            shipmentId,
+            text: `New event on order ${shipmentId}: ${fields.raw.toLowerCase()} at ${fields.location}`,
+          },
         ],
       }
     }

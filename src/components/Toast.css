@@ -23,8 +23,25 @@
   animation: toast-in var(--dur-toast) ease-out;
 }
 
+.toast-body {
+  display: grid;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
 .toast p {
   font-weight: 500;
+}
+
+/* The link keeps the toast's own colour: on ink, the underline is the cue. */
+.toast a {
+  justify-self: start;
+  color: inherit;
+  font-size: var(--text-13);
+}
+
+.toast a:focus-visible {
+  outline-color: var(--manifest);
 }
 
 .toast-close {
