@@ -1,63 +1,64 @@
 # Convoy: shipment tracking prototype
 
-Convoy is built on one rule: a date an operator confirmed and a date Convoy worked out must never look the same.
+Convoy gives a manufacturer's customers one place to see where an order is and when it arrives, and its ops team a short list of what to chase today. It is a clickable prototype on mocked data, with the AI simulated by rules.
 
 ## The cut I chose and why
 
-I built two roles and only the screens that answer one question each. The customer asks "is my order on time, and when does it arrive?": a shipment list, a detail page, a notification feed. Ops asks "which shipments do I chase first?": Today, an exceptions queue, a portfolio table and a detail page with the raw feed.
+Two roles, and only the screens that answer one question each. The customer asks "is my order on time, and when does it arrive?": a shipment list, a detail page and a notification feed. Ops asks "which shipments do I chase first?": Today, an exceptions queue, a portfolio table and a detail page with the raw operator feed beside the milestones.
 
-Ops covers two of the four sites, matched on origin or destination, and one shipment sits outside that perimeter on purpose: its URL says "not found" and search returns nothing. Nordvik, the hero customer, receives in Norway, outside the EU customs union. That gives one lane with real import customs and a Norwegian broker posting Norwegian statuses; sea arrivals inside the EU only need a proof of Union status (T2L).
+Ops covers two of the four sites by origin or destination; one shipment sits outside on purpose, so its URL says "Shipment not found" and search returns nothing. Nordvik, the hero customer, receives in Norway, outside the EU customs union: real import customs at Oslo and a Norwegian broker posting Norwegian statuses. Sea arrivals inside the EU only get "Port formalities (Union status check)" and a "Proof of Union status (T2L)"; a customs declaration exists only outside the union.
+
+One palette (manifest grey, ink, harbour blue for interaction, cleared green, amber, signal red), Barlow with tabular numbers, white panels with graded corners (12 px panels, 8 px controls, pills for status, risk, chips, stamps and the role switcher) and no shadows except on floating layers. The route timeline is the one bold element: a 6 px rounded ink track where operators confirmed, dashes where planned, an amber band under the span an estimate moved, ring nodes and a legend. An earlier flat "ledger" look read as a generic broadsheet in review, so I reworked it.
 
 Left out, and why:
 
-- A map. A good one costs hours, a cheap one looks generic. The leg-by-leg timeline carries the same information.
-- Real operator integrations. The brief is frontend only; a scripted live feed shows how freshness would feel.
-- Document upload, analytics, dark mode, a translated UI. None changes the answer to the two questions.
-- Free-form LLM search. It needs a network and a key; a canned parser is honest about what is simulated.
+- A map. A good one costs hours, a cheap one looks generic; the timeline carries the same information.
+- Real operator integrations, document upload, analytics, dark mode, a translated UI. The brief is frontend only, and none of these changes the answer to the two questions.
 - Automated tests. I spent the hours on the product and checked by hand: lint, build, both roles at 1440 and 360 px, keyboard, reduced motion. A real gap.
 
 ## Where and how the AI adds value
 
-Six features, each where someone needs it, all simulated with rules.
+Seven features, each placed where someone needs it.
 
 | Feature | Where | Based on |
 |---|---|---|
-| Exception management | Ops Today, exceptions queue | Delay, customs hold, silence, missing documents, port incidents; one proposed action per row. |
-| Arrival estimates | Shipment detail, both roles | Confirmed delays plus typical customs time, with a confidence word and the reason. |
-| Consolidation | Timeline, ops detail | Seven operator vocabularies ("Gate-in", "VSL DEP", "Fortollet") mapped to one set of milestones, raw feed beside it. |
+| Exception management | Ops Today, exceptions queue | Delay, customs hold, silence, documents, port incidents; one proposed action per row. |
+| Arrival estimates | Shipment detail, both roles | Confirmed delays plus typical customs time, with confidence and reason. |
+| Consolidation | Timeline, ops detail | Seven vocabularies ("Gate-in", "VSL DEP", "Fortollet") mapped to one milestone set, raw feed alongside. |
 | Daily summary | Ops Today | Live counts and ranked next actions, recomputed after every action. |
-| Natural-language search | Ops portfolio | "shipments to France this week running late" becomes three chips and a filtered table; unused words are marked ignored. |
-| Proactive notices | Exceptions queue, customer banner and feed | Order, route, estimate, confidence, cause. Ops edits the draft before sending. |
+| Natural-language search | Ops portfolio | "shipments to France this week running late" becomes three chips and a filtered table; leftover words are marked ignored; one control clears all. |
+| Proactive notices | Exceptions queue, customer banner, feed | Order, route, estimate, confidence, cause; ops edits before sending. |
+| Drafting in the recipient's language | Message dialogs | Customer account language or operator language; French for Rhone, reason shown. |
 
-Outputs are branded Convoy, not "AI": the user should trust the product and see the facts it used. Every output carries a stamp that opens a short explanation of what it was built from, and a "Why" line naming those facts. The interface never says "prototype": it is written as if shown to a client in the sector, and what is simulated is explained here and in the README.
+Outputs are branded Convoy, not "AI": the user should trust the product and see the facts it used. Every output carries a stamp that explains what it was built from and a "Why" line naming those facts. The interface never says "prototype" or "simulated"; the README and this document do.
 
-A timestamped operator event is drawn solid, planned legs are dashed, and the span an estimate moved is an amber hatch; the legend says so. One `Estimate` component is the only code allowed to render an arrival, and if nothing moved the date it says "Planned", not "Estimated". An unknown operator status shows as "Not mapped" with its raw text; a quiet feed shows the customer "Awaiting update". I would rather show a gap than guess.
+A confirmed date and a Convoy date never look the same: operator events solid, planned legs dashed, the span an estimate moved on the amber band. One `Estimate` component is the only code that renders an arrival; if nothing moved the date it says "Planned", not "Estimated". An unknown status shows as "Not mapped"; a quiet feed shows the customer "Awaiting update". I would rather show a gap than guess.
 
-The live feed shows this over time: seven scripted operator events, one every four seconds, with pause, resume and reset. Each lands with a brief highlight on what changed that fades on its own, a toast linking to the order and the header's "Last updated" time. When Nordhaul posts its own ETA on order 12466, that is an operator fact: it is solid, labelled "Operator ETA", and the Convoy estimate it replaces moves into an "ETA history" marked superseded.
+The live feed plays this out: seven scripted operator events, one every four seconds, with pause, resume and reset, on the demo clock. Each lands with a highlight that fades, a toast linking to the order and the header's "Last updated" time. When Nordhaul posts its own ETA on order 12466, it is an operator fact: solid, labelled "Operator ETA", and the superseded Convoy estimate moves into "ETA history".
 
-Each dialog shows a "To" line with recipient and channel: email for operators, Convoy inbox plus email for customers. Documents follow ownership: the manufacturer issues the invoice, packing list and T2L, so ops sends those with the ERP file attached (the file picker is simulated); the carrier issues the bill of lading or CMR and the broker the customs declaration, so those are requested. The customer never receives a document request, and downloads any existing document as a one-page synthetic PDF generated in the browser.
+Each dialog shows a "To" line with recipient and channel: email for operators, Convoy inbox plus email for customers. Documents follow ownership: the manufacturer's own (invoice, packing list, T2L) are sent with the ERP file attached (a fake picker); the carrier's bill of lading or CMR and the broker's customs declaration are requested. The customer never gets a document request, and downloads existing documents as one-page PDFs built in the browser. Notices are capped at 600 characters and clamped to three lines for the customer.
 
-Drafts are written in the recipient's language. Rhone Industries and Rhone Brokers work in French, so messages to them are drafted in French; the dialog shows the language, its reason and a "Write in English instead" switch. The switch only goes towards English, the shared language of the trade: with many languages, Convoy could not know which one an English reader wants instead. Notices are capped at 600 characters.
+The switch only goes towards English, the trade's shared language: "Write in English instead" regenerates the draft, "Back to French" undoes it, and an English draft offers no switch, since with many languages Convoy could not know which one to offer.
 
 ## Technical approach
 
-Store facts, derive judgments. React 19, Vite, react-router for real URLs, plain CSS with custom-property tokens, Barlow, lucide; no backend, UI kit or state library: nothing to fight. The store (a context and a reducer) holds operator events, the plan, documents and what ops did. Risk, estimates, summary, search and drafts are pure functions in `src/ai/`, run through selectors, so an ops action reaches the customer view with no extra wiring. Production replaces that folder.
+Store facts, derive judgments. React 19, Vite, react-router for real URLs, plain CSS with custom-property tokens; no backend, UI kit or state library. The store (context plus reducer) holds operator events, the plan, documents and what ops did. Risk, estimates, summary, search and drafts are pure functions in `src/ai/`, run through selectors, so an ops action reaches the customer view with no extra wiring.
 
-Risk weights are plain numbers (+4 for a customs hold, +3 for 24 hours of silence, +2 per day of slip capped at +6), so the same inputs give the same ranking. The demo clock is fixed at 13 Oct 2026, 14:30, and the live feed stamps its events on that clock, never the real one. 24 shipments, seven operators, four sites, identical on any machine.
+Risk weights are plain numbers (+4 for a customs hold, +3 for 24 hours of silence, +2 per day of slip capped at +6): same inputs, same ranking. The clock is fixed at 13 Oct 2026, 14:30, and the live feed stamps its events on it. 24 shipments, seven operators, four sites, identical on any machine.
 
-In production an LLM maps free-text statuses to milestones against a schema; rules stay as fallback and low confidence lands in "Not mapped". Arrival estimates come from a model on lane history and port feeds; thresholds decide between a date, a range or "no update yet". The model drafts notices and a human approves every message to a customer. Search returns the filter object the dropdowns use, so chips stay inspectable. A labelled set of real statuses and past delays scores each change before release.
+In production an LLM maps free-text statuses to milestones against a schema; rules stay as fallback and low confidence lands in "Not mapped". Estimates come from a model on lane history and port feeds, with thresholds deciding between a date, a range or "no update yet". A model drafts notices and a human approves each one. Search returns the same filter object the dropdowns use, so chips stay inspectable. A labelled set of real statuses and past delays scores every change before release. Events arrive by webhook, polling as fallback.
 
 ## Assumptions, limitations and next steps
 
-I assumed one customer and one ops persona are enough to show scoping; an English UI, metric units and EUR; operators that expose timestamped events; and a local demo, so no deployment or auth.
+Assumptions: one customer and one ops persona are enough to show scoping; an English UI, metric units and EUR; operators that post timestamped events; a local demo, so no deployment or auth.
 
 Limitations:
 
 - Reload resets all data.
-- The live feed is a seven-event script, not a connection.
+- The live feed is a seven-event script.
 - Search understands a fixed set of phrases.
 - Risk and estimates are rules, not models.
-- Drafts exist in English and French only.
+- Drafts in English and French only.
 - No auth, no tests.
 
 Next steps, in order:

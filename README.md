@@ -23,7 +23,7 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 
 ### Customer (3 to 4 minutes)
 
-1. Start as the customer (Nordvik Subsidiary). The list shows six shipments, the ones needing attention first.
+1. Start as the customer (Nordvik Subsidiary). The header reads "6 shipments, 4 need attention", and those four come first.
 2. Open order 12345. Nordvik receives in Norway, outside the EU customs union, so the route runs road, sea, Norwegian import customs at Oslo and road again, each leg from a different operator. The legend under the route reads "Confirmed by operator", "Planned" and "Moved by Convoy estimate".
 3. Look at the arrival card: an estimate with its confidence and the reason behind it. In the documents list the invoice is "Not sent"; click "Download" on the packing list to get a one-page PDF generated in the browser.
 4. Open Notifications from the top bar. Keep it in mind, it fills up later.
@@ -32,11 +32,11 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 
 1. Switch to ops. Today opens with the daily summary, ranked "Next actions" and "Your sites".
 2. Open Exceptions. Order 12345 sits in the "Sailings rolled at Tarragona" incident group with two other shipments. Click "Draft notice to customer" on 12345, read the drafted message, edit a word, then "Send notice to customer".
-3. Still in Exceptions, click "Draft notice to customer" on order 12471 (Rhone Industries, Marseille). The draft is in French because the account language is French; the dialog says so and offers "Write in English instead". Cancel.
+3. Still in Exceptions, click "Draft notice to customer" on order 12471 (Rhone Industries, Marseille). The draft is in French because the account language is French; the dialog says so and offers "Write in English instead", which "Back to French" undoes. Cancel.
 4. Switch back to the customer. The banner on order 12345 changes from the earlier import-declaration update to the new delay notice, and Notifications has a new item with an unread count in the nav.
 5. Switch to ops again. In Portfolio, click the suggestion "shipments to France this week running late" (or type it). Three interpreted chips appear and the table narrows to one row. Remove the window chip and a second French shipment comes back.
 6. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
-7. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Deklarasjon mottatt", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
+7. Clear the search with the × in the field ("Clear search and filters") and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Deklarasjon mottatt", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
 8. Open "Demo controls" and choose "Start live feed". Seven operator events land, one every four seconds, each with a toast that links to its order; the panel counts "Event n of 7" and the button becomes "Pause live feed", then "Resume live feed". Order 12345 leaves the vessel, the Gdansk hold on 12439 is released, the stale feed on 12377 wakes up, Norwegian customs stop 12345 and clear it again, Nordhaul posts its own ETA on 12466 (the arrival card switches to "Operator ETA" and the Convoy estimate moves to "ETA history") and 12420 is delivered. "Last updated" in the top bar follows the demo clock. The customer view shows the same events.
 9. On the detail page, use "Send document" on the invoice. The dialog says who receives it and how (Fjordklar Customs, the Norwegian import broker, by email), lists the ERP file as the attachment and lets you attach another. Confirm. The customer then sees "Sent to Fjordklar Customs" with the time and channel, and can download it.
 10. "Demo controls" then "Reset demo data" brings everything back.
