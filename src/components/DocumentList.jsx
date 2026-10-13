@@ -33,9 +33,9 @@ function noteOf(doc) {
   }
 }
 
-// The four document types with an icon and a word each. `renderAction`, when
+// The shipment's documents with an icon and a word each. `renderAction`, when
 // given, adds a slot per row (ops uses it for "Send document" and "Request
-// document").
+// document", the customer for "Download").
 export default function DocumentList({ documents, renderAction = null }) {
   return (
     <ul className="docs">

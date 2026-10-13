@@ -2,6 +2,7 @@ import { TriangleAlert } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 import DocumentList from '../../components/DocumentList.jsx'
+import DownloadLink from '../../components/DownloadLink.jsx'
 import Estimate from '../../components/Estimate.jsx'
 import NotFound from '../../components/NotFound.jsx'
 import RouteTimeline from '../../components/RouteTimeline.jsx'
@@ -19,6 +20,10 @@ import './ShipmentDetail.css'
 // layout measurement; the cost is a toggle that reveals little when a
 // borderline text happens to fit.
 const LONG_NOTICE = 220
+
+// A document the customer can download is one that exists: issued, or sent
+// on to the next party. Missing, requested or rejected ones have no file.
+const downloadable = (doc) => doc.status === 'ok' || doc.status === 'sent'
 
 // Sections in spec order: header, notice banner, ETA card, route, documents.
 // An unknown id and an id outside the customer's perimeter look identical.
@@ -85,7 +90,10 @@ export default function ShipmentDetail() {
 
       <section className="detail-section" aria-labelledby="documents-heading">
         <h2 id="documents-heading">Documents</h2>
-        <DocumentList documents={view.documents} />
+        <DocumentList
+          documents={view.documents}
+          renderAction={(doc) => (downloadable(doc) ? <DownloadLink view={view} doc={doc} /> : null)}
+        />
       </section>
     </div>
   )

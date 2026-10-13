@@ -48,6 +48,16 @@
   font-size: var(--text-13);
 }
 
+/* The customer's download sits at the row end, quiet, so the status word
+   keeps the weight. */
+.docs-action:empty {
+  display: none;
+}
+
+.docs-download {
+  margin-right: calc(-1 * var(--space-3));
+}
+
 @media (max-width: 720px) {
   .docs-row {
     grid-template-columns: 1fr auto;
