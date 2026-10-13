@@ -92,6 +92,7 @@ export default function Portfolio() {
   const options = useMemo(() => optionsOf(views), [views])
   const rows = useMemo(() => rankByRisk(applyFilters(views, filters)), [views, filters])
   const active = countActive(filters)
+  const clearLabel = state.q ? 'Clear search and filters' : 'Clear filters'
 
   function search(text) {
     const result = interpret(text)
@@ -139,6 +140,7 @@ export default function Portfolio() {
         unreadable={unreadable}
         onSearch={search}
         onRemoveChip={(key) => setFilter(key, null)}
+        onClear={clear}
       />
 
       <section className="portfolio-filters" aria-label="Filters">
@@ -156,7 +158,7 @@ export default function Portfolio() {
             {active} {active === 1 ? 'filter' : 'filters'} active
           </span>
           <button type="button" className="portfolio-clear" onClick={clear}>
-            Clear filters
+            {clearLabel}
           </button>
         </p>
       )}
@@ -165,7 +167,7 @@ export default function Portfolio() {
         <div className="portfolio-empty">
           <p>No shipments match these filters.</p>
           <button type="button" className="button button-secondary" onClick={clear}>
-            Clear filters
+            {clearLabel}
           </button>
         </div>
       ) : (

@@ -1,5 +1,5 @@
 import { Search, X } from 'lucide-react'
-import { useId } from 'react'
+import { useId, useRef } from 'react'
 import { SUGGESTED_QUERIES } from '../ai/search.js'
 import AiStamp, { Why } from './AiStamp.jsx'
 import './SearchBar.css'
@@ -11,10 +11,18 @@ import './SearchBar.css'
   suggested queries instead of guessing.
 
   `text` and `onTextChange` control the input; `interpreted` is { chips, ignored } or null; `unreadable` is true after a
-  search that matched nothing. The parent decides what a search does.
+  search that matched nothing. The parent decides what a search does. `onClear` puts the page back as it was before
+  any search: the × inside the field shows as soon as there is anything to clear.
 */
-export default function SearchBar({ text, onTextChange, interpreted, unreadable, onSearch, onRemoveChip }) {
+export default function SearchBar({ text, onTextChange, interpreted, unreadable, onSearch, onRemoveChip, onClear }) {
   const inputId = useId()
+  const input = useRef(null)
+  const clearable = Boolean(text || interpreted || unreadable)
+
+  function clear() {
+    onClear()
+    input.current?.focus()
+  }
 
   function submit(event) {
     event.preventDefault()
@@ -32,16 +40,27 @@ export default function SearchBar({ text, onTextChange, interpreted, unreadable,
         <label className="visually-hidden" htmlFor={inputId}>
           Search shipments
         </label>
-        <Search className="search-icon" size={18} aria-hidden="true" />
-        <input
-          id={inputId}
-          className="field search-input"
-          type="search"
-          value={text}
-          placeholder="Try: shipments to France this week running late"
-          onChange={(event) => onTextChange(event.target.value)}
-          autoComplete="off"
-        />
+        <span className="search-field">
+          <Search className="search-icon" size={18} aria-hidden="true" />
+          <input
+            id={inputId}
+            ref={input}
+            className="field search-input"
+            type="search"
+            value={text}
+            placeholder="Try: shipments to France this week running late"
+            onChange={(event) => onTextChange(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === 'Escape' && clearable) clear()
+            }}
+            autoComplete="off"
+          />
+          {clearable && (
+            <button type="button" className="search-clear" onClick={clear} aria-label="Clear search and filters">
+              <X size={16} aria-hidden="true" />
+            </button>
+          )}
+        </span>
         <button type="submit" className="button">
           Search
         </button>

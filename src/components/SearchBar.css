@@ -10,11 +10,44 @@
   gap: var(--space-2);
 }
 
+/* The field with its two icons: search on the left, clear on the right. */
+.search-field {
+  position: relative;
+  display: block;
+}
+
 .search-input {
   width: 100%;
   min-height: 40px;
   padding-left: 36px;
+  padding-right: 40px;
   font-size: var(--text-16);
+}
+
+/* The browser's own clear control would duplicate ours. */
+.search-input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.search-clear {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-control);
+  background: none;
+  color: var(--ink-2);
+  cursor: pointer;
+}
+
+.search-clear:hover {
+  background: var(--tint-harbour);
+  color: var(--harbour);
 }
 
 .search-icon {
