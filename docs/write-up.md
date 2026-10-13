@@ -2,59 +2,85 @@
 
 ## The cut I chose and why
 
-I read the brief as two people with the same problem. A customer wants to know whether the order is on time and when it arrives. An ops person wants to know which shipments to chase first. Everything else was optional, so I built two roles and only the screens those two questions need.
+I built two roles and only the screens that answer one question each: for the customer, "is my order on time, and when does it arrive?"; for ops, "which shipments do I chase first?".
 
-The customer sees a shipment list, a detail page and a notification feed. Ops sees a Today page, an exceptions queue, a portfolio table and a detail page. The ops user is scoped to two of the four sites, matched on origin or destination. The scope lives in one selector, and one shipment sits outside it on purpose, so the rule is visible: its direct URL says "not found" and a search for it matches nothing.
+- Customer: shipment list, detail page, notification feed.
+- Ops: Today, exceptions queue, portfolio table, detail page.
+- Ops is scoped to two of the four sites, matched on origin or destination.
+- One shipment sits outside that scope on purpose: its URL says "not found" and search matches nothing.
 
-What I left out, and why:
+Left out, and why:
 
-- A map. A good one costs hours and a cheap one looks generic. The leg-by-leg timeline carries the same information and became the centrepiece.
-- Real-time transport and operator integrations. The brief is frontend only, so one scripted live event shows how freshness would feel.
-- Document upload, analytics, dark mode and multiple languages. None of them changes the answer to the two questions above.
-- Free-form LLM search. It needs a network and a key, and a canned parser lets me be honest about what is simulated.
-- Automated tests. I chose to spend the hours on the product and checked it by hand: lint, build, both roles at 1440 and 360 px, a keyboard pass and reduced motion. That is a real gap, and I list it below.
+- A map. A good one costs hours, a cheap one looks generic. The leg-by-leg timeline carries the same information.
+- Real-time operator integrations. The brief is frontend only; one scripted live event shows how freshness would feel.
+- Document upload, analytics, dark mode, multiple languages. None changes the answer to the two questions.
+- Free-form LLM search. It needs a network and a key; a canned parser is honest about what is simulated.
+- Automated tests. I spent the hours on the product and checked by hand: lint, build, both roles at 1440 and 360 px, keyboard, reduced motion. A real gap.
 
 ## Where and how the AI adds value
 
-Six features, each on a screen where someone would need it. All are simulated with deterministic rules, and the interface says so by marking each one with a small "Convoy" stamp and a "Why" line that states what it was based on.
+Six features, each on the screen where someone needs it, all simulated with deterministic rules.
 
-- Exception management. Ops Today and the exceptions queue rank shipments by a risk score built from delay, customs holds, silence, missing documents and port incidents. Each row proposes one next action: draft a notice, request a document or contact the operator.
-- Arrival estimates. A shipment detail shows an estimate with a confidence word and a reason, for example the vessel delay at Tarragona plus typical customs time at Gdansk.
-- Consolidation. Six operators speak six vocabularies: "Gate-in", "VSL DEP", "Docs lodged", "Dédouané". Convoy maps them to one set of milestones and shows one timeline. Ops can see the raw feed beside the normalised one.
-- Daily summary. Today opens with a sentence built from live counts, followed by ranked next actions. It stays true after ops act, because it is recomputed from the same facts.
-- Natural-language search. In the portfolio, "shipments to France this week running late" becomes three visible chips and a filtered table. Words it cannot use are shown as ignored.
-- Proactive notices. From the queue, ops opens a drafted message in plain language, edits it and sends it. The customer then sees it as a banner on the shipment and in the feed. This is the one place the two roles meet.
+- Every AI output carries a small "Convoy" stamp and a "Why" line naming the facts it used.
 
-The principle behind all of it is that a prediction must never pass as a fact. An operator event with a timestamp is confirmed and drawn solid. Anything else, planned or estimated, is dashed or hatched, and a single `Estimate` component is the only code allowed to render it. If nothing moved the date, the interface says "Planned", not "Estimated". An unknown operator status is shown as "Not mapped" and kept raw. I would rather show a gap than guess.
+| Feature | Where | Based on |
+|---|---|---|
+| Exception management | Ops Today, exceptions queue | Delay, customs hold, silence, missing documents, port incidents. Each row proposes one next action. |
+| Arrival estimates | Shipment detail, both roles | Confirmed delays plus typical customs time, with a confidence word and the reason. |
+| Consolidation | Timeline, ops detail | Six operator vocabularies ("Gate-in", "VSL DEP", "Dédouané") mapped to one set of milestones, raw feed beside it. |
+| Daily summary | Ops Today | Live counts and ranked next actions, recomputed after every ops action. |
+| Natural-language search | Ops portfolio | "shipments to France this week running late" becomes three chips and a filtered table. Unused words are marked ignored. |
+| Proactive notices | Exceptions queue, then the customer's banner and feed | Order, route, estimate, confidence, cause. Ops edits the draft before sending. |
+
+Every action says who receives it and how:
+
+- Each dialog shows recipient and channel ("Baltic Customs · email"). Notices go to the customer's Convoy inbox and email. The activity log records the channel.
+- Documents follow ownership. The manufacturer issues the invoice and packing list, so ops sends them to the broker or carrier. The carrier issues the bill of lading or CMR and the broker the customs declaration, so those are requested. The customer never gets a document request.
+- Notices are capped at 600 characters; long ones are clamped to three lines in the customer view until opened.
+- Toasts link to the shipment they are about.
+
+A prediction never passes as a fact:
+
+- A timestamped operator event is confirmed and drawn solid. Anything planned or estimated is dashed or hatched.
+- One `Estimate` component is the only code allowed to render an estimate.
+- If nothing moved the date, the interface says "Planned", not "Estimated".
+- An unknown operator status shows as "Not mapped" and stays raw. A quiet feed shows the customer "Awaiting update". I would rather show a gap than guess.
 
 ## Technical approach
 
-React 19 with Vite, react-router for real URLs, plain CSS with custom-property tokens, Barlow as the only type family and lucide for icons. No backend, no UI kit, no state library. This was the fastest route to something polished, because I control every pixel and there is nothing to fight.
+Store facts, derive judgments.
 
-The central decision is to store facts and derive judgments. The store, a context with a reducer, holds operator events, the plan, documents and what ops did. Risk, arrival estimates, the summary, search results and drafted notices are pure functions in `src/ai/` run through selectors. That makes the reliability rule structural, since the UI cannot display an estimate as confirmed. It also means ops actions flow to the customer view with no extra wiring, and the folder is a clean line to point at: this is what production would replace.
+- React 19, Vite, react-router for real URLs, plain CSS with custom-property tokens, Barlow, lucide icons. No backend, UI kit or state library: nothing to fight.
+- The store (a context with a reducer) holds operator events, the plan, documents and what ops did.
+- Risk, estimates, summary, search and drafts are pure functions in `src/ai/`, run through selectors. Ops actions reach the customer view with no extra wiring, and that folder is what production replaces.
+- Risk weights are plain numbers: +4 for a customs hold, +3 for 24 hours of silence, +2 per day of slip, capped at +6. Same inputs, same ranking.
+- 24 shipments, six operators, a fixed "now" of 13 Oct 2026, 14:30. The demo renders the same on any machine.
 
-The risk rules are plain weights, such as +4 for a customs hold, +3 for 24 hours of silence and +2 per day of slip, capped. Same inputs give the same ranking. The dataset has 24 shipments, six operators and a fixed "now" of 13 Oct 2026, 14:30, so the demo renders the same on any machine.
+Production path for the AI:
 
-For production, the AI path would look like this:
-
-- Operator statuses. An LLM would extract and map free-text statuses to milestones, validated against a schema. A rules table stays as the fallback, and anything below a confidence threshold lands in "Not mapped", as it does here.
-- Arrival estimates. A model trained on lane history, with vessel and port feeds as inputs, would return an estimate and a confidence. Thresholds decide whether the customer sees a date, a range or "no update yet".
-- Notices. Drafts come from the model, but a human approves every message that reaches a customer.
-- Search. The LLM would turn text into the same filter object the dropdowns use, so the chips stay inspectable and a bad parse can be corrected.
-- Evaluation and freshness. A labelled set of real operator statuses and past delays would score each change before it ships. Operators push events by webhook where they can, and polling covers the rest.
+- Operator statuses: an LLM maps free text to milestones, validated against a schema. Rules stay as fallback; low confidence lands in "Not mapped".
+- Arrival estimates: a model on lane history plus vessel and port feeds, with thresholds deciding between a date, a range or "no update yet".
+- Notices: the model drafts, a human approves every message to a customer.
+- Search: the LLM returns the filter object the dropdowns use, so chips stay inspectable and a bad parse can be corrected.
+- Evaluation: a labelled set of real statuses and past delays scores each change before release. Webhooks where operators offer them, polling elsewhere.
 
 ## Assumptions, limitations and next steps
 
-I assumed one customer and one ops persona are enough to show scoping, that English, metric units and EUR are fine, and that operators expose events with timestamps. I also assumed the demo runs locally, so there is no deployment or auth.
+Assumed: one customer and one ops persona are enough to show scoping; English, metric units and EUR; operators expose timestamped events; the demo runs locally, so no deployment or auth.
 
-Limitations I know about:
+Limitations:
 
-- Reloading resets all data.
-- Search understands a fixed set of phrases and nothing else.
-- Risk and estimates are deterministic rules, not models, so they cannot learn.
-- There is only one scripted live event.
-- No auth and no tests. I also added an "Awaiting update" customer status for shipments whose operator feed has gone quiet.
+- Reload resets all data.
+- Search understands a fixed set of phrases.
+- Risk and estimates are rules, not models. They cannot learn.
+- One scripted live event.
+- No auth, no tests.
 
-Next steps, in order. First, real events behind a thin API with webhooks. Second, an evaluation set for the status mapper, before any LLM touches customer-facing text. Third, tests for the risk and search rules, which are the cheapest to cover. Then notification preferences, document upload and a map, once I know what customers actually ask for.
+Next steps, in order:
+
+1. Real events behind a thin API with webhooks.
+2. An evaluation set for the status mapper, before any LLM touches customer-facing text.
+3. Tests for the risk and search rules, the cheapest to cover.
+4. Notification preferences, document upload and a map, once I know what customers ask for.
 
 I used AI coding tools (Claude Code) throughout. I made the scope, product and visual decisions and reviewed what it produced.
