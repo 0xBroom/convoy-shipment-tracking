@@ -56,7 +56,7 @@
 /* The row the latest live event touched, in the group and in the table. */
 .incident-members > li[data-live='true'],
 .exceptions-table tbody tr[data-live='true'] {
-  animation: live-row var(--dur-live) ease-out both;
+  animation: live-row var(--dur-tint) ease-out;
 }
 
 .incident-order {

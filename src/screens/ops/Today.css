@@ -70,7 +70,7 @@
 }
 
 .today-actions > li[data-live='true'] {
-  animation: live-row var(--dur-live) ease-out both;
+  animation: live-row var(--dur-tint) ease-out;
 }
 
 .today-actions > li::before {

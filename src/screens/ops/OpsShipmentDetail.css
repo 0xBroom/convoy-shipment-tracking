@@ -242,8 +242,11 @@
   display: none;
 }
 
+/* In the rail the card is one more section: same top rule and spacing as its
+   siblings, and no bottom rule of its own. */
 .ops-rail .estimate-card {
-  padding: 0;
+  padding: var(--space-3) 0 0;
+  border-bottom: 0;
 }
 
 .ops-log {
