@@ -11,8 +11,8 @@ export const SEED_NOTICES = [
     customerId: 'nordvik',
     kind: 'update',
     title: 'Order 12345 customs documents lodged',
-    text: 'Customs documents for Gdansk were lodged on 8 Oct at 10:00. We still need the commercial invoice before customs review.',
-    sentAt: t(8, '11:05'),
+    text: 'Customs documents for Gdansk were lodged on 13 Oct at 10:00. We still need the commercial invoice before customs review.',
+    sentAt: t(13, '11:05'),
     read: false,
   },
   {
@@ -22,7 +22,7 @@ export const SEED_NOTICES = [
     kind: 'delivered',
     title: 'Order 12210 delivered',
     text: 'Delivered to Lyon at 09:12. Signed by the receiving warehouse.',
-    sentAt: t(8, '09:12'),
+    sentAt: t(13, '09:12'),
     read: false,
   },
   {
@@ -32,15 +32,15 @@ export const SEED_NOTICES = [
     kind: 'customs',
     title: 'Order 12290 held at customs at Gdansk',
     text: 'Customs asked for a corrected declaration. Convoy is following up with the broker.',
-    sentAt: t(7, '16:40'),
+    sentAt: t(12, '16:40'),
     read: true,
   },
 ]
 
 // Ops activity log entries present when the demo loads (newest first at render).
 export const SEED_ACTIVITY = [
-  { id: 'activity-1', at: t(8, '11:05'), type: 'notice', shipmentId: '12345', text: 'Update sent to customer' },
-  { id: 'activity-2', at: t(8, '10:20'), type: 'operator', shipmentId: '12418', text: 'Message sent to Iberroute' },
-  { id: 'activity-3', at: t(7, '16:55'), type: 'operator', shipmentId: '12290', text: 'Message sent to Baltic Customs' },
-  { id: 'activity-4', at: t(7, '16:45'), type: 'notice', shipmentId: '12290', text: 'Update sent to customer' },
+  { id: 'activity-1', at: t(13, '11:05'), type: 'notice', shipmentId: '12345', text: 'Update sent to customer' },
+  { id: 'activity-2', at: t(13, '10:20'), type: 'operator', shipmentId: '12418', text: 'Message sent to Iberroute' },
+  { id: 'activity-3', at: t(12, '16:55'), type: 'operator', shipmentId: '12290', text: 'Message sent to Baltic Customs' },
+  { id: 'activity-4', at: t(12, '16:45'), type: 'notice', shipmentId: '12290', text: 'Update sent to customer' },
 ]

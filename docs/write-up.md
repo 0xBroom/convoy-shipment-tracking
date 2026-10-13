@@ -33,7 +33,7 @@ React 19 with Vite, react-router for real URLs, plain CSS with custom-property t
 
 The central decision is to store facts and derive judgments. The store, a context with a reducer, holds operator events, the plan, documents and what ops did. Risk, arrival estimates, the summary, search results and drafted notices are pure functions in `src/ai/` run through selectors. That makes the reliability rule structural, since the UI cannot display an estimate as confirmed. It also means ops actions flow to the customer view with no extra wiring, and the folder is a clean line to point at: this is what production would replace.
 
-The risk rules are plain weights, such as +4 for a customs hold, +3 for 24 hours of silence and +2 per day of slip, capped. Same inputs give the same ranking. The dataset has 24 shipments, six operators and a fixed "now" of 8 Oct 2026, 14:30, so the demo renders the same on any machine.
+The risk rules are plain weights, such as +4 for a customs hold, +3 for 24 hours of silence and +2 per day of slip, capped. Same inputs give the same ranking. The dataset has 24 shipments, six operators and a fixed "now" of 13 Oct 2026, 14:30, so the demo renders the same on any machine.
 
 For production, the AI path would look like this:
 

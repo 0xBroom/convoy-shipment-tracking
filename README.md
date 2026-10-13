@@ -15,7 +15,7 @@ npm run dev
 
 Open the URL Vite prints. `npm run lint` and `npm run build` both pass. Fonts and icons are bundled, so it works offline.
 
-The app has a fixed "now": 8 Oct 2026, 14:30, Europe/Madrid. Reloading the page resets all data.
+The app has a fixed "now": 13 Oct 2026, 14:30, Europe/Madrid. Reloading the page resets all data.
 
 ## Demo script (about 10 minutes)
 
@@ -37,7 +37,7 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 5. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
 6. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Docs lodged", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
 7. Open "Demo controls" and choose "Simulate new event". A toast appears and the timeline extends. The estimate stays but its reason changes. Customer view shows the same event.
-8. On the detail page, use "Request document" on the invoice and confirm. The customer then sees "Requested on 8 Oct, 14:30".
+8. On the detail page, use "Request document" on the invoice and confirm. The customer then sees "Requested on 13 Oct, 14:30".
 9. "Demo controls" then "Reset demo data" brings everything back.
 
 ## What is simulated
