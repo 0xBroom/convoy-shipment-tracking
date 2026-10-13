@@ -72,7 +72,7 @@ function Attachments({ files, canAdd, onAdd, onRemove }) {
         <Paperclip size={14} aria-hidden="true" />
         Attach another file
       </button>
-      <p className="action-attach-note">This prototype does not read real files.</p>
+      <p className="action-attach-note">Convoy attached the file on record in the ERP.</p>
     </div>
   )
 }
