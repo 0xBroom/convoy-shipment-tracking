@@ -157,16 +157,23 @@
   padding-left: var(--space-4);
 }
 
-/* Who receives the message and how: one definition row above the buttons,
-   set like the facts block, with the name in full ink so it reads first. */
+/* Who receives the message, how, and in which language: two definition rows
+   above the buttons, set like the facts block, the terms aligned in one
+   column and the value in full ink so it reads first. */
 .action-to {
-  display: flex;
-  gap: var(--space-3);
+  display: grid;
+  gap: var(--space-1);
   margin: 0;
   padding-top: var(--space-3);
   border-top: 1px solid var(--rule);
   color: var(--ink-2);
   font-size: var(--text-13);
+}
+
+.action-to > div {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+  gap: var(--space-3);
 }
 
 .action-to dt {
@@ -188,6 +195,16 @@
 .action-to-part::before {
   content: '\00b7';
   margin-right: var(--space-2);
+}
+
+/* The way to the other language: a quiet link at the end of the row. */
+.action-language {
+  font-size: inherit;
+}
+
+.action-language:disabled {
+  color: var(--ink-3);
+  cursor: not-allowed;
 }
 
 .action-buttons {

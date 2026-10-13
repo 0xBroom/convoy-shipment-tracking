@@ -2,12 +2,15 @@
 // parties (two EU port agents checking Union status, one Norwegian import
 // broker). Each one speaks its own raw vocabulary; that is the point of the
 // normaliser. `vocab` maps raw status to a milestone. `email` is where Convoy
-// writes to them; the addresses are made up.
+// writes to them; the addresses are made up. `language` is the language the
+// operator posts its statuses in, and the default for messages Convoy drafts
+// to it.
 export const OPERATORS = [
   {
     id: 'iberroute',
     name: 'Iberroute',
     mode: 'road',
+    language: 'en',
     email: 'ops@iberroute.example',
     vocab: {
       Tendered: 'picked_up',
@@ -21,6 +24,7 @@ export const OPERATORS = [
     id: 'nordhaul',
     name: 'Nordhaul',
     mode: 'road',
+    language: 'en',
     email: 'ops@nordhaul.example',
     vocab: {
       Collected: 'picked_up',
@@ -33,6 +37,7 @@ export const OPERATORS = [
     id: 'portline',
     name: 'Portline',
     mode: 'sea',
+    language: 'en',
     email: 'ops@portline.example',
     vocab: {
       'Gate-in': 'gate_in',
@@ -47,6 +52,7 @@ export const OPERATORS = [
     id: 'medlines',
     name: 'MedLines',
     mode: 'sea',
+    language: 'en',
     email: 'ops@medlines.example',
     vocab: {
       'GATE IN': 'gate_in',
@@ -61,6 +67,7 @@ export const OPERATORS = [
     id: 'baltic-customs',
     name: 'Baltic Customs',
     mode: 'customs',
+    language: 'en',
     email: 'docs@baltic-customs.example',
     vocab: {
       'Docs lodged': 'docs_submitted',
@@ -73,6 +80,7 @@ export const OPERATORS = [
     id: 'rhone-brokers',
     name: 'Rhone Brokers',
     mode: 'customs',
+    language: 'fr',
     email: 'docs@rhone-brokers.example',
     vocab: {
       'Déclaration déposée': 'docs_submitted',
@@ -85,6 +93,7 @@ export const OPERATORS = [
     id: 'fjordklar',
     name: 'Fjordklar Customs',
     mode: 'customs',
+    language: 'en',
     email: 'toll@fjordklar.example',
     vocab: {
       'Deklarasjon mottatt': 'docs_submitted',

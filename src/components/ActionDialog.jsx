@@ -1,7 +1,8 @@
 import { FileText, Paperclip, RotateCcw, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
-import { draftDocumentRequest, draftDocumentSend, draftNotice, draftOperatorMessage } from '../ai/drafts.js'
+import { draftDocumentRequest, draftDocumentSend, draftNotice, draftOperatorMessage, recipientLanguage } from '../ai/drafts.js'
 import { DOCUMENT_LABELS, docLabel, documentFileName, isShipperDocument } from '../data/documents.js'
+import { LANGUAGES, otherLanguage } from '../data/languages.js'
 import { OPERATORS_BY_ID } from '../data/operators.js'
 import { documentRecipient } from '../lib/documents.js'
 import { fmtDateTime } from '../lib/format.js'
@@ -77,13 +78,13 @@ function Attachments({ files, canAdd, onAdd, onRemove }) {
 }
 
 // Each proposed action type from the risk engine maps to one dialog: its
-// title, the draft, the facts the draft used, who receives it and the
-// confirm button.
+// title, the draft (in a given language), the facts the draft used, who
+// receives it and the confirm button.
 const ACTIONS = {
   notify: {
     title: (view) => `Draft notice to customer, order ${view.id}`,
     confirm: 'Send notice to customer',
-    draft: (view) => draftNotice(view),
+    draft: (view, _action, language) => draftNotice(view, { language }),
     facts(view) {
       const est = view.estimate
       const cause = view.risk.reasons[0]?.text
@@ -101,7 +102,7 @@ const ACTIONS = {
   send_document: {
     title: (view, action) => `Send ${docLabel(action.docType)}, order ${view.id}`,
     confirm: 'Send document',
-    draft: (view, action) => draftDocumentSend(view, action.docType),
+    draft: (view, action, language) => draftDocumentSend(view, action.docType, { language }),
     facts(view, action) {
       const doc = view.documents.find((d) => d.type === action.docType)
       return [
@@ -125,7 +126,7 @@ const ACTIONS = {
   request_document: {
     title: (view, action) => `Request ${docLabel(action.docType)}, order ${view.id}`,
     confirm: 'Request document',
-    draft: (view, action) => draftDocumentRequest(view, action.docType),
+    draft: (view, action, language) => draftDocumentRequest(view, action.docType, { language }),
     facts(view, action) {
       const doc = view.documents.find((d) => d.type === action.docType)
       return [
@@ -147,7 +148,7 @@ const ACTIONS = {
   contact_operator: {
     title: (view) => `Message operator, order ${view.id}`,
     confirm: 'Send message to operator',
-    draft: (view) => draftOperatorMessage(view),
+    draft: (view, _action, language) => draftOperatorMessage(view, { language }),
     facts(view) {
       const { operatorName, event } = contactTarget(view)
       return [
@@ -169,12 +170,18 @@ const ACTIONS = {
   onClose. Nothing is dispatched until the confirm button is clicked and the
   short "Sending…" state has passed, and what is sent is the edited text.
   Cancel during that state drops the send.
+
+  The draft is written in the recipient's language. "Write in … instead"
+  switches it and regenerates the draft; the sent text keeps whichever
+  language it was written in.
 */
 export default function ActionDialog({ view, action, onClose }) {
   const dispatch = useDispatch()
   const spec = ACTIONS[action.type]
   const dialog = useRef(null)
-  const [draft] = useState(() => spec.draft(view, action))
+  const [recipient] = useState(() => recipientLanguage(view, action))
+  const [language, setLanguage] = useState(recipient.language)
+  const [draft, setDraft] = useState(() => spec.draft(view, action, language))
   const [text, setText] = useState(draft)
   const [extras, setExtras] = useState([])
   const [sending, setSending] = useState(false)
@@ -182,8 +189,21 @@ export default function ActionDialog({ view, action, onClose }) {
   const titleId = `action-title-${view.id}`
   const to = spec.to(view, action)
   const edited = text !== draft
+  const chosen = language !== recipient.language
+  const languageWhy = chosen
+    ? `Written in ${LANGUAGES[language]} at your request; ${recipient.reason}.`
+    : `Written in ${LANGUAGES[language]} because ${recipient.reason}.`
 
   useEffect(() => () => clearTimeout(sendTimer.current), [])
+
+  // A new language means a new draft; any edits to the old one are dropped.
+  const switchLanguage = () => {
+    const next = otherLanguage(language)
+    const regenerated = spec.draft(view, action, next)
+    setLanguage(next)
+    setDraft(regenerated)
+    setText(regenerated)
+  }
 
   // The ERP file always goes; extras are added and removed by name.
   const files = spec.attachments ? [erpFile(action.docType, view.id), ...extras] : []
@@ -266,15 +286,32 @@ export default function ActionDialog({ view, action, onClose }) {
             ))}
           </ul>
         </div>
-        <Why>{spec.why}</Why>
+        <Why>
+          {spec.why} {languageWhy}
+        </Why>
 
         <dl className="action-to">
-          <dt>To</dt>
-          <dd>
-            <span className="action-to-name">{to.name}</span>
-            {to.address && <span className="action-to-part">{to.address}</span>}
-            <span className="action-to-part">{to.channel}</span>
-          </dd>
+          <div>
+            <dt>To</dt>
+            <dd>
+              <span className="action-to-name">{to.name}</span>
+              {to.address && <span className="action-to-part">{to.address}</span>}
+              <span className="action-to-part">{to.channel}</span>
+            </dd>
+          </div>
+          <div>
+            <dt>Language</dt>
+            <dd>
+              <span className="action-to-name">{LANGUAGES[language]}</span>
+              <span className="action-to-part">
+                {chosen ? 'your choice; ' : ''}
+                {recipient.reason}
+              </span>
+              <button type="button" className="link-button action-language" disabled={sending} onClick={switchLanguage}>
+                Write in {LANGUAGES[otherLanguage(language)]} instead
+              </button>
+            </dd>
+          </div>
         </dl>
 
         <div className="action-buttons">

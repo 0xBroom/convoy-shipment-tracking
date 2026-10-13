@@ -43,6 +43,26 @@ export function fmtDateTime(value) {
 // "8 Oct"
 export const fmtDate = (value) => date.format(new Date(value))
 
+// French forms for drafts written in French: "8 oct. à 14:30" and "8 oct.".
+// The UI itself never uses them.
+const dateTimeFr = new Intl.DateTimeFormat('fr-FR', {
+  day: 'numeric',
+  month: 'short',
+  hour: '2-digit',
+  minute: '2-digit',
+  hourCycle: 'h23',
+  timeZone: TZ,
+})
+const dateFr = new Intl.DateTimeFormat('fr-FR', { day: 'numeric', month: 'short', timeZone: TZ })
+
+export function fmtDateTimeFr(value) {
+  const parts = dateTimeFr.formatToParts(new Date(value))
+  const pick = (type) => parts.find((p) => p.type === type).value
+  return `${pick('day')} ${pick('month')} à ${pick('hour')}:${pick('minute')}`
+}
+
+export const fmtDateFr = (value) => dateFr.format(new Date(value))
+
 // "14:30"
 export const fmtTime = (value) => time.format(new Date(value))
 
