@@ -6,6 +6,30 @@ import { selectCustomerNotices } from '../../store/selectors.js'
 import { useDispatch, useSelector } from '../../store/useStore.js'
 import './Notifications.css'
 
+// A notice longer than this is clamped to three lines until opened. Three
+// lines at the 64ch measure hold about 190 characters, so a text under the
+// limit is never clamped. Counting characters is deterministic and needs no
+// layout measurement; the cost is a toggle that reveals little when a
+// borderline text happens to fit.
+const LONG_NOTICE = 220
+
+function NoticeBody({ text }) {
+  const [open, setOpen] = useState(false)
+  const long = text.length > LONG_NOTICE
+  return (
+    <>
+      <p className="notice-body" data-clamped={long && !open}>
+        {text}
+      </p>
+      {long && (
+        <button type="button" className="link-button notice-toggle" aria-expanded={open} onClick={() => setOpen(!open)}>
+          {open ? 'Show less' : 'Show more'}
+        </button>
+      )}
+    </>
+  )
+}
+
 // Opening the page marks everything read, so the nav count drops at once.
 // The dots shown here are the ones that were unread when the page opened,
 // so the customer can still see what is new.
@@ -42,7 +66,7 @@ export default function Notifications() {
                     {unread && <span className="visually-hidden">Unread. </span>}
                     {notice.title}
                   </h2>
-                  <p className="notice-body">{notice.text}</p>
+                  <NoticeBody text={notice.text} />
                   <Link to={`/customer/shipments/${notice.shipmentId}`}>
                     Open shipment<span className="visually-hidden"> {notice.shipmentId}</span>
                   </Link>

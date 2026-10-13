@@ -160,6 +160,18 @@ textarea {
   text-underline-offset: 3px;
 }
 
+/* A button that reads as a link, for small in-text toggles ("Show more"). */
+.link-button {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: var(--harbour);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  cursor: pointer;
+}
+
 .button:disabled,
 .button[aria-disabled='true'] {
   background: var(--manifest);

@@ -10,6 +10,9 @@ import './ActionDialog.css'
 
 const route = (view) => `${view.origin.city} to ${view.destination.city}`
 
+// Every draft fits with room to edit; the counter shows how much is left.
+const MAX_TEXT = 600
+
 // Each proposed action type from the risk engine maps to one dialog: its
 // title, the draft, the facts the draft used and the confirm button.
 const ACTIONS = {
@@ -108,13 +111,20 @@ export default function ActionDialog({ view, action, onClose }) {
         <label className="visually-hidden" htmlFor={`${titleId}-text`}>
           Message text, editable
         </label>
-        <textarea
-          id={`${titleId}-text`}
-          className="field action-text"
-          rows={7}
-          value={text}
-          onChange={(event) => setText(event.target.value)}
-        />
+        <div className="action-field">
+          <textarea
+            id={`${titleId}-text`}
+            className="field action-text"
+            rows={7}
+            maxLength={MAX_TEXT}
+            value={text}
+            onChange={(event) => setText(event.target.value)}
+          />
+          <p className="action-count">
+            <span className="visually-hidden">Length </span>
+            {text.length} / {MAX_TEXT}
+          </p>
+        </div>
 
         <div className="action-facts">
           <p>Facts used</p>

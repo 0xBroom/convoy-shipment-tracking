@@ -52,6 +52,19 @@
   max-width: var(--measure);
 }
 
+/* A long notice shows three lines until "Read full notice" opens it. */
+.notice-banner-text[data-clamped='true'] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.notice-banner-toggle {
+  justify-self: start;
+  font-size: var(--text-13);
+}
+
 .notice-banner-meta {
   color: var(--ink-2);
   font-size: var(--text-13);

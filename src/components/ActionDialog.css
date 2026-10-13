@@ -30,9 +30,22 @@
   gap: var(--space-3);
 }
 
+.action-field {
+  display: grid;
+  gap: var(--space-1);
+  justify-items: end;
+}
+
 .action-text {
   width: 100%;
   resize: vertical;
+}
+
+.action-count {
+  color: var(--ink-3);
+  font-family: var(--font-data);
+  font-size: var(--text-12);
+  font-variant-numeric: tabular-nums;
 }
 
 .action-facts {

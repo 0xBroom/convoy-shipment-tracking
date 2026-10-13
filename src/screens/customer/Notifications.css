@@ -54,6 +54,18 @@
   color: var(--ink-2);
 }
 
+/* A long notice shows three lines until "Show more" opens it. */
+.notice-body[data-clamped='true'] {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.notice-toggle {
+  font-size: var(--text-13);
+}
+
 .notice-time {
   color: var(--ink-2);
   font-family: var(--font-data);
@@ -82,7 +94,12 @@
   }
 
   .notice-body,
+  .notice-toggle,
   .notice-main a {
     grid-column: 2;
+  }
+
+  .notice-toggle {
+    justify-self: start;
   }
 }
