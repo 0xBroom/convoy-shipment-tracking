@@ -3,7 +3,7 @@ import { INCIDENTS } from '../data/incidents.js'
 import { SITES_BY_ID } from '../data/sites.js'
 import { documentRecipient } from '../lib/documents.js'
 import { dayKey, fmtDateTime, fmtDuration, hoursSince } from '../lib/format.js'
-import { contactTarget, deliveredEvent } from '../lib/shipment.js'
+import { contactTarget, deliveredEvent, holdText } from '../lib/shipment.js'
 import { rankByRisk } from './risk.js'
 
 const MAX_NEXT_ACTIONS = 5
@@ -116,7 +116,7 @@ export function describeAction(view, action, now) {
       const hold = view.risk.tags.includes('customs_hold')
       return {
         text: `Contact ${target.operatorName} about order ${id}`,
-        why: hold ? `Held at customs, ${target.event.location}.` : `${capitalise(staleText(view, now))}.`,
+        why: hold ? `${holdText(view, target.event)}.` : `${capitalise(staleText(view, now))}.`,
       }
     }
     default:

@@ -9,8 +9,8 @@ import { contactTarget } from '../lib/shipment.js'
 
 const routeOf = (view) => `${view.origin.city} to ${view.destination.city}`
 
-// What the customer is waiting for next, from the data: the vessel, customs,
-// or the last leg.
+// What the customer is waiting for next, from the data: the vessel, customs
+// or the port formalities, or the last leg.
 function nextMilestone(view) {
   const last = view.timeline.at(-1)
   const sea = view.legs.find((l) => l.mode === 'sea')
@@ -18,7 +18,11 @@ function nextMilestone(view) {
   const cleared = view.timeline.some((e) => view.legs[e.legIndex]?.mode === 'customs' && e.milestone === 'cleared')
   const customs = view.legs.find((l) => l.mode === 'customs')
   if (sea && !discharged) return `the vessel is discharged at ${sea.to.replace(/ port$/, '')}`
-  if (customs && !cleared) return `customs clears at ${customs.from}`
+  if (customs && !cleared) {
+    return customs.formality === 'union_status'
+      ? `the port releases it at ${customs.from}`
+      : `customs clears it at ${customs.from}`
+  }
   return last ? `the truck is out for delivery` : 'the shipment is collected'
 }
 

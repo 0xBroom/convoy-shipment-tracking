@@ -5,7 +5,7 @@ export const LIVE_EVENT = {
   shipmentId: '12345',
   operatorId: 'portline',
   raw: 'Discharged',
-  location: 'Gdansk',
+  location: 'Oslo',
   legIndex: 1,
   at: NOW.toISOString(),
 }

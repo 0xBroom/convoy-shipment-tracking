@@ -3,7 +3,7 @@ import { INCIDENTS } from '../data/incidents.js'
 import { SITES_BY_ID } from '../data/sites.js'
 import { documentActionType } from '../lib/documents.js'
 import { fmtDuration, hoursSince } from '../lib/format.js'
-import { isDelivered, lastEvent, openHold } from '../lib/shipment.js'
+import { holdText, isDelivered, lastEvent, openHold } from '../lib/shipment.js'
 
 // Rule weights. Same inputs always give the same score and the same ranking.
 const WEIGHTS = {
@@ -42,7 +42,7 @@ export function scoreRisk(view, now) {
   if (slipWeight > 0) add('delay', `${delayCause(view)} ${fmtDuration(slipHours)}`, slipWeight)
 
   const hold = openHold(view)
-  if (hold) add('customs_hold', `Held at customs, ${hold.location}`, WEIGHTS.customsHold)
+  if (hold) add('customs_hold', holdText(view, hold), WEIGHTS.customsHold)
 
   const last = lastEvent(view)
   const silentHours = last ? hoursSince(last.at, now) : null
@@ -118,9 +118,12 @@ function unresolvedIncident(view) {
 }
 
 // Names the mode that caused the delay: the confirmed delay events first,
-// customs time when it is the only source.
+// customs or port formality time when it is the only source.
 function delayCause(view) {
   const delayed = view.timeline.find((e) => e.delayHours > 0)
-  if (!delayed) return 'Customs delay'
+  if (!delayed) {
+    const customs = view.legs.find((l) => l.mode === 'customs')
+    return customs?.formality === 'union_status' ? 'Port formalities delay' : 'Customs delay'
+  }
   return view.legs[delayed.legIndex].mode === 'sea' ? 'Vessel delay' : 'Road delay'
 }

@@ -24,7 +24,7 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 ### Customer (3 to 4 minutes)
 
 1. Start as the customer (Nordvik Subsidiary). The list shows six shipments, the ones needing attention first.
-2. Open order 12345. Read the route timeline: road, sea, customs and road again, each leg from a different operator. Solid lines are confirmed by an operator, dashed and hatched ones are not.
+2. Open order 12345. Read the route timeline: road, sea, Norwegian import customs and road again, each leg from a different operator. Solid lines are confirmed by an operator, dashed and hatched ones are not.
 3. Look at the arrival card: an estimate with its confidence and the reason behind it. Check the documents list, where the invoice has not been sent yet.
 4. Open Notifications from the top bar. Keep it in mind, it fills up later.
 
@@ -35,9 +35,9 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 3. Switch back to the customer. The banner on order 12345 changes from the earlier "documents lodged" update to the new delay notice, and Notifications has a new item with an unread count in the nav.
 4. Switch to ops again. In Portfolio, click the suggestion "shipments to France this week running late" (or type it). Three interpreted chips appear and the table narrows to one row. Remove the window chip and a second French shipment comes back.
 5. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
-6. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Docs lodged", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
+6. Clear the search and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Deklarasjon mottatt", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
 7. Open "Demo controls" and choose "Simulate new event". A toast appears and the timeline extends. The estimate stays but its reason changes. Customer view shows the same event.
-8. On the detail page, use "Send document" on the invoice. The dialog says who receives it and how (Baltic Customs, by email) and names the attached file. Confirm. The customer then sees "Sent to Baltic Customs on 13 Oct, 14:30 by email".
+8. On the detail page, use "Send document" on the invoice. The dialog says who receives it and how (Fjordklar Customs, the Norwegian import broker, by email) and names the attached file. Confirm. The customer then sees "Sent to Fjordklar Customs on 13 Oct, 14:30 by email".
 9. "Demo controls" then "Reset demo data" brings everything back.
 
 ## What is simulated

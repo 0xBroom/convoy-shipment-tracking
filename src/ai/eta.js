@@ -37,7 +37,7 @@ export function estimateArrival(view, now) {
 function customsDelay(view, now) {
   const leg = view.legs.find((l) => l.mode === 'customs')
   const cleared = view.timeline.some((e) => view.legs[e.legIndex]?.mode === 'customs' && e.milestone === 'cleared')
-  if (!leg || cleared) return { hours: 0, held: false, location: null }
+  if (!leg || cleared) return { hours: 0, held: false, leg: null }
 
   const upper = leg.typicalHours[1]
   const hold = openHold(view)
@@ -45,11 +45,21 @@ function customsDelay(view, now) {
     return {
       hours: Math.max(MIN_HOLD_HOURS, upper - hoursSince(hold.at, now)),
       held: true,
-      location: leg.from,
+      leg,
     }
   }
   const allowed = hoursBetween(leg.plannedDeparture, leg.plannedArrival)
-  return { hours: Math.max(0, upper - allowed), held: false, location: leg.from }
+  return { hours: Math.max(0, upper - allowed), held: false, leg }
+}
+
+// What the customs leg is, in the rationale: an EU port only checks Union
+// status, so its time is "port formalities", never "customs".
+function customsPart({ held, leg }) {
+  const union = leg.formality === 'union_status'
+  if (held) {
+    return union ? `the open hold at ${leg.from} pending proof of Union status` : `the open customs hold at ${leg.from}`
+  }
+  return union ? `typical port formalities at ${leg.from}` : `typical customs time at ${leg.from}`
 }
 
 // low: silent feed or an open hold. high: on the last leg with a fresh feed.
@@ -76,13 +86,7 @@ function rationaleOf(view, customs, delayHours) {
       parts.push(`${mode === 'sea' ? 'vessel' : 'road'} delay at ${e.location}`)
     }
   }
-  if (customs.hours > 0) {
-    parts.push(
-      customs.held
-        ? `the open customs hold at ${customs.location}`
-        : `typical customs time at ${customs.location}`,
-    )
-  }
+  if (customs.hours > 0) parts.push(customsPart(customs))
   return `Based on ${joinParts([...new Set(parts)])}.`
 }
 

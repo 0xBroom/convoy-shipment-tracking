@@ -1,6 +1,8 @@
-// Six operators, two per mode. Each one speaks its own raw vocabulary; that
-// is the point of the normaliser. `vocab` maps raw status to a milestone.
-// `email` is where Convoy writes to them; the addresses are made up.
+// Seven operators: two road carriers, two sea carriers and three customs
+// parties (two EU port agents checking Union status, one Norwegian import
+// broker). Each one speaks its own raw vocabulary; that is the point of the
+// normaliser. `vocab` maps raw status to a milestone. `email` is where Convoy
+// writes to them; the addresses are made up.
 export const OPERATORS = [
   {
     id: 'iberroute',
@@ -77,6 +79,18 @@ export const OPERATORS = [
       Contrôle: 'under_review',
       Bloqué: 'held',
       Dédouané: 'cleared',
+    },
+  },
+  {
+    id: 'fjordklar',
+    name: 'Fjordklar Customs',
+    mode: 'customs',
+    email: 'toll@fjordklar.example',
+    vocab: {
+      'Deklarasjon mottatt': 'docs_submitted',
+      'Under behandling': 'under_review',
+      'Stoppet for kontroll': 'held',
+      Fortollet: 'cleared',
     },
   },
 ]

@@ -24,11 +24,13 @@ const LABELS = {
   cleared: 'Cleared',
 }
 
-// A road leg that is not the last one ends at a port or hub, not at the
-// customer. "Delivered" there would read as final delivery, so say where.
+// A road leg that is not the last one ends at a port, a border or a hub, not
+// at the customer. "Delivered" there would read as final delivery, so say where.
+const HANDOVER_LABELS = { port: 'Delivered to port', customs: 'At the border' }
+
 function milestoneLabel(leg, isLast, milestone, label) {
   if (milestone !== 'delivered' || isLast) return label
-  return leg.toKind === 'port' ? 'Delivered to port' : 'Handed over'
+  return HANDOVER_LABELS[leg.toKind] ?? 'Handed over'
 }
 
 // The same rule for a normalised event, so the ops feed reads like the route.

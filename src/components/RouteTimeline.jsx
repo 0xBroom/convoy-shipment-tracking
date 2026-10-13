@@ -1,7 +1,7 @@
 import { Ship, Stamp, Truck } from 'lucide-react'
 import { fmtDateTime } from '../lib/format.js'
-import { MODE_LABELS } from '../data/milestones.js'
 import { OPERATORS_BY_ID } from '../data/operators.js'
+import { legTitle } from '../lib/route.js'
 import { buildTimeline } from '../lib/timeline.js'
 import { useLiveEventId } from '../store/useStore.js'
 import AiStamp from './AiStamp.jsx'
@@ -32,11 +32,6 @@ function Node({ kind, confirmed, estimated, className = '' }) {
       data-estimated={estimated && !confirmed}
     />
   )
-}
-
-function legTitle(leg) {
-  const mode = MODE_LABELS[leg.mode]
-  return leg.from === leg.to ? `${mode} at ${leg.from}` : `${mode}, ${leg.from} to ${leg.to}`
 }
 
 /*

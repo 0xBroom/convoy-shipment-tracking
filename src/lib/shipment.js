@@ -20,6 +20,16 @@ export function openHold(view) {
   return latest?.milestone === 'held' ? latest : null
 }
 
+// The one wording for an open hold, shared by the risk reasons and the
+// proposed actions. At an EU port the goods are held because their Union
+// status is unproven, not by import customs.
+export function holdText(view, hold = openHold(view)) {
+  const leg = view.legs[hold.legIndex]
+  return leg?.formality === 'union_status'
+    ? `Held pending proof of Union status, ${hold.location}`
+    : `Held at customs, ${hold.location}`
+}
+
 // Who to ask: the broker when the shipment is held, otherwise the operator of
 // the last status.
 export function contactTarget(view) {

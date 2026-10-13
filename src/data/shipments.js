@@ -1,6 +1,6 @@
 import { SITES_BY_ID } from './sites.js'
 import { t } from './time.js'
-import { DOCUMENT_TYPES } from './documents.js'
+import { documentTypesFor } from './documents.js'
 
 /*
   Shipments are facts only: what the order promised (plan), what operators
@@ -13,8 +13,13 @@ import { DOCUMENT_TYPES } from './documents.js'
     the clocks change on 25 Oct), written through t(day, "HH:MM") from time.js.
   - An event with `delayHours` reports a delay the operator confirmed
     (for example a vessel rollover); the ETA engine adds it to the plan.
-  - Customs legs carry `typicalHours` ([low, high]), the usual clearance time.
-    The plan window of the leg is what the order assumed.
+  - Customs legs carry `formality` and `typicalHours` ([low, high], the usual
+    clearance time). The plan window of the leg is what the order assumed.
+    There is no import clearance between EU member states: a sea arrival at an
+    EU port only has its Union status checked ('union_status', proof is a T2L),
+    while the Norwegian lane clears real import customs ('import').
+  - Documents follow the route (documentTypesFor); fixtures only list the ones
+    that are not simply "ok".
   - Raw statuses are exactly what each operator sends. 'ROLLED' is not in the
     Portline vocabulary on purpose: it must render as "Not mapped".
 */
@@ -24,6 +29,10 @@ const site = (id) => {
   return { siteId: id, city, country, label: name }
 }
 const place = (city, country) => ({ siteId: null, city, country, label: city })
+
+// Nordvik Subsidiary receives at Drammen, outside the EU customs union.
+const NORDVIK = 'Nordvik, Drammen'
+const drammen = () => place('Drammen', 'NO')
 
 const leg = (mode, operatorId, from, to, kinds, [plannedDeparture, plannedArrival], extra) => ({
   mode,
@@ -37,6 +46,9 @@ const leg = (mode, operatorId, from, to, kinds, [plannedDeparture, plannedArriva
   ...extra,
 })
 
+const unionStatus = (typicalHours) => ({ formality: 'union_status', typicalHours })
+const importCustoms = (typicalHours) => ({ formality: 'import', typicalHours })
+
 const event = (operatorId, raw, location, legIndex, at, extra) => ({
   operatorId,
   raw,
@@ -46,15 +58,16 @@ const event = (operatorId, raw, location, legIndex, at, extra) => ({
   ...extra,
 })
 
-const documents = (overrides = {}) =>
-  DOCUMENT_TYPES.map((type) => ({ type, status: 'ok', ...overrides[type] }))
+const documentsFor = (legs, overrides = {}) =>
+  documentTypesFor(legs).map((type) => ({ type, status: 'ok', ...overrides[type] }))
 
 // Events are stored in time order with stable ids ("12345-e3").
-function shipment({ id, events, ...rest }) {
+function shipment({ id, legs, events, documents: overrides, ...rest }) {
   const ordered = [...events].sort((a, b) => a.at.localeCompare(b.at))
   return {
     id,
-    documents: documents(),
+    legs,
+    documents: documentsFor(legs, overrides),
     flags: {},
     ...rest,
     events: ordered.map((e, i) => ({ id: `${id}-e${i + 1}`, ...e })),
@@ -75,21 +88,40 @@ function roadShipment({ operatorId, origin, destination, departure, promisedAt, 
   })
 }
 
+// Road all the way to Norway: the same carrier drives to the Svinesund border,
+// Fjordklar clears the import there, and the truck carries on to Drammen.
+// Rows are [legIndex, raw, location, at]; rows on leg 1 come from Fjordklar.
+function norwayRoadShipment({ operatorId, origin, departure, border: [borderArrival, borderCleared], promisedAt, rows, ...rest }) {
+  return shipment({
+    origin,
+    destination: drammen(),
+    promisedAt,
+    legs: [
+      leg('road', operatorId, origin.label, 'Svinesund border', ['site', 'customs'], [departure, borderArrival]),
+      leg('customs', 'fjordklar', 'Svinesund', 'Svinesund', ['customs', 'customs'], [borderArrival, borderCleared], importCustoms([2, 4])),
+      leg('road', operatorId, 'Svinesund border', NORDVIK, ['customs', 'site'], [borderCleared, promisedAt]),
+    ],
+    events: rows.map(([legIndex, raw, location, at]) =>
+      event(legIndex === 1 ? 'fjordklar' : operatorId, raw, location, legIndex, at),
+    ),
+    ...rest,
+  })
+}
+
 export const SHIPMENTS = [
-  // Hero: four legs, four operators, one rolled vessel, one missing invoice.
+  // Hero: four legs, four operators, one rolled vessel, one missing invoice
+  // that Norwegian customs need before they clear the goods.
   shipment({
     id: '12345',
     customerId: 'nordvik',
     origin: site('zaragoza'),
-    destination: site('gdansk'),
+    destination: drammen(),
     promisedAt: t(17, '12:00'),
     legs: [
       leg('road', 'iberroute', 'Zaragoza plant', 'Tarragona port', ['site', 'port'], [t(11, '07:00'), t(11, '20:00')]),
-      leg('sea', 'portline', 'Tarragona port', 'Gdansk port', ['port', 'port'], [t(12, '20:00'), t(16, '06:00')]),
-      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(16, '08:00'), t(16, '22:00')], {
-        typicalHours: [24, 48],
-      }),
-      leg('road', 'nordhaul', 'Gdansk port', 'Nordvik, Gdansk', ['port', 'site'], [t(17, '06:00'), t(17, '12:00')]),
+      leg('sea', 'portline', 'Tarragona port', 'Oslo port', ['port', 'port'], [t(12, '20:00'), t(16, '06:00')]),
+      leg('customs', 'fjordklar', 'Oslo', 'Oslo', ['customs', 'customs'], [t(16, '08:00'), t(16, '22:00')], importCustoms([24, 48])),
+      leg('road', 'nordhaul', 'Oslo port', NORDVIK, ['port', 'site'], [t(17, '06:00'), t(17, '12:00')]),
     ],
     events: [
       event('iberroute', 'Tendered', 'Zaragoza', 0, t(11, '07:40')),
@@ -98,29 +130,28 @@ export const SHIPMENTS = [
       event('iberroute', 'POD', 'Tarragona', 0, t(11, '19:30')),
       event('portline', 'Gate-in', 'Tarragona', 1, t(11, '21:30')),
       event('portline', 'Loaded on vessel', 'Tarragona', 1, t(12, '15:00')),
-      event('baltic-customs', 'Docs lodged', 'Gdansk', 2, t(13, '10:00')),
+      event('fjordklar', 'Deklarasjon mottatt', 'Oslo', 2, t(13, '10:00')),
       event('portline', 'ROLLED', 'Tarragona', 1, t(13, '13:10'), { delayHours: 18 }),
     ],
-    documents: documents({
-      invoice: { status: 'missing', neededBy: 'customs review at Gdansk' },
-    }),
+    documents: {
+      invoice: { status: 'missing', neededBy: 'import clearance at Oslo' },
+    },
     flags: { incidentId: 'tarragona-rollover' },
   }),
 
-  // Held at customs with a rejected declaration, also hit by the rollover.
+  // Held at Gdansk: the T2L lodged for it was rejected, so the port treats
+  // the goods as non-Union until a corrected proof arrives. Also rolled.
   shipment({
     id: '12290',
-    customerId: 'nordvik',
+    customerId: 'vistula',
     origin: site('tarragona'),
     destination: site('gdansk'),
     promisedAt: t(16, '18:00'),
     legs: [
       leg('road', 'iberroute', 'Tarragona warehouse', 'Tarragona port', ['site', 'port'], [t(10, '08:00'), t(10, '18:00')]),
       leg('sea', 'portline', 'Tarragona port', 'Gdansk port', ['port', 'port'], [t(11, '18:00'), t(15, '06:00')]),
-      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(15, '08:00'), t(16, '08:00')], {
-        typicalHours: [24, 48],
-      }),
-      leg('road', 'nordhaul', 'Gdansk port', 'Nordvik, Gdansk', ['port', 'site'], [t(16, '12:00'), t(16, '18:00')]),
+      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(15, '08:00'), t(16, '08:00')], unionStatus([12, 24])),
+      leg('road', 'nordhaul', 'Gdansk port', 'Vistula Components, Gdansk', ['port', 'site'], [t(16, '12:00'), t(16, '18:00')]),
     ],
     events: [
       event('iberroute', 'Tendered', 'Tarragona', 0, t(10, '08:15')),
@@ -133,30 +164,28 @@ export const SHIPMENTS = [
       event('baltic-customs', 'Held for inspection', 'Gdansk', 2, t(12, '16:40')),
       event('portline', 'ROLLED', 'Tarragona', 1, t(13, '13:10'), { delayHours: 18 }),
     ],
-    documents: documents({
-      customs_declaration: {
+    documents: {
+      union_status: {
         status: 'rejected',
         rejectedAt: t(12, '16:40'),
-        neededBy: 'customs release at Gdansk',
+        neededBy: 'release at Gdansk',
       },
-    }),
+    },
     flags: { incidentId: 'tarragona-rollover' },
   }),
 
-  // Third shipment on the rolled vessel, for another customer.
+  // Second Nordvik order on the same rolled Oslo sailing, documents complete.
   shipment({
     id: '12411',
-    customerId: 'lusitania',
+    customerId: 'nordvik',
     origin: site('tarragona'),
-    destination: site('gdansk'),
+    destination: drammen(),
     promisedAt: t(17, '18:00'),
     legs: [
       leg('road', 'iberroute', 'Tarragona warehouse', 'Tarragona port', ['site', 'port'], [t(10, '09:00'), t(10, '19:00')]),
-      leg('sea', 'portline', 'Tarragona port', 'Gdansk port', ['port', 'port'], [t(12, '20:00'), t(16, '08:00')]),
-      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(16, '10:00'), t(17, '10:00')], {
-        typicalHours: [12, 24],
-      }),
-      leg('road', 'nordhaul', 'Gdansk port', 'Lusitania Parts, Gdansk', ['port', 'site'], [t(17, '12:00'), t(17, '18:00')]),
+      leg('sea', 'portline', 'Tarragona port', 'Oslo port', ['port', 'port'], [t(12, '20:00'), t(16, '06:00')]),
+      leg('customs', 'fjordklar', 'Oslo', 'Oslo', ['customs', 'customs'], [t(16, '08:00'), t(17, '08:00')], importCustoms([24, 48])),
+      leg('road', 'nordhaul', 'Oslo port', NORDVIK, ['port', 'site'], [t(17, '12:00'), t(17, '18:00')]),
     ],
     events: [
       event('iberroute', 'Tendered', 'Tarragona', 0, t(10, '09:00')),
@@ -165,7 +194,7 @@ export const SHIPMENTS = [
       event('iberroute', 'POD', 'Tarragona', 0, t(10, '18:45')),
       event('portline', 'Gate-in', 'Tarragona', 1, t(10, '21:00')),
       event('portline', 'Loaded on vessel', 'Tarragona', 1, t(12, '11:00')),
-      event('baltic-customs', 'Docs lodged', 'Gdansk', 2, t(13, '09:30')),
+      event('fjordklar', 'Deklarasjon mottatt', 'Oslo', 2, t(13, '09:30')),
       event('portline', 'ROLLED', 'Tarragona', 1, t(13, '13:10'), { delayHours: 18 }),
     ],
     flags: { incidentId: 'tarragona-rollover' },
@@ -181,9 +210,7 @@ export const SHIPMENTS = [
     legs: [
       leg('road', 'iberroute', 'Tarragona warehouse', 'Tarragona port', ['site', 'port'], [t(7, '08:00'), t(7, '16:00')]),
       leg('sea', 'medlines', 'Tarragona port', 'Gdansk port', ['port', 'port'], [t(8, '22:00'), t(12, '18:00')]),
-      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(12, '20:00'), t(13, '20:00')], {
-        typicalHours: [24, 48],
-      }),
+      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(12, '20:00'), t(13, '20:00')], unionStatus([12, 24])),
       leg('road', 'nordhaul', 'Gdansk port', 'Vistula Components, Gdansk', ['port', 'site'], [t(14, '08:00'), t(14, '14:00')]),
     ],
     events: [
@@ -212,9 +239,7 @@ export const SHIPMENTS = [
     legs: [
       leg('road', 'iberroute', 'Tarragona warehouse', 'Tarragona port', ['site', 'port'], [t(11, '08:00'), t(11, '14:30')]),
       leg('sea', 'medlines', 'Tarragona port', 'Gdansk port', ['port', 'port'], [t(12, '22:00'), t(16, '10:00')]),
-      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(16, '12:00'), t(17, '12:00')], {
-        typicalHours: [12, 24],
-      }),
+      leg('customs', 'baltic-customs', 'Gdansk', 'Gdansk', ['customs', 'customs'], [t(16, '12:00'), t(17, '12:00')], unionStatus([12, 24])),
       leg('road', 'nordhaul', 'Gdansk port', 'Vistula Components, Gdansk', ['port', 'site'], [t(18, '08:00'), t(18, '14:00')]),
     ],
     events: [
@@ -228,7 +253,7 @@ export const SHIPMENTS = [
     ],
   }),
 
-  // Delayed vessel to Marseille with a French broker (French raw statuses).
+  // Delayed vessel to Marseille with a French port agent (French raw statuses).
   shipment({
     id: '12471',
     customerId: 'rhone',
@@ -238,9 +263,7 @@ export const SHIPMENTS = [
     legs: [
       leg('road', 'iberroute', 'Tarragona warehouse', 'Tarragona port', ['site', 'port'], [t(9, '08:00'), t(9, '15:00')]),
       leg('sea', 'medlines', 'Tarragona port', 'Marseille port', ['port', 'port'], [t(10, '03:00'), t(11, '03:00')]),
-      leg('customs', 'rhone-brokers', 'Marseille', 'Marseille', ['customs', 'customs'], [t(11, '06:00'), t(12, '06:00')], {
-        typicalHours: [12, 24],
-      }),
+      leg('customs', 'rhone-brokers', 'Marseille', 'Marseille', ['customs', 'customs'], [t(11, '06:00'), t(12, '06:00')], unionStatus([12, 24])),
       leg('road', 'nordhaul', 'Marseille port', 'Rhone Industries, Marseille', ['port', 'site'], [t(13, '06:00'), t(13, '18:00')]),
     ],
     events: [
@@ -255,7 +278,9 @@ export const SHIPMENTS = [
     ],
   }),
 
-  // Inbound from Gdansk, vessel just departed. No customs leg inside the EU.
+  // Inbound from Gdansk, vessel just departed. Portline's direct Gdansk to
+  // Tarragona service is an authorised regular shipping service, so Union
+  // status is presumed on arrival: no formality leg, no T2L.
   shipment({
     id: '12392',
     customerId: 'lusitania',
@@ -277,65 +302,70 @@ export const SHIPMENTS = [
     ],
   }),
 
-  // Single-leg road shipments.
-  roadShipment({
+  // Nordvik's road orders: trucks to Drammen, cleared at the Svinesund border.
+  norwayRoadShipment({
     id: '12188',
     customerId: 'nordvik',
     operatorId: 'iberroute',
     origin: site('tarragona'),
-    destination: place('Porto', 'PT'),
     departure: t(12, '08:00'),
-    promisedAt: t(16, '10:00'),
+    border: [t(15, '08:00'), t(15, '12:00')],
+    promisedAt: t(15, '16:00'),
     rows: [
-      ['Tendered', 'Tarragona', t(12, '08:00')],
-      ['Depot scan', 'Tarragona', t(12, '11:00')],
-      ['In transit', 'Burgos', t(13, '09:40')],
+      [0, 'Tendered', 'Tarragona', t(12, '08:00')],
+      [0, 'Depot scan', 'Tarragona', t(12, '11:00')],
+      [0, 'In transit', 'Lyon', t(13, '09:40')],
     ],
-    documents: documents({
-      bill_of_lading: { status: 'missing', neededBy: 'collection at the Porto warehouse' },
-    }),
+    documents: {
+      bill_of_lading: { status: 'missing', neededBy: 'import clearance at Svinesund' },
+    },
   }),
-  roadShipment({
+  norwayRoadShipment({
     id: '12377',
     customerId: 'nordvik',
     operatorId: 'iberroute',
     origin: site('zaragoza'),
-    destination: place('Bilbao', 'ES'),
     departure: t(12, '06:00'),
-    promisedAt: t(13, '18:00'),
+    border: [t(15, '10:00'), t(15, '14:00')],
+    promisedAt: t(15, '18:00'),
     rows: [
-      ['Tendered', 'Zaragoza', t(12, '06:00')],
-      ['In transit', 'Zaragoza', t(12, '07:30')], // 31 h before the demo clock
+      [0, 'Tendered', 'Zaragoza', t(12, '06:00')],
+      [0, 'In transit', 'Zaragoza', t(12, '07:30')], // 31 h before the demo clock
     ],
   }),
-  roadShipment({
+  norwayRoadShipment({
     id: '12402',
     customerId: 'nordvik',
     operatorId: 'nordhaul',
     origin: site('tarragona'),
-    destination: place('Seville', 'ES'),
     departure: t(12, '16:00'),
-    promisedAt: t(15, '12:00'),
+    border: [t(16, '00:00'), t(16, '04:00')],
+    promisedAt: t(16, '08:00'),
     rows: [
-      ['Collected', 'Tarragona', t(12, '16:00')],
-      ['Linehaul', 'Valencia', t(13, '06:15')],
+      [0, 'Collected', 'Tarragona', t(12, '16:00')],
+      [0, 'Linehaul', 'Montpellier', t(13, '06:15')],
     ],
   }),
-  roadShipment({
+  norwayRoadShipment({
     id: '12210',
     customerId: 'nordvik',
     operatorId: 'nordhaul',
     origin: site('zaragoza'),
-    destination: site('lyon'),
-    departure: t(12, '07:00'),
+    departure: t(9, '07:00'),
+    border: [t(12, '10:00'), t(12, '14:00')],
     promisedAt: t(13, '10:00'),
     rows: [
-      ['Collected', 'Zaragoza', t(12, '07:30')],
-      ['Linehaul', 'Perpignan', t(12, '12:30')],
-      ['With driver', 'Lyon', t(13, '07:40')],
-      ['Delivered', 'Lyon', t(13, '09:12')],
+      [0, 'Collected', 'Zaragoza', t(9, '07:30')],
+      [0, 'Linehaul', 'Perpignan', t(9, '12:30')],
+      [0, 'Linehaul', 'Hamburg', t(11, '06:00')],
+      [1, 'Deklarasjon mottatt', 'Svinesund', t(12, '09:40')],
+      [1, 'Fortollet', 'Svinesund', t(12, '12:15')],
+      [2, 'With driver', 'Drammen', t(13, '07:40')],
+      [2, 'Delivered', 'Drammen', t(13, '09:12')],
     ],
   }),
+
+  // Single-leg road shipments inside the EU.
   roadShipment({
     id: '12455',
     customerId: 'lusitania',

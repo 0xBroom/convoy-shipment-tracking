@@ -4,6 +4,7 @@ export const COUNTRIES = {
   PL: 'Poland',
   PT: 'Portugal',
   IT: 'Italy',
+  NO: 'Norway', // outside the EU customs union: the one lane with import customs
 }
 
 // The four company sites. The ops user covers zaragoza and tarragona.
