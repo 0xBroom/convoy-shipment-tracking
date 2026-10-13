@@ -1,6 +1,7 @@
-import { docLabel } from '../data/documents.js'
+import { docLabel, isShipperDocument } from '../data/documents.js'
 import { INCIDENTS } from '../data/incidents.js'
 import { SITES_BY_ID } from '../data/sites.js'
+import { documentRecipient } from '../lib/documents.js'
 import { dayKey, fmtDateTime, fmtDuration, hoursSince } from '../lib/format.js'
 import { contactTarget, deliveredEvent } from '../lib/shipment.js'
 import { rankByRisk } from './risk.js'
@@ -84,14 +85,24 @@ export function describeAction(view, action, now) {
         why: whyOf(view),
       }
     }
+    // Our own documents are sent to the party that needs them; the other
+    // parties' documents are requested from their owner.
+    case 'send_document':
     case 'request_document': {
       const doc = view.documents.find((d) => d.type === action.docType)
       const label = docLabel(action.docType)
+      const who = documentRecipient(view, action.docType).name
       const reason =
         doc.status === 'rejected'
           ? `${label} rejected ${fmtDateTime(doc.rejectedAt)}`
-          : `${label} missing before ${doc.neededBy}`
-      return { text: `Request the ${label} for order ${id}`, why: `${capitalise(reason)}.` }
+          : isShipperDocument(action.docType)
+            ? `${label} not sent, needed before ${doc.neededBy}`
+            : `${label} missing before ${doc.neededBy}`
+      const text =
+        action.type === 'send_document'
+          ? `Send the ${label} to ${who}, order ${id}`
+          : `Request the ${label} from ${who}, order ${id}`
+      return { text, why: `${capitalise(reason)}.` }
     }
     case 'awaiting_operator': {
       const target = contactTarget(view)

@@ -9,10 +9,20 @@ export const sendNotice = ({ shipmentId, kind = 'delay', text }) => ({
   text,
 })
 
-export const requestDocument = ({ shipmentId, docType, text }) => ({
+// Document actions name the operator the message goes to (`operatorId`).
+export const requestDocument = ({ shipmentId, docType, operatorId, text }) => ({
   type: 'requestDocument',
   shipmentId,
   docType,
+  operatorId,
+  text,
+})
+
+export const sendDocument = ({ shipmentId, docType, operatorId, text }) => ({
+  type: 'sendDocument',
+  shipmentId,
+  docType,
+  operatorId,
   text,
 })
 

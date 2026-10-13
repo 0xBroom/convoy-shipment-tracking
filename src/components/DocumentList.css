@@ -26,7 +26,8 @@
   font-weight: 500;
 }
 
-.docs-row[data-status='ok'] .docs-status {
+.docs-row[data-status='ok'] .docs-status,
+.docs-row[data-status='sent'] .docs-status {
   color: var(--cleared);
 }
 

@@ -11,7 +11,7 @@ export const SEED_NOTICES = [
     customerId: 'nordvik',
     kind: 'update',
     title: 'Order 12345 customs documents lodged',
-    text: 'Customs documents for Gdansk were lodged on 13 Oct at 10:00. We still need the commercial invoice before customs review.',
+    text: 'Customs documents for Gdansk were lodged on 13 Oct at 10:00. We still have to send the commercial invoice before customs review.',
     sentAt: t(13, '11:05'),
     read: false,
   },
@@ -37,10 +37,11 @@ export const SEED_NOTICES = [
   },
 ]
 
-// Ops activity log entries present when the demo loads (newest first at render).
+// Ops activity log entries present when the demo loads (newest first at
+// render). Each one names its channel, as the reducer does at runtime.
 export const SEED_ACTIVITY = [
-  { id: 'activity-1', at: t(13, '11:05'), type: 'notice', shipmentId: '12345', text: 'Update sent to customer' },
-  { id: 'activity-2', at: t(13, '10:20'), type: 'operator', shipmentId: '12418', text: 'Message sent to Iberroute' },
-  { id: 'activity-3', at: t(12, '16:55'), type: 'operator', shipmentId: '12290', text: 'Message sent to Baltic Customs' },
-  { id: 'activity-4', at: t(12, '16:45'), type: 'notice', shipmentId: '12290', text: 'Update sent to customer' },
+  { id: 'activity-1', at: t(13, '11:05'), type: 'notice', shipmentId: '12345', text: 'Update sent to customer, Convoy inbox and email' },
+  { id: 'activity-2', at: t(13, '10:20'), type: 'operator', shipmentId: '12418', text: 'Message sent to Iberroute by email' },
+  { id: 'activity-3', at: t(12, '16:55'), type: 'operator', shipmentId: '12290', text: 'Message sent to Baltic Customs by email' },
+  { id: 'activity-4', at: t(12, '16:45'), type: 'notice', shipmentId: '12290', text: 'Update sent to customer, Convoy inbox and email' },
 ]

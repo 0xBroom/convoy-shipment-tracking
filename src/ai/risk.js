@@ -1,6 +1,7 @@
-import { DOCUMENT_LABELS } from '../data/documents.js'
+import { DOCUMENT_LABELS, isShipperDocument } from '../data/documents.js'
 import { INCIDENTS } from '../data/incidents.js'
 import { SITES_BY_ID } from '../data/sites.js'
+import { documentActionType } from '../lib/documents.js'
 import { fmtDuration, hoursSince } from '../lib/format.js'
 import { isDelivered, lastEvent, openHold } from '../lib/shipment.js'
 
@@ -55,8 +56,12 @@ export function scoreRisk(view, now) {
 
   const rejected = view.documents.filter((d) => d.status === 'rejected')
   const missing = view.documents.filter((d) => d.status === 'missing')
+  // Our own documents are "not sent" rather than "missing": the fix is ours.
   for (const doc of rejected) add('missing_document', `${DOCUMENT_LABELS[doc.type]} rejected`, WEIGHTS.documentRejected)
-  for (const doc of missing) add('missing_document', `${DOCUMENT_LABELS[doc.type]} missing`, WEIGHTS.documentMissing)
+  for (const doc of missing) {
+    const state = isShipperDocument(doc.type) ? 'not sent' : 'missing'
+    add('missing_document', `${DOCUMENT_LABELS[doc.type]} ${state}`, WEIGHTS.documentMissing)
+  }
 
   if (incident) {
     add('port_incident', `Port incident, ${SITES_BY_ID[incident.siteId].city}`, WEIGHTS.incident)
@@ -65,9 +70,11 @@ export function scoreRisk(view, now) {
 
   // Proposed actions in precedence order: a rejected document blocks customs,
   // so it comes first; then telling the customer; then the remaining asks.
-  for (const doc of rejected) actions.push({ type: 'request_document', docType: doc.type })
+  // A document action is "send" for our own documents, "request" otherwise.
+  const documentAction = (doc) => ({ type: documentActionType(doc.type), docType: doc.type })
+  for (const doc of rejected) actions.push(documentAction(doc))
   if (incident || slipHours >= 24) actions.push({ type: 'notify' })
-  for (const doc of missing) actions.push({ type: 'request_document', docType: doc.type })
+  for (const doc of missing) actions.push(documentAction(doc))
   if (hold && !rejected.length && !missing.length) actions.push({ type: 'contact_operator' })
   if (tags.includes('stale')) {
     const type = awaiting ? 'awaiting_operator' : 'contact_operator'

@@ -1,10 +1,12 @@
 // Six operators, two per mode. Each one speaks its own raw vocabulary; that
 // is the point of the normaliser. `vocab` maps raw status to a milestone.
+// `email` is where Convoy writes to them; the addresses are made up.
 export const OPERATORS = [
   {
     id: 'iberroute',
     name: 'Iberroute',
     mode: 'road',
+    email: 'ops@iberroute.example',
     vocab: {
       Tendered: 'picked_up',
       'Depot scan': 'departed_hub',
@@ -17,6 +19,7 @@ export const OPERATORS = [
     id: 'nordhaul',
     name: 'Nordhaul',
     mode: 'road',
+    email: 'ops@nordhaul.example',
     vocab: {
       Collected: 'picked_up',
       Linehaul: 'in_transit',
@@ -28,6 +31,7 @@ export const OPERATORS = [
     id: 'portline',
     name: 'Portline',
     mode: 'sea',
+    email: 'ops@portline.example',
     vocab: {
       'Gate-in': 'gate_in',
       'Loaded on vessel': 'loaded',
@@ -41,6 +45,7 @@ export const OPERATORS = [
     id: 'medlines',
     name: 'MedLines',
     mode: 'sea',
+    email: 'ops@medlines.example',
     vocab: {
       'GATE IN': 'gate_in',
       'VSL LOAD': 'loaded',
@@ -54,6 +59,7 @@ export const OPERATORS = [
     id: 'baltic-customs',
     name: 'Baltic Customs',
     mode: 'customs',
+    email: 'docs@baltic-customs.example',
     vocab: {
       'Docs lodged': 'docs_submitted',
       'Under review': 'under_review',
@@ -65,6 +71,7 @@ export const OPERATORS = [
     id: 'rhone-brokers',
     name: 'Rhone Brokers',
     mode: 'customs',
+    email: 'docs@rhone-brokers.example',
     vocab: {
       'Déclaration déposée': 'docs_submitted',
       Contrôle: 'under_review',

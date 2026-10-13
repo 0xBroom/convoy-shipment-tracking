@@ -1,6 +1,7 @@
-import { DOCUMENT_LABELS } from '../data/documents.js'
-import { fmtDate, fmtDateTime } from '../lib/format.js'
+import { docLabel, documentFileName } from '../data/documents.js'
 import { NOW } from '../data/now.js'
+import { documentRecipient } from '../lib/documents.js'
+import { fmtDate, fmtDateTime } from '../lib/format.js'
 import { contactTarget } from '../lib/shipment.js'
 
 // Message drafts are templates over facts. Convoy drafts; a person edits and
@@ -48,16 +49,34 @@ export function draftNotice(view, now = NOW) {
   )
 }
 
-// Request to the customer for a missing or rejected document.
+// Request to the operator that owns a missing or rejected document.
 export function draftDocumentRequest(view, docType) {
   const doc = view.documents.find((d) => d.type === docType)
-  const label = DOCUMENT_LABELS[docType].toLowerCase()
+  const label = docLabel(docType)
+  const to = documentRecipient(view, docType)
+  const when = doc.neededBy ? ` before ${doc.neededBy}` : ''
   const lead =
     doc.status === 'rejected'
-      ? `The ${label} for order ${view.id} (${routeOf(view)}) was rejected on ${fmtDateTime(doc.rejectedAt)}. We need a corrected version`
-      : `We need the ${label} for order ${view.id} (${routeOf(view)})`
-  const when = doc.neededBy ? ` before ${doc.neededBy}` : ''
-  return `${lead}${when}. Please send it by reply, or tell us when we can expect it.`
+      ? `the ${label} for order ${view.id} (${routeOf(view)}) was rejected on ${fmtDateTime(doc.rejectedAt)}. We need a corrected version${when}`
+      : `we need the ${label} for order ${view.id} (${routeOf(view)})${when}`
+  return `Hello ${to.name}, ${lead}. Please send it by reply, or tell us when we can expect it.`
+}
+
+// One of our own documents, sent with the file attached to the party that
+// needs it next. A rejected document goes out as a corrected version.
+export function draftDocumentSend(view, docType) {
+  const doc = view.documents.find((d) => d.type === docType)
+  const label = docLabel(docType)
+  const to = documentRecipient(view, docType)
+  const when = doc.neededBy ? `, needed before ${doc.neededBy}` : ''
+  const corrected =
+    doc.status === 'rejected'
+      ? ` This is the corrected version, replacing the one rejected on ${fmtDateTime(doc.rejectedAt)}.`
+      : ''
+  return (
+    `Hello ${to.name}, please find attached the ${label} for order ${view.id} (${routeOf(view)})${when}: ` +
+    `${documentFileName(docType, view.id)}.${corrected} Please confirm receipt, or tell us if anything else is needed.`
+  )
 }
 
 // Question to the operator that owns the last status. Quotes the raw status.

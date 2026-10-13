@@ -10,6 +10,7 @@ import RiskLevel from '../../components/RiskLevel.jsx'
 import RouteTimeline from '../../components/RouteTimeline.jsx'
 import StatusSwatch from '../../components/StatusSwatch.jsx'
 import { NOW } from '../../data/now.js'
+import { documentActionType } from '../../lib/documents.js'
 import { fmtDateTime } from '../../lib/format.js'
 import { routeSentence } from '../../lib/route.js'
 import { isDelivered, lastEvent } from '../../lib/shipment.js'
@@ -171,9 +172,10 @@ export default function OpsShipmentDetail() {
     .flatMap((leg) => leg.rows)
     .filter((row) => !row.confirmed)
   const last = lastEvent(view)
+  // Send our own documents, request the other parties'.
   const documentAction = (doc) =>
     doc.status === 'missing' || doc.status === 'rejected' ? (
-      <ActionButton view={view} action={{ type: 'request_document', docType: doc.type }} />
+      <ActionButton view={view} action={{ type: documentActionType(doc.type), docType: doc.type }} />
     ) : null
 
   return (

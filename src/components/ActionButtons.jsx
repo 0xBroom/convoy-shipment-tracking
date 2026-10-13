@@ -9,6 +9,7 @@ import './ActionButtons.css'
 // One name per action, the same in the button, the dialog confirm and the toast.
 const LABELS = {
   notify: 'Draft notice to customer',
+  send_document: 'Send document',
   request_document: 'Request document',
   contact_operator: 'Contact operator',
 }
@@ -64,6 +65,7 @@ export function ActionStates({ view }) {
   const message = log.find((entry) => entry.type === 'operator')
   const states = [
     view.notified && 'Customer notified',
+    view.documents.some((d) => d.status === 'sent') && 'Document sent',
     view.documents.some((d) => d.status === 'requested') && 'Document requested',
     message && message.text,
   ].filter(Boolean)

@@ -27,6 +27,8 @@ const nowIso = () => NOW.toISOString()
 const noticeTitle = (kind, shipmentId) =>
   kind === 'delay' ? `Order ${shipmentId} arriving later` : `Update on order ${shipmentId}`
 
+const operatorName = (id) => OPERATORS_BY_ID[id]?.name ?? id
+
 // Adds an activity entry and a toast in one step, so every ops action is
 // logged and reported with the same name. The toast keeps the shipment id so
 // it can link to the order it is about.
@@ -73,38 +75,63 @@ export function reducer(state, action) {
         {
           type: 'notice',
           shipmentId: shipment.id,
-          text: 'Notice sent to customer',
+          text: 'Notice sent to customer, Convoy inbox and email',
           detail: action.text,
-          toast: 'Notice sent',
+          toast: 'Notice sent to customer',
         },
       )
     }
 
+    // Document actions record the channel: operators are reached by email.
     case 'requestDocument': {
       const shipment = state.shipments.byId[action.shipmentId]
       if (!shipment?.documents.some((d) => d.type === action.docType)) return state
+      const name = operatorName(action.operatorId)
+      const label = DOCUMENT_LABELS[action.docType]
       const next = withShipment(state, shipment.id, (s) => ({
         ...s,
         documents: s.documents.map((d) =>
-          d.type === action.docType ? { ...d, status: 'requested', requestedAt: nowIso() } : d,
+          d.type === action.docType
+            ? { ...d, status: 'requested', requestedAt: nowIso(), requestedFrom: action.operatorId }
+            : d,
         ),
       }))
       return record(next, {
         type: 'document',
         shipmentId: shipment.id,
-        text: `Document requested, ${DOCUMENT_LABELS[action.docType].toLowerCase()}`,
+        text: `${label} requested from ${name} by email`,
         detail: action.text,
-        toast: 'Document requested',
+        toast: `${label} requested from ${name}`,
+      })
+    }
+
+    case 'sendDocument': {
+      const shipment = state.shipments.byId[action.shipmentId]
+      if (!shipment?.documents.some((d) => d.type === action.docType)) return state
+      const name = operatorName(action.operatorId)
+      const label = DOCUMENT_LABELS[action.docType]
+      const next = withShipment(state, shipment.id, (s) => ({
+        ...s,
+        documents: s.documents.map((d) =>
+          d.type === action.docType ? { ...d, status: 'sent', sentAt: nowIso(), sentTo: action.operatorId } : d,
+        ),
+      }))
+      return record(next, {
+        type: 'document',
+        shipmentId: shipment.id,
+        text: `${label} sent to ${name} by email`,
+        detail: action.text,
+        toast: `${label} sent to ${name}`,
       })
     }
 
     case 'contactOperator': {
       if (!state.shipments.byId[action.shipmentId]) return state
-      const name = OPERATORS_BY_ID[action.operatorId]?.name ?? action.operatorId
+      const name = operatorName(action.operatorId)
       return record(state, {
         type: 'operator',
         shipmentId: action.shipmentId,
-        text: `Message sent to ${name}`,
+        text: `Message sent to ${name} by email`,
         detail: action.text,
         toast: `Message sent to ${name}`,
       })
