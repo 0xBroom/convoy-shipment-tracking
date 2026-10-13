@@ -23,11 +23,15 @@
   --tint-amber: color-mix(in oklab, var(--amber) 10%, white);
   --tint-signal: color-mix(in oklab, var(--signal) 10%, white);
 
-  /* Estimated or planned area under a leg */
+  /* Route line states. Confirmed is solid ink; planned is a thin dashed line
+     in a lighter ink (3.3:1 on manifest, enough for a graphic); moved by a
+     Convoy estimate is an amber hatch at low alpha, light enough that ink
+     text on it stays above 7:1. */
+  --line-planned: color-mix(in oklab, var(--ink) 45%, var(--manifest));
   --hatch: repeating-linear-gradient(
     135deg,
-    transparent 0 4px,
-    color-mix(in oklab, var(--ink) 10%, transparent) 4px 5px
+    color-mix(in oklab, var(--amber) 12%, transparent) 0 4px,
+    color-mix(in oklab, var(--amber) 42%, transparent) 4px 5px
   );
 
   /* Type */

@@ -36,9 +36,11 @@ function Node({ kind, confirmed, estimated, className = '' }) {
 
 /*
   The memorable element: one consolidated route across every leg and operator.
-  Solid ink = an operator confirmed it. Dashed = planned. Dashed with a hatch
-  band = estimated by Convoy. Place shapes: circle site, square port, diamond
-  customs. Each row carries a data-event-id so a raw feed can highlight it.
+  Solid ink = an operator confirmed it. Thin light dashes = planned. Dashes
+  over an amber hatch band = the span a Convoy estimate moved. Place shapes:
+  circle site, square port, diamond customs. Each row carries a data-event-id
+  so a raw feed can highlight it. The legend under the route always lists all
+  three states, so a reader learns the key before a shipment needs it.
 */
 export default function RouteTimeline({ view, activeEventId = null, onEventActive = null }) {
   const legs = buildTimeline(view)
@@ -143,19 +145,21 @@ export default function RouteTimeline({ view, activeEventId = null, onEventActiv
         </ol>
       </div>
 
-      <p className="timeline-legend">
-        <span className="timeline-key" data-key="confirmed" aria-hidden="true" />
-        Solid: confirmed by the operator.
-        <span className="timeline-key" data-key="planned" aria-hidden="true" />
-        Dashed: planned, not confirmed yet.
-        {estimated && (
-          <>
-            <span className="timeline-key" data-key="estimated" aria-hidden="true" />
-            Hatched: moved by Convoy.
-            <AiStamp variant="estimate" />
-          </>
-        )}
-      </p>
+      <ul className="timeline-legend" aria-label="Line key">
+        <li>
+          <span className="timeline-key" data-key="confirmed" aria-hidden="true" />
+          Confirmed by operator
+        </li>
+        <li>
+          <span className="timeline-key" data-key="planned" aria-hidden="true" />
+          Planned
+        </li>
+        <li>
+          <span className="timeline-key" data-key="estimated" aria-hidden="true" />
+          Moved by Convoy estimate
+          {estimated && <AiStamp variant="estimate" />}
+        </li>
+      </ul>
     </div>
   )
 }

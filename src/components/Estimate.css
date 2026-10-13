@@ -1,7 +1,7 @@
 /*
   Estimate vs confirmed: solid means an operator confirmed it. Dashed means
-  nobody has. A hatch band marks a date Convoy moved. No dedicated colour, so
-  an estimate never looks like a status and still reads without colour.
+  nobody has. The amber hatch marks a date Convoy moved, the same hatch as the
+  route line, and the dashes carry the meaning without the colour.
 */
 .estimate {
   display: inline-flex;
