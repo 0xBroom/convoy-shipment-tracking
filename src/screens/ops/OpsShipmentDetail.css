@@ -131,6 +131,24 @@
   font-size: var(--text-13);
 }
 
+/* The raw row's mapped milestone, for phones only; desktop has the column. */
+.ops-event-map {
+  display: none;
+  align-items: center;
+  gap: var(--space-2);
+  color: var(--ink-2);
+}
+
+.ops-event-map-label {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+.ops-event-map[data-mapped='false'] .ops-event-map-label {
+  color: var(--ink-2);
+  font-weight: 500;
+}
+
 .ops-event-pending {
   background: var(--manifest);
 }
@@ -259,7 +277,9 @@
 }
 
 /* Phone order: the route timeline above already is the normalised view, so the
-   flat normalised list drops out; then risk and actions; then the raw feed. */
+   flat normalised list drops out; then risk and actions; then the raw feed,
+   where each row now carries its mapped milestone on a second line so the
+   raw-to-Convoy mapping is still readable without the side-by-side column. */
 @media (max-width: 720px) {
   .ops-columns {
     grid-template-columns: 1fr;
@@ -268,6 +288,10 @@
 
   .ops-norm {
     display: none;
+  }
+
+  .ops-event-map {
+    display: flex;
   }
 
   .ops-rail {

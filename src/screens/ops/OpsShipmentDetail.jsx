@@ -30,7 +30,9 @@ function hooks(id, setActive) {
   }
 }
 
-function RawFeed({ events, activeId, setActive, liveId }) {
+// On a phone the normalised column is hidden, so each raw row also carries its
+// mapped milestone on a line of its own (CSS shows it below 720px only).
+function RawFeed({ view, events, activeId, setActive, liveId }) {
   return (
     <section className="ops-feed" aria-labelledby="raw-heading">
       <h2 id="raw-heading">Operator feed (raw)</h2>
@@ -42,6 +44,18 @@ function RawFeed({ events, activeId, setActive, liveId }) {
               <span className="ops-event-operator">{e.operatorName}</span>
               <span className="ops-raw">&lsquo;{e.raw}&rsquo;</span>
               {!e.recognised && <span className="ops-unmapped">Not mapped</span>}
+            </span>
+            <span className="ops-event-map" data-mapped={e.recognised}>
+              <span aria-hidden="true">&rarr;</span>
+              <span className="visually-hidden">Convoy reads this as</span>
+              {e.recognised ? (
+                <>
+                  <span className="ops-event-map-label">{eventLabel(view, e)}</span>
+                  <span className="stamp">Convoy</span>
+                </>
+              ) : (
+                <span className="ops-event-map-label">Not mapped</span>
+              )}
             </span>
             <span className="ops-event-meta">
               {e.location}, <time dateTime={e.at.toISOString()}>{fmtDateTime(e.at)}</time>
@@ -190,7 +204,7 @@ export default function OpsShipmentDetail() {
       </section>
 
       <div className="ops-columns">
-        <RawFeed events={view.timeline} activeId={activeId} setActive={setActive} liveId={liveId} />
+        <RawFeed view={view} events={view.timeline} activeId={activeId} setActive={setActive} liveId={liveId} />
         <NormalisedFeed
           view={view}
           events={view.timeline}
