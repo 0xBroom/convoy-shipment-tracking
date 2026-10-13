@@ -83,8 +83,11 @@
   list-style: none;
 }
 
+/* Suggestions are chips: pills, so they read as ready-made queries rather
+   than commands. */
 .search-suggestions .button {
   min-height: 28px;
+  border-radius: var(--radius-pill);
   font-size: var(--text-13);
 }
 
@@ -119,8 +122,8 @@
   gap: var(--space-2);
   min-height: 28px;
   padding: 0 var(--space-2) 0 var(--space-3);
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-tag);
+  border: 1px solid color-mix(in oklab, var(--ink) 35%, white);
+  border-radius: var(--radius-pill);
   background: var(--surface);
   font-family: var(--font-data);
   font-weight: 500;

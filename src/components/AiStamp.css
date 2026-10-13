@@ -3,14 +3,14 @@
   display: inline-flex;
 }
 
-/* The chip: harbour ink on a harbour tint, the same 18px line as before. */
+/* The chip: harbour ink on a harbour tint, as a pill like every label. */
 .stamp {
   display: inline-flex;
   align-items: center;
   gap: var(--space-1);
   padding: 0 var(--space-2);
-  border: 1px solid var(--harbour);
-  border-radius: var(--radius-tag);
+  border: 1px solid color-mix(in oklab, var(--harbour) 55%, white);
+  border-radius: var(--radius-pill);
   background: var(--tint-harbour);
   color: var(--harbour);
   font-family: var(--font-data);

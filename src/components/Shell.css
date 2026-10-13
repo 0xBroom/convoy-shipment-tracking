@@ -57,8 +57,8 @@
 
 .shell-count {
   min-width: 20px;
-  padding: 0 var(--space-1);
-  border-radius: var(--radius-tag);
+  padding: 0 6px;
+  border-radius: var(--radius-pill);
   background: var(--ink);
   color: var(--surface);
   font-family: var(--font-data);
@@ -89,42 +89,58 @@
   font-size: var(--text-13);
 }
 
-/* Segmented control: two radios, the active one inked. */
+/* Segmented control: a pill track with an ink thumb that slides under the
+   chosen role. Two equal columns, so the thumb is exactly one column wide. */
 .role-switch {
-  display: inline-flex;
-  border: 1px solid var(--ink);
-  border-radius: var(--radius-control);
-  overflow: hidden;
+  position: relative;
+  display: inline-grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 3px;
+  border: 1px solid var(--rule-panel);
+  border-radius: var(--radius-pill);
+  background: var(--manifest);
+}
+
+.role-switch::before {
+  content: '';
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: var(--radius-pill);
+  background: var(--ink);
+  transition: transform 220ms cubic-bezier(0.3, 0, 0.2, 1);
+}
+
+.role-switch:has(button:last-child[aria-checked='true'])::before {
+  transform: translateX(100%);
 }
 
 .role-switch button {
-  min-height: 32px;
+  position: relative;
+  min-height: 30px;
   min-width: 72px;
   padding: 0 var(--space-3);
   border: 0;
-  background: var(--surface);
-  color: var(--ink);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--ink-2);
   font-weight: 500;
   cursor: pointer;
-  transition: background-color var(--dur-hover), color var(--dur-hover);
-}
-
-.role-switch button + button {
-  border-left: 1px solid var(--ink);
+  transition: color var(--dur-hover);
 }
 
 .role-switch button:hover {
-  background: var(--tint-harbour);
+  color: var(--ink);
 }
 
 .role-switch button[aria-checked='true'] {
-  background: var(--ink);
   color: var(--surface);
 }
 
-/* The focus ring sits inside the control so overflow hidden does not clip it. */
 .role-switch button:focus-visible {
-  outline-offset: -4px;
+  outline-offset: 2px;
 }
 
 .shell-persona {
