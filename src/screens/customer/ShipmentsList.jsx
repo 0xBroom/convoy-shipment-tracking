@@ -32,7 +32,7 @@ export default function ShipmentsList() {
       <header className="shipments-head">
         <h1>My shipments</h1>
         {rows.length > 0 && (
-          <p className="shipments-count">{attention > 0 ? `${count}, ${attention} needs attention` : count}</p>
+          <p className="shipments-count">{attention > 0 ? `${count}, ${attention} ${attention === 1 ? 'needs' : 'need'} attention` : count}</p>
         )}
       </header>
 
