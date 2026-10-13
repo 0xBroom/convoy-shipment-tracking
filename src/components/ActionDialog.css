@@ -143,10 +143,6 @@
   color: var(--harbour);
 }
 
-.action-attach {
-  margin-left: calc(-1 * var(--space-3));
-}
-
 .action-attach-note {
   color: var(--ink-3);
   font-size: var(--text-12);

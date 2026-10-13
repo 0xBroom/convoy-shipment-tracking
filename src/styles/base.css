@@ -147,15 +147,18 @@ textarea {
 }
 
 /* Quieter than secondary: for the extra actions on a dense row, where only the
-   proposed action should carry weight. Still a real button with a 32px target. */
+   proposed action should carry weight. Reads as a link: no fill and no side
+   padding, so its text lines up with the plain text around it. Keeps the 32px
+   height as its target. */
 .button-quiet {
+  padding-inline: 0;
   background: transparent;
   border-color: transparent;
   color: var(--harbour);
 }
 
 .button-quiet:hover {
-  background: var(--tint-harbour);
+  background: transparent;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
