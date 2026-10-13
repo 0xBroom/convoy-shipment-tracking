@@ -36,8 +36,8 @@ function Node({ kind, confirmed, estimated, className = '' }) {
 
 /*
   The memorable element: one consolidated route across every leg and operator.
-  Solid ink = an operator confirmed it. Thin light dashes = planned. Dashes
-  over an amber hatch band = the span a Convoy estimate moved. Place shapes:
+  Thick solid ink = an operator confirmed it. Light dashes = planned. Dashes
+  over a soft amber band = the span a Convoy estimate moved. Place shapes:
   circle site, square port, diamond customs. Each row carries a data-event-id
   so a raw feed can highlight it. The legend under the route always lists all
   three states, so a reader learns the key before a shipment needs it.

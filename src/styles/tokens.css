@@ -30,11 +30,19 @@
   --on-tint-amber: color-mix(in oklab, var(--amber) 78%, var(--ink));
   --on-tint-signal: color-mix(in oklab, var(--signal) 88%, var(--ink));
 
-  /* Route line states. Confirmed is solid ink; planned is a thin dashed line
-     in a lighter ink (3.3:1 on manifest, enough for a graphic); moved by a
-     Convoy estimate is an amber hatch at low alpha, light enough that ink
-     text on it stays above 7:1. */
+  /* Route line states. Confirmed is a thick solid ink track; planned is a
+     dashed track in a lighter ink (3.3:1 on manifest, enough for a graphic);
+     moved by a Convoy estimate is a soft amber band under the dashes. The
+     hatch is the text version of that band, light enough that ink text on it
+     stays above 7:1. */
   --line-planned: color-mix(in oklab, var(--ink) 45%, var(--manifest));
+  --dash: repeating-linear-gradient(90deg, var(--line-planned) 0 8px, transparent 8px 14px);
+  --dash-down: repeating-linear-gradient(180deg, var(--line-planned) 0 8px, transparent 8px 14px);
+  --band: repeating-linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--amber) 13%, transparent) 0 6px,
+    color-mix(in oklab, var(--amber) 24%, transparent) 6px 8px
+  );
   --hatch: repeating-linear-gradient(
     135deg,
     color-mix(in oklab, var(--amber) 12%, transparent) 0 4px,
