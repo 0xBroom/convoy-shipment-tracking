@@ -38,7 +38,7 @@ The live feed plays this out: seven scripted operator events, one every four sec
 
 Each dialog shows a "To" line with recipient and channel: email for operators, Convoy inbox plus email for customers. Documents follow ownership: the manufacturer's own (invoice, packing list, T2L) are sent with the ERP file attached (a fake picker); the carrier's bill of lading or CMR and the broker's customs declaration are requested. The customer never gets a document request, and downloads existing documents as one-page PDFs built in the browser. Notices are capped at 600 characters and clamped to three lines for the customer.
 
-The switch only goes towards English, the trade's shared language: "Write in English instead" regenerates the draft, "Back to French" undoes it, and an English draft offers no switch, since with many languages Convoy could not know which one to offer.
+The language switch only goes towards English, the trade's shared language: "Write in English instead" regenerates the draft, "Back to French" undoes it, and an English draft offers no switch, since with many languages Convoy could not know which one to offer.
 
 ## Technical approach
 
