@@ -293,7 +293,8 @@
 
   .timeline-leg {
     display: grid;
-    grid-template-columns: 32px 1fr;
+    /* Wide enough for the Now marker, which sits right of the line. */
+    grid-template-columns: 44px 1fr;
     padding-bottom: var(--space-4);
   }
 
