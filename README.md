@@ -1,6 +1,6 @@
 # Convoy
 
-Convoy is a shipment tracking prototype for an industrial manufacturer that ships from several sites, through several operators, by road and sea. It gives customers one honest answer to "when does it arrive?" and gives ops a short list of what needs attention today.
+Convoy is a shipment tracking prototype for an industrial manufacturer that ships from several sites, through several operators, by road and sea. Customers get a straight answer to "when does it arrive?", and ops gets a short list of what needs attention today.
 
 Everything runs on mocked data with simulated AI and no backend. The write-up is in [`docs/write-up.md`](docs/write-up.md) and [`docs/write-up.pdf`](docs/write-up.pdf).
 
@@ -37,7 +37,7 @@ The "Viewing as" switcher in the top bar changes role. "Demo controls" sits next
 5. Switch to ops again. In Portfolio, click the suggestion "shipments to France this week running late" (or type it). Three interpreted chips appear and the table narrows to one row. Remove the window chip and a second French shipment comes back.
 6. Type "purple unicorn". Convoy says it could not read the search and keeps the table as it was. Then type "20311": no match, and nothing leaks about hidden shipments.
 7. Clear the search with the × in the field ("Clear search and filters") and open order 12345 from the portfolio. The raw operator feed ("Gate-in", "Deklarasjon mottatt", "OUT_FOR_DELIVERY") sits beside the normalised milestones. Hover a row to light up the same event in the timeline. The right rail explains the risk score.
-8. Open "Demo controls" and choose "Start live feed". Seven operator events land, one every four seconds, each with a toast that links to its order; the panel counts "Event n of 7" and the button becomes "Pause live feed", then "Resume live feed". Order 12345 leaves the vessel, the Gdansk hold on 12439 is released, the stale feed on 12377 wakes up, Norwegian customs stop 12345 and clear it again, Nordhaul posts its own ETA on 12466 (the arrival card switches to "Operator ETA" and the Convoy estimate moves to "ETA history") and 12420 is delivered. "Last updated" in the top bar follows the demo clock. The customer view shows the same events.
+8. Open "Demo controls" and choose "Start live feed". Seven operator events land, one every four seconds, each with a toast that links to its order. The panel counts "Event n of 7", and the button turns into "Pause live feed", then "Resume live feed". In order: 12345 leaves the vessel, the Gdansk hold on 12439 is released, the quiet feed on 12377 wakes up, and Norwegian customs stop 12345 for a check. Nordhaul posts its own ETA on 12466, so the arrival card switches to "Operator ETA" and the Convoy estimate moves to "ETA history". Then 12420 is delivered, and customs clear 12345. "Last updated" in the top bar follows the demo clock, and the customer view shows the same events.
 9. On the detail page, use "Send document" on the invoice. The dialog says who receives it and how (Fjordklar Customs, the Norwegian import broker, by email), lists the ERP file as the attachment and lets you attach another. Confirm. The customer then sees "Sent to Fjordklar Customs" with the time and channel, and can download it.
 10. "Demo controls" then "Reset demo data" brings everything back.
 
