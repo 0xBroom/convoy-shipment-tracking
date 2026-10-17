@@ -2,7 +2,7 @@
 
 Convoy is a shipment tracking prototype for an industrial manufacturer that ships from several sites, through several operators, by road and sea. Customers get a straight answer to "when does it arrive?", and ops gets a short list of what needs attention today.
 
-Everything runs on mocked data with simulated AI and no backend. The write-up is in [`docs/write-up.md`](docs/write-up.md) and [`docs/write-up.pdf`](docs/write-up.pdf).
+Try it at https://convoy-shipment-tracking.vercel.app/. Everything runs on mocked data with simulated AI and no backend. The write-up is in [`docs/write-up.md`](docs/write-up.md) and [`docs/write-up.pdf`](docs/write-up.pdf).
 
 ## Run it
 

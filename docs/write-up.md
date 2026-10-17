@@ -52,7 +52,7 @@ In production, an LLM would map free-text statuses to milestones against a fixed
 
 ## Assumptions, limitations and next steps
 
-Assumptions: one customer and one ops persona are enough to show scoping. The UI is in English, with metric units and EUR. Operators post timestamped events. The demo runs locally, so there is no deployment or auth.
+Assumptions: one customer and one ops persona are enough to show scoping. The UI is in English, with metric units and EUR. Operators post timestamped events. The demo is a static site at https://convoy-shipment-tracking.vercel.app/, with no backend and no auth.
 
 Limitations:
 
